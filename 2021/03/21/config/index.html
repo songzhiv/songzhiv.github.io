@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Ubuntu配置 | subv&#39;s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="WSL2配置">
+    <meta name="description" content="重回Ubuntu  Windows20H2 + WSL2 + WindowTerminal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu配置">
+<meta property="og:url" content="https://subv.icu/2021/03/21/config/index.html">
+<meta property="og:site_name" content="subv&#39;s blog">
+<meta property="og:description" content="重回Ubuntu  Windows20H2 + WSL2 + WindowTerminal">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-03-21T08:40:56.000Z">
+<meta property="article:modified_time" content="2021-03-23T07:34:48.875Z">
+<meta property="article:author" content="subv">
+<meta property="article:tag" content="WSL2配置">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="subv&#39;s blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/vv.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">subv</h5>
+          <a href="mailto:songzhiv@qq.com" title="songzhiv@qq.com" class="mail">songzhiv@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/songzhiv" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-about"></i>
+                About
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Ubuntu配置</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Ubuntu配置</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-03-21T08:40:56.000Z" itemprop="datePublished" class="page-time">
+  2021-03-21
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#重回Ubuntu"><span class="post-toc-text">重回Ubuntu</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#换源"><span class="post-toc-text">换源</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#代理"><span class="post-toc-text">代理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#软件安装与配置"><span class="post-toc-text">软件安装与配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#init-vim"><span class="post-toc-text">init.vim</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#zshrc"><span class="post-toc-text">.zshrc</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#install-sh"><span class="post-toc-text">install.sh</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#WindowsTeminal"><span class="post-toc-text">WindowsTeminal</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Sublimetext3"><span class="post-toc-text">Sublimetext3</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-config"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Ubuntu配置</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-03-21 16:40:56" datetime="2021-03-21T08:40:56.000Z"  itemprop="datePublished">2021-03-21</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="重回Ubuntu"><a href="#重回Ubuntu" class="headerlink" title="重回Ubuntu"></a>重回Ubuntu</h2></br>
+
+<p><strong>Windows20H2</strong> + <strong>WSL2</strong> + <strong>WindowTerminal</strong></p>
+<a id="more"></a>
+
+<h3 id="换源"><a href="#换源" class="headerlink" title="换源"></a>换源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i <span class="string">'s/archive.ubuntu.com/mirrors.ustc.edu.cn/g'</span> /etc/apt/sources.list</span><br><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+
+<h3 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h3><p><a href="https://zhuanlan.zhihu.com/p/108927713" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/108927713</a></p>
+<h3 id="软件安装与配置"><a href="#软件安装与配置" class="headerlink" title="软件安装与配置"></a>软件安装与配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">终端</span><br><span class="line">sudo apt install zsh</span><br><span class="line">sh -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)</span>"</span></span><br><span class="line">git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-autosuggestions</span><br><span class="line">git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-syntax-highlighting</span><br><span class="line">git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-completions <span class="variable">$&#123;ZSH_CUSTOM:=~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-completions</span><br><span class="line"></span><br><span class="line">neovim</span><br><span class="line">sudo apt install -y neovim</span><br><span class="line">sudo apt autoremove vim</span><br><span class="line">sudo apt autoremove nano</span><br><span class="line">sh -c <span class="string">'curl -fLo "$&#123;XDG_DATA_HOME:-$HOME/.local/share&#125;"/nvim/site/autoload/plug.vim --create-dirs \</span></span><br><span class="line"><span class="string">       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'</span></span><br><span class="line"></span><br><span class="line">mkdir ~/.config/nvim/</span><br><span class="line">nvim ~/.config/nvim/init.vim</span><br><span class="line">curl -sL install-node.now.sh/lts | bash</span><br><span class="line">sudo apt-get install yarn</span><br><span class="line"></span><br><span class="line">:CocInstall coc-cmake  coc-git coc-highlight  coc-json  coc-python coc-sh  coc-snippets coc-syntax</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">software</span><br><span class="line">sudo apt upgrade</span><br><span class="line">sudo apt install python2.7 </span><br><span class="line">sudo apt install python3-pip</span><br><span class="line">pip3 install -i https://mirrors.ustc.edu.cn/pypi/web/simple pip -U</span><br><span class="line">pip3 config <span class="built_in">set</span> global.index-url https://mirrors.ustc.edu.cn/pypi/web/simple</span><br><span class="line"></span><br><span class="line">git挂代理</span><br><span class="line">git config --global http.https://github.com.proxy socks5://127.0.0.1:10808</span><br><span class="line">git config --global http.https://github.com.proxy https://127.0.0.1:10809</span><br><span class="line">git config --global https.https://github.com.proxy https://127.0.0.1:10809</span><br><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> http_proxy=<span class="string">"http://localhost:port"</span></span><br><span class="line"><span class="built_in">export</span> https_proxy=<span class="string">"http://localhost:port"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> setproxy=<span class="string">"export ALL_PROXY=socks5://127.0.0.1:10808"</span> </span><br><span class="line"><span class="built_in">alias</span> unsetproxy=<span class="string">"unset ALL_PROXY"</span></span><br><span class="line"></span><br><span class="line">docker</span><br><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line">sudo add-apt-repository \</span><br><span class="line">   <span class="string">"deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \</span></span><br><span class="line"><span class="string">   <span class="variable">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">   stable"</span></span><br><span class="line"></span><br><span class="line">sudo apt update </span><br><span class="line">sudo apt install -y docker-ce</span><br><span class="line">用管理员打开windows terminal</span><br><span class="line">sudo service docker start</span><br><span class="line">docker ps</span><br><span class="line">sudo vi /etc/docker/.json</span><br><span class="line">添加=============================</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [<span class="string">"https://docker.mirrors.ustc.edu.cn/"</span>]</span><br><span class="line">&#125;</span><br><span class="line">pip3 install docker-compose</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1  https://github.com/maurosoria/dirsearch.git /opt/dirsearch</span><br><span class="line">    sudo ln -sf /opt/dirsearch/dirsearch.py  /usr/<span class="built_in">local</span>/bin/dirsearch</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/offensive-security/exploitdb.git /opt/exploitdb</span><br><span class="line">sudo ln -sf /opt/exploitdb/searchsploit /usr/<span class="built_in">local</span>/bin/searchsploit</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev</span><br><span class="line"></span><br><span class="line">curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb &gt; msfinstall &amp;&amp; \</span><br><span class="line">  chmod 755 msfinstall &amp;&amp; \</span><br><span class="line">  ./msfinstall</span><br><span class="line">  </span><br><span class="line">sudo apt install nmap</span><br><span class="line">sudo apt install hydra</span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/vulhub/vulhub.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="init-vim"><a href="#init-vim" class="headerlink" title="init.vim"></a>init.vim</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">call plug<span class="comment">#begin('~/.config/vim_plug/plugged')</span></span><br><span class="line">    Plug <span class="string">'sainnhe/sonokai'</span></span><br><span class="line">    Plug <span class="string">'vim-python/python-syntax'</span></span><br><span class="line">    Plug <span class="string">'vim-airline/vim-airline'</span></span><br><span class="line">    Plug <span class="string">'vim-airline/vim-airline-themes'</span></span><br><span class="line">    Plug <span class="string">'luochen1990/rainbow'</span></span><br><span class="line">    Plug <span class="string">'preservim/nerdtree'</span></span><br><span class="line">    Plug <span class="string">'neoclide/coc.nvim'</span>, &#123;<span class="string">'branch'</span>: <span class="string">'release'</span>&#125;</span><br><span class="line">call plug<span class="comment">#end()</span></span><br><span class="line"></span><br><span class="line">filetype plugin on</span><br><span class="line">filetype indent on</span><br><span class="line"><span class="built_in">set</span> ambiwidth=double</span><br><span class="line"><span class="built_in">set</span> showmatch <span class="string">" 高亮匹配括号</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set ignorecase</span></span><br><span class="line"><span class="string">set clipboard+=unnamed</span></span><br><span class="line"><span class="string">set softtabstop=4</span></span><br><span class="line"><span class="string">set shiftwidth=4</span></span><br><span class="line"><span class="string">set nobackup</span></span><br><span class="line"><span class="string">set termguicolors</span></span><br><span class="line"><span class="string">set nu "</span>设置显示行号</span><br><span class="line">syntax on <span class="string">"语法检测</span></span><br><span class="line"><span class="string">set guicursor=i:block-iCursor-blinkon0,v:block-vCursor</span></span><br><span class="line"><span class="string">set autoindent</span></span><br><span class="line"><span class="string">set t_Co=256</span></span><br><span class="line"><span class="string">set mouse=a</span></span><br><span class="line"><span class="string">set tabstop=4</span></span><br><span class="line"><span class="string">set history=1000</span></span><br><span class="line"><span class="string">set encoding=utf-8</span></span><br><span class="line"><span class="string">let g:rainbow_active = 1</span></span><br><span class="line"><span class="string">map &lt;Tab&gt; :NERDTreeToggle&lt;CR&gt;</span></span><br><span class="line"><span class="string">nmap &lt;F12&gt; :SCCompileRun&lt;cr&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;F9&gt; :echo system('python2 "</span><span class="string">' . expand('</span>%<span class="string">') . '</span><span class="string">"')&lt;cr&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;F10&gt; :echo system('python3 "</span><span class="string">' . expand('</span>%<span class="string">') . '</span><span class="string">"')&lt;cr&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="zshrc"><a href="#zshrc" class="headerlink" title=".zshrc"></a>.zshrc</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># If you come from bash you might have to change your $PATH.</span></span><br><span class="line"><span class="comment"># export PATH=$HOME/bin:/usr/local/bin:$PATH</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Path to your oh-my-zsh installation.</span></span><br><span class="line"><span class="built_in">export</span> ZSH=<span class="string">"/root/.oh-my-zsh"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set name of the theme to load --- if set to "random", it will</span></span><br><span class="line"><span class="comment"># load a random theme each time oh-my-zsh is loaded, in which case,</span></span><br><span class="line"><span class="comment"># to know which specific one was loaded, run: echo $RANDOM_THEME</span></span><br><span class="line"><span class="comment"># See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes</span></span><br><span class="line">ZSH_THEME=<span class="string">"robbyrussell"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set list of themes to pick from when loading at random</span></span><br><span class="line"><span class="comment"># Setting this variable when ZSH_THEME=random will cause zsh to load</span></span><br><span class="line"><span class="comment"># a theme from this variable instead of looking in $ZSH/themes/</span></span><br><span class="line"><span class="comment"># If set to an empty array, this variable will have no effect.</span></span><br><span class="line"><span class="comment"># ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to use case-sensitive completion.</span></span><br><span class="line"><span class="comment"># CASE_SENSITIVE="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to use hyphen-insensitive completion.</span></span><br><span class="line"><span class="comment"># Case-sensitive completion must be off. _ and - will be interchangeable.</span></span><br><span class="line"><span class="comment"># HYPHEN_INSENSITIVE="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to disable bi-weekly auto-update checks.</span></span><br><span class="line"><span class="comment"># DISABLE_AUTO_UPDATE="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to automatically update without prompting.</span></span><br><span class="line"><span class="comment"># DISABLE_UPDATE_PROMPT="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to change how often to auto-update (in days).</span></span><br><span class="line"><span class="comment"># export UPDATE_ZSH_DAYS=13</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line if pasting URLs and other text is messed up.</span></span><br><span class="line"><span class="comment"># DISABLE_MAGIC_FUNCTIONS="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to disable colors in ls.</span></span><br><span class="line"><span class="comment"># DISABLE_LS_COLORS="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to disable auto-setting terminal title.</span></span><br><span class="line"><span class="comment"># DISABLE_AUTO_TITLE="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to enable command auto-correction.</span></span><br><span class="line"><span class="comment"># ENABLE_CORRECTION="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line to display red dots whilst waiting for completion.</span></span><br><span class="line"><span class="comment"># COMPLETION_WAITING_DOTS="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line if you want to disable marking untracked files</span></span><br><span class="line"><span class="comment"># under VCS as dirty. This makes repository status check for large repositories</span></span><br><span class="line"><span class="comment"># much, much faster.</span></span><br><span class="line"><span class="comment"># DISABLE_UNTRACKED_FILES_DIRTY="true"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line if you want to change the command execution time</span></span><br><span class="line"><span class="comment"># stamp shown in the history command output.</span></span><br><span class="line"><span class="comment"># You can set one of the optional three formats:</span></span><br><span class="line"><span class="comment"># "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"</span></span><br><span class="line"><span class="comment"># or set a custom format using the strftime function format specifications,</span></span><br><span class="line"><span class="comment"># see 'man strftime' for details.</span></span><br><span class="line"><span class="comment"># HIST_STAMPS="mm/dd/yyyy"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Would you like to use another custom folder than $ZSH/custom?</span></span><br><span class="line"><span class="comment"># ZSH_CUSTOM=/path/to/new-custom-folder</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Which plugins would you like to load?</span></span><br><span class="line"><span class="comment"># Standard plugins can be found in $ZSH/plugins/</span></span><br><span class="line"><span class="comment"># Custom plugins may be added to $ZSH_CUSTOM/plugins/</span></span><br><span class="line"><span class="comment"># Example format: plugins=(rails git textmate ruby lighthouse)</span></span><br><span class="line"><span class="comment"># Add wisely, as too many plugins slow down shell startup.</span></span><br><span class="line">plugins=( git </span><br><span class="line">zsh-syntax-highlighting</span><br><span class="line">zsh-completions</span><br><span class="line">zsh-autosuggestions</span><br><span class="line">z</span><br><span class="line">)</span><br><span class="line"><span class="built_in">source</span> <span class="variable">$ZSH</span>/oh-my-zsh.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># User configuration</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># export MANPATH="/usr/local/man:$MANPATH"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># You may need to manually set your language environment</span></span><br><span class="line"><span class="comment"># export LANG=en_US.UTF-8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Preferred editor for local and remote sessions</span></span><br><span class="line"><span class="comment"># if [[ -n $SSH_CONNECTION ]]; then</span></span><br><span class="line"><span class="comment">#   export EDITOR='vim'</span></span><br><span class="line"><span class="comment"># else</span></span><br><span class="line"><span class="comment">#   export EDITOR='mvim'</span></span><br><span class="line"><span class="comment"># fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Compilation flags</span></span><br><span class="line"><span class="comment"># export ARCHFLAGS="-arch x86_64"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set personal aliases, overriding those provided by oh-my-zsh libs,</span></span><br><span class="line"><span class="comment"># plugins, and themes. Aliases can be placed here, though oh-my-zsh</span></span><br><span class="line"><span class="comment"># users are encouraged to define aliases within the ZSH_CUSTOM folder.</span></span><br><span class="line"><span class="comment"># For a full list of active aliases, run `alias`.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Example aliases</span></span><br><span class="line"><span class="comment"># alias zshconfig="mate ~/.zshrc"</span></span><br><span class="line"><span class="comment"># alias ohmyzsh="mate ~/.oh-my-zsh"</span></span><br><span class="line"><span class="built_in">alias</span> py=<span class="string">"python"</span></span><br><span class="line"><span class="built_in">alias</span> py3=<span class="string">"python3"</span></span><br><span class="line"><span class="built_in">alias</span> sqlmap=<span class="string">"python /home/subv/sqlmap-dev/sqlmap.py"</span></span><br><span class="line"><span class="built_in">alias</span> docker=<span class="string">"sudo docker"</span></span><br><span class="line"><span class="built_in">alias</span> dc=<span class="string">"docker-compose"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> setproxy=<span class="string">"export ALL_PROXY=socks5://127.0.0.1:10808"</span></span><br><span class="line"><span class="built_in">alias</span> unsetproxy=<span class="string">"unset ALL_PROXY"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="install-sh"><a href="#install-sh" class="headerlink" title="install.sh"></a>install.sh</h3><blockquote>
+<p> 个人用，不要直接复制运行</p>
+</blockquote>
+<p>vim打开 <code>:set ff=unix</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">cd</span> ~/</span><br><span class="line">sudo sed -i <span class="string">'s/archive.ubuntu.com/mirrors.ustc.edu.cn/g'</span> /etc/apt/sources.list</span><br><span class="line">sudo apt update -y</span><br><span class="line">sudo apt install zsh python2.7 python3-pip neovim nmap hydra  -y</span><br><span class="line">sudo apt autoremove vim nano -y</span><br><span class="line"></span><br><span class="line">pip3 install -i https://mirrors.ustc.edu.cn/pypi/web/simple pip -U</span><br><span class="line">pip3 config <span class="built_in">set</span> global.index-url https://mirrors.ustc.edu.cn/pypi/web/simple</span><br><span class="line">sudo apt install python-dev -y</span><br><span class="line"></span><br><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line">sudo add-apt-repository \</span><br><span class="line">   <span class="string">"deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \</span></span><br><span class="line"><span class="string">   <span class="variable">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">   stable"</span></span><br><span class="line"></span><br><span class="line">sudo apt update -y</span><br><span class="line">sudo apt install -y docker-ce</span><br><span class="line">pip3 install docker-compose</span><br><span class="line"></span><br><span class="line">sh -c <span class="string">'curl -fLo "$&#123;XDG_DATA_HOME:-$HOME/.local/share&#125;"/nvim/site/autoload/plug.vim --create-dirs \</span></span><br><span class="line"><span class="string">       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'</span></span><br><span class="line"></span><br><span class="line">sudo mkdir ~/.config</span><br><span class="line">sudo mkdir ~/.config/nvim/</span><br><span class="line">sudo mkdir /etc/docker/</span><br><span class="line">sudo mv ~/config/daemon.json /etc/docker/</span><br><span class="line">sudo mv ~/config/init.vim ~/.config/nvim/</span><br><span class="line">sudo apt install nodejs -y</span><br><span class="line">sudo apt-get install yarn -y</span><br><span class="line"></span><br><span class="line">sudo apt upgrade -y</span><br><span class="line">vim +PlugInstall +qall</span><br><span class="line"></span><br><span class="line">sudo rm -rf ~/.oh-my-zsh/</span><br><span class="line">sudo rm -rf ~/.zshrc</span><br><span class="line">sh -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Do you want to set the git proxy(y/N)?"</span></span><br><span class="line"><span class="built_in">read</span> input</span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$input</span> = <span class="string">"y"</span> ]] || [[ <span class="variable">$input</span> = <span class="string">"Y"</span> ]]; <span class="keyword">then</span></span><br><span class="line">	host_ip=$(cat /etc/resolv.conf |grep <span class="string">"nameserver"</span> |cut -f 2 -d <span class="string">" "</span>)</span><br><span class="line">	git config --global http.https://github.com.proxy socks5://<span class="variable">$host_ip</span>:10808</span><br><span class="line">	git config --global https.https://github.com.proxy socks5://<span class="variable">$host_ip</span>:10808</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"you can use this command by youself: git config --global https.https://github.com.proxy https://host_ip:port"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-autosuggestions</span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-syntax-highlighting</span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/zsh-users/zsh-completions <span class="variable">$&#123;ZSH_CUSTOM:=~/.oh-my-zsh/custom&#125;</span>/plugins/zsh-completions</span><br><span class="line">cat ~/config/zshrc &gt;&gt; .zshrc</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/maurosoria/dirsearch.git /opt/dirsearch</span><br><span class="line">sudo ln -sf /opt/dirsearch/dirsearch.py  /usr/<span class="built_in">local</span>/bin/dirsearch</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/offensive-security/exploitdb.git /opt/exploitdb</span><br><span class="line">sudo ln -sf /opt/exploitdb/searchsploit /usr/<span class="built_in">local</span>/bin/searchsploit</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev</span><br><span class="line"></span><br><span class="line">sudo git <span class="built_in">clone</span> --depth=1 https://github.com/vulhub/vulhub.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"input  :CocInstall coc-cmake  coc-git coc-highlight  coc-json  coc-python coc-sh  coc-snippets coc-syntax   in the vim command"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"========================================="</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"=============Good, Enjoy it.============="</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"========================================="</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="WindowsTeminal"><a href="#WindowsTeminal" class="headerlink" title="WindowsTeminal"></a>WindowsTeminal</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This file was initially generated by Windows Terminal Preview 1.5.3242.0</span></span><br><span class="line"><span class="comment">// It should still be usable in newer versions, but newer versions might have additional</span></span><br><span class="line"><span class="comment">// settings, help text, or changes that you will not see unless you clear this file</span></span><br><span class="line"><span class="comment">// and let us generate a new one for you.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// To view the default settings, hold "alt" while clicking on the "Settings" button.</span></span><br><span class="line"><span class="comment">// For documentation on these settings, see: https://aka.ms/terminal-documentation</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"$schema"</span>: <span class="string">"https://aka.ms/terminal-profiles-schema"</span>,</span><br><span class="line"></span><br><span class="line">    <span class="attr">"defaultProfile"</span>: <span class="string">"&#123;2c4de342-38b7-51cf-b940-2309a097f518&#125;"</span>,</span><br><span class="line">   </span><br><span class="line">    <span class="attr">"initialCols"</span>: <span class="number">81</span>,           <span class="comment">//终端窗口初始宽度</span></span><br><span class="line">	<span class="attr">"initialRows"</span>: <span class="number">26</span>,            <span class="comment">//终端窗口初始高度</span></span><br><span class="line">    <span class="comment">// You can add more global application settings here.</span></span><br><span class="line">    <span class="comment">// To learn more about global settings, visit https://aka.ms/terminal-global-settings</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// If enabled, selections are automatically copied to your clipboard.</span></span><br><span class="line">    <span class="attr">"copyOnSelect"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If enabled, formatted data is also copied to your clipboard</span></span><br><span class="line">    <span class="attr">"copyFormatting"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// A profile specifies a command to execute paired with information about how it should look and feel.</span></span><br><span class="line">    <span class="comment">// Each one of them will appear in the 'New Tab' dropdown,</span></span><br><span class="line">    <span class="comment">//   and can be invoked from the commandline with `wt.exe -p xxx`</span></span><br><span class="line">    <span class="comment">// To learn more about profiles, visit https://aka.ms/terminal-profile-settings</span></span><br><span class="line">    <span class="attr">"profiles"</span>:</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"defaults"</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Put settings here that you want to apply to all profiles.</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"list"</span>:</span><br><span class="line">        [</span><br><span class="line"></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"guid"</span>: <span class="string">"&#123;2c4de342-38b7-51cf-b940-2309a097f518&#125;"</span>,</span><br><span class="line">                <span class="attr">"hidden"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"Ubuntu"</span>,</span><br><span class="line">                <span class="attr">"source"</span>: <span class="string">"Windows.Terminal.Wsl"</span>,</span><br><span class="line">                <span class="attr">"fontFace"</span> : <span class="string">"monaco"</span>,</span><br><span class="line">               <span class="attr">"padding"</span> : <span class="string">"5, 5, 5, 5"</span>,</span><br><span class="line">               <span class="attr">"suppressApplicationTitle"</span>: <span class="literal">true</span>,</span><br><span class="line">               <span class="attr">"tabTitle"</span>: <span class="string">"Ubuntu"</span>,</span><br><span class="line">               <span class="attr">"acrylicOpacity"</span>: <span class="number">0.7</span>,</span><br><span class="line">               <span class="attr">"useAcrylic"</span>: <span class="literal">true</span>,</span><br><span class="line">               <span class="attr">"acrylicOpacity"</span> : <span class="number">0.70</span>,</span><br><span class="line">               <span class="attr">"cursorColor"</span>: <span class="string">"#4ab118"</span>, <span class="comment">//光标颜色</span></span><br><span class="line">               <span class="attr">"fontSize"</span>: <span class="number">11</span>,</span><br><span class="line">               <span class="attr">"snapOnInput"</span> : <span class="literal">true</span>,</span><br><span class="line">               <span class="attr">"cursorShape"</span>: <span class="string">"filledBox"</span>, <span class="comment">//光标形状</span></span><br><span class="line">				<span class="attr">"commandline"</span>: <span class="string">"ubuntu"</span>,</span><br><span class="line">               <span class="attr">"colorScheme"</span> : <span class="string">"Ubuntu"</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Make changes here to the powershell.exe profile.</span></span><br><span class="line">                <span class="attr">"guid"</span>: <span class="string">"&#123;61c54bbd-c2c6-5271-96e7-009a87ff44bf&#125;"</span>,</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"Windows PowerShell"</span>,</span><br><span class="line">                <span class="attr">"commandline"</span>: <span class="string">"powershell.exe"</span>,</span><br><span class="line">                <span class="attr">"hidden"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"fontFace"</span> : <span class="string">"monaco"</span>,</span><br><span class="line">               <span class="attr">"hidden"</span>: <span class="literal">false</span>,</span><br><span class="line">               <span class="attr">"acrylicOpacity"</span>: <span class="number">0.7</span>,</span><br><span class="line">               <span class="attr">"useAcrylic"</span>: <span class="literal">true</span>,</span><br><span class="line">               <span class="attr">"colorScheme"</span> : <span class="string">"AdventureTime"</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Make changes here to the cmd.exe profile.</span></span><br><span class="line">                <span class="attr">"guid"</span>: <span class="string">"&#123;0caa0dad-35be-5f56-a8ff-afceeeaa6101&#125;"</span>,</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"命令提示符"</span>,</span><br><span class="line">                <span class="attr">"commandline"</span>: <span class="string">"cmd.exe"</span>,</span><br><span class="line">                <span class="attr">"hidden"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"fontFace"</span> : <span class="string">"monaco"</span>,</span><br><span class="line">               <span class="attr">"padding"</span> : <span class="string">"5, 5, 5, 5"</span>,</span><br><span class="line">               <span class="attr">"suppressApplicationTitle"</span>: <span class="literal">false</span>,</span><br><span class="line">               <span class="attr">"tabTitle"</span>: <span class="string">"CMD"</span>,</span><br><span class="line">              <span class="attr">"colorScheme"</span> : <span class="string">"Ubuntu"</span>,</span><br><span class="line">               <span class="attr">"cursorColor"</span>: <span class="string">"#4ab118"</span>, <span class="comment">//光标颜色</span></span><br><span class="line">               <span class="attr">"fontSize"</span>: <span class="number">11</span>,</span><br><span class="line">               <span class="attr">"snapOnInput"</span> : <span class="literal">true</span>,</span><br><span class="line">               <span class="attr">"cursorShape"</span>: <span class="string">"filledBox"</span>,</span><br><span class="line">               <span class="attr">"startingDirectory"</span>: <span class="string">"D:\\Xray"</span>,</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"guid"</span>: <span class="string">"&#123;b453ae62-4e3d-5e58-b989-0a998ec441b8&#125;"</span>,</span><br><span class="line">                <span class="attr">"hidden"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"Azure Cloud Shell"</span>,</span><br><span class="line">                <span class="attr">"source"</span>: <span class="string">"Windows.Terminal.Azure"</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add custom color schemes to this array.</span></span><br><span class="line">    <span class="comment">// To learn more about color schemes, visit https://aka.ms/terminal-color-schemes</span></span><br><span class="line">    <span class="attr">"schemes"</span>: [              &#123;</span><br><span class="line">           <span class="attr">"name"</span>: <span class="string">"Ubuntu"</span>,</span><br><span class="line">           <span class="attr">"black"</span>: <span class="string">"#2e3436"</span>,</span><br><span class="line">           <span class="attr">"red"</span>: <span class="string">"#cc0000"</span>,</span><br><span class="line">           <span class="attr">"green"</span>: <span class="string">"#2fff24"</span>,</span><br><span class="line">           <span class="attr">"yellow"</span>: <span class="string">"#c4a000"</span>,</span><br><span class="line">           <span class="attr">"blue"</span>: <span class="string">"#3465a4"</span>,</span><br><span class="line">           <span class="attr">"purple"</span>: <span class="string">"#75507b"</span>,</span><br><span class="line">           <span class="attr">"cyan"</span>: <span class="string">"#06989a"</span>,</span><br><span class="line">           <span class="attr">"white"</span>: <span class="string">"#d3d7cf"</span>,</span><br><span class="line">           <span class="attr">"brightBlack"</span>: <span class="string">"#555753"</span>,</span><br><span class="line">           <span class="attr">"brightRed"</span>: <span class="string">"#ef2929"</span>,</span><br><span class="line">           <span class="attr">"brightGreen"</span>: <span class="string">"#8ae234"</span>,</span><br><span class="line">           <span class="attr">"brightYellow"</span>: <span class="string">"#fce94f"</span>,</span><br><span class="line">           <span class="attr">"brightBlue"</span>: <span class="string">"#729fcf"</span>,</span><br><span class="line">           <span class="attr">"brightPurple"</span>: <span class="string">"#ad7fa8"</span>,</span><br><span class="line">           <span class="attr">"brightCyan"</span>: <span class="string">"#34e2e2"</span>,</span><br><span class="line">           <span class="attr">"brightWhite"</span>: <span class="string">"#eeeeec"</span>,</span><br><span class="line">           <span class="attr">"background"</span>: <span class="string">"#300a24"</span>,</span><br><span class="line">           <span class="attr">"foreground"</span>: <span class="string">"#eeeeec"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       &#123;</span><br><span class="line">           <span class="attr">"name"</span>: <span class="string">"AdventureTime"</span>,</span><br><span class="line">           <span class="attr">"black"</span>: <span class="string">"#050404"</span>,</span><br><span class="line">           <span class="attr">"red"</span>: <span class="string">"#bd0013"</span>,</span><br><span class="line">           <span class="attr">"green"</span>: <span class="string">"#4ab118"</span>,</span><br><span class="line">           <span class="attr">"yellow"</span>: <span class="string">"#e7741e"</span>,</span><br><span class="line">           <span class="attr">"blue"</span>: <span class="string">"#0f4ac6"</span>,</span><br><span class="line">           <span class="attr">"purple"</span>: <span class="string">"#665993"</span>,</span><br><span class="line">           <span class="attr">"cyan"</span>: <span class="string">"#70a598"</span>,</span><br><span class="line">           <span class="attr">"white"</span>: <span class="string">"#f8dcc0"</span>,</span><br><span class="line">           <span class="attr">"brightBlack"</span>: <span class="string">"#4e7cbf"</span>,</span><br><span class="line">           <span class="attr">"brightRed"</span>: <span class="string">"#fc5f5a"</span>,</span><br><span class="line">           <span class="attr">"brightGreen"</span>: <span class="string">"#9eff6e"</span>,</span><br><span class="line">           <span class="attr">"brightYellow"</span>: <span class="string">"#efc11a"</span>,</span><br><span class="line">           <span class="attr">"brightBlue"</span>: <span class="string">"#1997c6"</span>,</span><br><span class="line">           <span class="attr">"brightPurple"</span>: <span class="string">"#9b5953"</span>,</span><br><span class="line">           <span class="attr">"brightCyan"</span>: <span class="string">"#c8faf4"</span>,</span><br><span class="line">           <span class="attr">"brightWhite"</span>: <span class="string">"#f6f5fb"</span>,</span><br><span class="line">           <span class="attr">"background"</span>: <span class="string">"#1f1d45"</span>,</span><br><span class="line">           <span class="attr">"foreground"</span>: <span class="string">"#f8dcc0"</span></span><br><span class="line">         &#125;],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add custom actions and keybindings to this array.</span></span><br><span class="line">    <span class="comment">// To unbind a key combination from your defaults.json, set the command to "unbound".</span></span><br><span class="line">    <span class="comment">// To learn more about actions and keybindings, visit https://aka.ms/terminal-keybindings</span></span><br><span class="line">    <span class="attr">"actions"</span>:</span><br><span class="line">    [</span><br><span class="line">        <span class="comment">// Copy and paste are bound to Ctrl+Shift+C and Ctrl+Shift+V in your defaults.json.</span></span><br><span class="line">        <span class="comment">// These two lines additionally bind them to Ctrl+C and Ctrl+V.</span></span><br><span class="line">        <span class="comment">// To learn more about selection, visit https://aka.ms/terminal-selection</span></span><br><span class="line">      &#123; <span class="attr">"command"</span>: &#123;<span class="attr">"action"</span>: <span class="string">"copy"</span>, <span class="attr">"singleLine"</span>: <span class="literal">false</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+c"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: <span class="string">"paste"</span>, <span class="attr">"keys"</span>: <span class="string">"ctrl+v"</span> &#125;,</span><br><span class="line">       <span class="comment">// Press Ctrl+Shift+F to open the search box</span></span><br><span class="line">       &#123; <span class="attr">"command"</span>: <span class="string">"find"</span>, <span class="attr">"keys"</span>: <span class="string">"ctrl+f"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"moveFocus"</span>, <span class="attr">"direction"</span>: <span class="string">"down"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+down"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"moveFocus"</span>, <span class="attr">"direction"</span>: <span class="string">"left"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+left"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"moveFocus"</span>, <span class="attr">"direction"</span>: <span class="string">"right"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+right"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"moveFocus"</span>, <span class="attr">"direction"</span>: <span class="string">"up"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+up"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"resizePane"</span>, <span class="attr">"direction"</span>: <span class="string">"down"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"alt+down"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"resizePane"</span>, <span class="attr">"direction"</span>: <span class="string">"left"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"alt+left"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"resizePane"</span>, <span class="attr">"direction"</span>: <span class="string">"right"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"alt+right"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"resizePane"</span>, <span class="attr">"direction"</span>: <span class="string">"up"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"alt+up"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: <span class="string">"closePane"</span>, <span class="attr">"keys"</span>: <span class="string">"ctrl+q"</span> &#125;,</span><br><span class="line"></span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"newTab"</span>, <span class="attr">"index"</span>: <span class="number">0</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+1"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"newTab"</span>, <span class="attr">"index"</span>: <span class="number">1</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+2"</span> &#125;,</span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"newTab"</span>, <span class="attr">"index"</span>: <span class="number">2</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+3"</span> &#125;,</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       <span class="comment">// Press Alt+Shift+D to open a new pane.</span></span><br><span class="line">       <span class="comment">// - "split": "auto" makes this pane open in the direction that provides the most surface area.</span></span><br><span class="line">       <span class="comment">// - "splitMode": "duplicate" makes the new pane use the focused pane's profile.</span></span><br><span class="line">       <span class="comment">// To learn more about panes, visit https://aka.ms/terminal-panes</span></span><br><span class="line">       &#123; <span class="attr">"command"</span>: &#123; <span class="attr">"action"</span>: <span class="string">"splitPane"</span>, <span class="attr">"split"</span>: <span class="string">"auto"</span>, <span class="attr">"splitMode"</span>: <span class="string">"duplicate"</span> &#125;, <span class="attr">"keys"</span>: <span class="string">"ctrl+w"</span> &#125;,</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Sublimetext3"><a href="#Sublimetext3" class="headerlink" title="Sublimetext3"></a>Sublimetext3</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"auto_complete"</span>: <span class="literal">true</span>,</span><br><span class="line">	<span class="attr">"auto_match_enabled"</span>: <span class="literal">false</span>,</span><br><span class="line">	<span class="attr">"color_scheme"</span>: <span class="string">"Packages/Color Scheme - Default/Monokai.sublime-color-scheme"</span>,</span><br><span class="line">	<span class="attr">"dictionary"</span>: <span class="string">"Packages/Language - English/en_GB.dic"</span>,</span><br><span class="line">	<span class="attr">"font_face"</span>: <span class="string">"monaco"</span>,</span><br><span class="line">	<span class="attr">"font_size"</span>: <span class="number">12</span>,</span><br><span class="line">	<span class="attr">"ignored_packages"</span>:</span><br><span class="line">	[</span><br><span class="line"> <span class="string">"Vintage"</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">bracket:</span><br><span class="line">&#123;</span><br><span class="line">   <span class="attr">"bracket_styles"</span>: &#123;</span><br><span class="line">       <span class="comment">// `default` and `unmatched` styles are special</span></span><br><span class="line">       <span class="comment">// styles. If they are not defined here,</span></span><br><span class="line">       <span class="comment">// they will be generated internally with</span></span><br><span class="line">       <span class="comment">// internal defaults.</span></span><br><span class="line">       <span class="comment">// `default` style defines attributes that</span></span><br><span class="line">       <span class="comment">// will be used for any style that does not</span></span><br><span class="line">       <span class="comment">// explicitly define that attribute.  So if</span></span><br><span class="line">       <span class="comment">// a style does not define a color, it will</span></span><br><span class="line">       <span class="comment">// use the color from the "default" style.</span></span><br><span class="line">       <span class="attr">"default"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"dot"</span>,</span><br><span class="line">           <span class="comment">// Support the old convention of `brackethighlighter.default`</span></span><br><span class="line">           <span class="comment">// for themes that already provide something.</span></span><br><span class="line">           <span class="comment">// As this has always been the only one we've provided</span></span><br><span class="line">           <span class="comment">// by default, all the others will use region-ish colors.</span></span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.yellowish brackethighlighter.default"</span>,</span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">           <span class="attr">"style"</span>: <span class="string">"hightlight"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="comment">// This particular style is used to highlight</span></span><br><span class="line">       <span class="comment">// unmatched bracket pairs.  It is a special</span></span><br><span class="line">       <span class="comment">// style.</span></span><br><span class="line">       <span class="attr">"unmatched"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"question"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.redish"</span>,</span><br><span class="line">           <span class="attr">"style"</span>: <span class="string">"outline"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="comment">// User defined region styles</span></span><br><span class="line">       <span class="attr">"curly"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"curly_bracket"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.purplish"</span>,</span><br><span class="line">           <span class="attr">"style"</span>: <span class="string">"hightlight"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"round"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"round_bracket"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.yellowish"</span>,</span><br><span class="line">           <span class="attr">"style"</span>: <span class="string">"hightlight"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"square"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"square_bracket"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.bluish"</span>,</span><br><span class="line">           <span class="attr">"style"</span>: <span class="string">"hightlight"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="comment">//下面的都是原来的样式</span></span><br><span class="line">       <span class="attr">"angle"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"angle_bracket"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.orangish"</span></span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"tag"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"tag"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.orangish"</span></span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"c_define"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"hash"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.yellowish"</span></span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"single_quote"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"single_quote"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.greenish"</span></span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"double_quote"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"double_quote"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.greenish"</span></span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">       &#125;,</span><br><span class="line">       <span class="attr">"regex"</span>: &#123;</span><br><span class="line">           <span class="attr">"icon"</span>: <span class="string">"star"</span>,</span><br><span class="line">           <span class="attr">"color"</span>: <span class="string">"region.greenish"</span></span><br><span class="line">           <span class="comment">// "style": "underline"</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-03-23T07:34:48.875Z" itemprop="dateUpdated">2021-03-23 15:34:48</time>
+</span><br>
+
+
+        
+        <a href="/2021/03/21/config/" target="_blank" rel="external">https://subv.icu/2021/03/21/config/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://subv.icu">
+            <img src="/img/avatar.jpg" alt="subv">
+            subv
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WSL2%E9%85%8D%E7%BD%AE/" rel="tag">WSL2配置</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://subv.icu/2021/03/21/config/&title=《Ubuntu配置》 — subv's blog&pic=https://subv.icu/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://subv.icu/2021/03/21/config/&title=《Ubuntu配置》 — subv's blog&source=重回Ubuntu
+
+Windows20H2 + WSL2 + WindowTerminal" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://subv.icu/2021/03/21/config/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Ubuntu配置》 — subv's blog&url=https://subv.icu/2021/03/21/config/&via=https://subv.icu" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://subv.icu/2021/03/21/config/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2021/03/22/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2--%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">内网安全攻防--隐藏通信隧道技术</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>subv &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://subv.icu/2021/03/21/config/&title=《Ubuntu配置》 — subv's blog&pic=https://subv.icu/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://subv.icu/2021/03/21/config/&title=《Ubuntu配置》 — subv's blog&source=重回Ubuntu
+
+Windows20H2 + WSL2 + WindowTerminal" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://subv.icu/2021/03/21/config/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Ubuntu配置》 — subv's blog&url=https://subv.icu/2021/03/21/config/&via=https://subv.icu" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://subv.icu/2021/03/21/config/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwUlEQVR42u3aS27DMAwFwN7/0u4Biih8pKQ2xWhlxI492hD86OurvJ4fa/3M+vf1ezYsXFzcMfdZrjql/p5X1+v/4uLi3ue+ihjrZ9ahav5+XFzcT+Guw1wvGcLFxf1/3LRkwsXF/RRuWrT0WhtXazVcXNwBd/6Z+fWR/i4uLm6L+4SrnhjVg1TwdVxc3CvcekCZpEG9JuzL9+Di4h7mpqVIb0uVZkepuMLFxb3IraQvk2Sospk4I8PFxb3CXRPro9b0yaARg4uLe4X7pioq362z0m2U5j+4uLhbuRNivZ2aBrK4+MHFxT3MrbdCeock6ulUKZDh4uIe5qYN095ApT6SCWo1XFzcA9x6yjIpbHoDmzdDVlxc3APctIxJxyqT4qfUKsXFxT3M7RUt9cOa2wIiLi7uRW4akuZD1nqjFhcX97e4caoRbqB38CK4jYuLu4n7hKvX/tg2jMHFxb3Cra90OFoJhWmgxMXFvcndFbzS01Pp77i4uPe5veJn0iqtFz/b2iK4uLiHufORajp8xcXF/cvcXhkT93F3BTJcXNwBNz1clW41DXnNmTAuLu4m7iToTJodlVHKqL+Li4vb4X4DlT/YV50cSpwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '2';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '1';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
