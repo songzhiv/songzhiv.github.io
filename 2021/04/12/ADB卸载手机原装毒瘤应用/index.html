@@ -21,19 +21,19 @@
     
     
     <meta name="keywords" content="">
-    <meta name="description" content="我的手机系统是miui12.5，其他手机也类似 准备下载google adb工具并解压  进入开发者模式。miui中进入设置&#x3D;》我的****设备&#x3D;》全部参数。连续点击5下miui版本进入开发者模式。 数据线链接电脑。 回到设置中搜索框输入开发者选项，点进去找到USB调试，接受风险打开。 进入adb目录打开cmd或者powershell  输入.\adb.exe shell 显示下面这样就成功链接了">
+    <meta name="description" content="我的手机系统是miui12.5，其他手机也类似">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ADB卸载手机原装毒瘤应用">
 <meta property="og:url" content="https://subv.icu/2021/04/12/ADB%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E6%AF%92%E7%98%A4%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="subv&#39;s blog">
-<meta property="og:description" content="我的手机系统是miui12.5，其他手机也类似 准备下载google adb工具并解压  进入开发者模式。miui中进入设置&#x3D;》我的****设备&#x3D;》全部参数。连续点击5下miui版本进入开发者模式。 数据线链接电脑。 回到设置中搜索框输入开发者选项，点进去找到USB调试，接受风险打开。 进入adb目录打开cmd或者powershell  输入.\adb.exe shell 显示下面这样就成功链接了">
+<meta property="og:description" content="我的手机系统是miui12.5，其他手机也类似">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617976291146-d7571877-37ac-452a-aba7-6dcb137c521b.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975324410-5e1febfd-3204-403e-9fce-fab8f8930cab.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975365177-b6785a7d-cc51-4eec-a4d9-93edf9275bfc.png">
 <meta property="article:published_time" content="2021-04-12T04:42:26.258Z">
-<meta property="article:modified_time" content="2021-04-15T08:42:55.188Z">
+<meta property="article:modified_time" content="2021-04-15T08:48:47.629Z">
 <meta property="article:author" content="subv">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png">
@@ -193,8 +193,8 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>我的手机系统是miui12.5，其他手机也类似</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p><a href="https://developer.android.google.cn/studio/releases/platform-tools?hl=zh-cn#downloads" target="_blank" rel="noopener">下载google adb工具</a>并解压</p>
+            <p>我的手机系统是miui12.5，其他手机也类似<a id="more"></a></p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先<a href="https://developer.android.google.cn/studio/releases/platform-tools?hl=zh-cn#downloads" target="_blank" rel="noopener">下载google adb工具</a>并解压</p>
 <ol>
 <li>进入开发者模式。miui中进入<strong>设置</strong>=》<strong>我的****设备</strong>=》<strong>全部参数</strong>。连续点击5下<strong>miui版本</strong>进入开发者模式。</li>
 <li>数据线链接电脑。</li>
@@ -205,34 +205,34 @@
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png" alt="image.png" title="">
+                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png" alt="1-1" title="">
                 </div>
-                <div class="image-caption">image.png</div>
+                <div class="image-caption">1-1</div>
             </figure>
 
 <h2 id="卸载垃圾应用"><a href="#卸载垃圾应用" class="headerlink" title="卸载垃圾应用"></a>卸载垃圾应用</h2><p>命令 pm uninstall –user 0 com.miui.systemAdSolution    最后跟的是应用的包名，包名可以在应用管理中查看，想卸载哪个应用就点开那个应用，把最后的包名替换就行了。success就表示成功了。</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617976291146-d7571877-37ac-452a-aba7-6dcb137c521b.png" alt="image.png" title="">
+                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617976291146-d7571877-37ac-452a-aba7-6dcb137c521b.png" alt="1-2" title="">
                 </div>
-                <div class="image-caption">image.png</div>
+                <div class="image-caption">1-2</div>
             </figure>
 
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975324410-5e1febfd-3204-403e-9fce-fab8f8930cab.png" alt="image.png" title="">
+                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975324410-5e1febfd-3204-403e-9fce-fab8f8930cab.png" alt="1-3" title="">
                 </div>
-                <div class="image-caption">image.png</div>
+                <div class="image-caption">1-3</div>
             </figure>
 
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975365177-b6785a7d-cc51-4eec-a4d9-93edf9275bfc.png" alt="image.png" title="">
+                    <img src="https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975365177-b6785a7d-cc51-4eec-a4d9-93edf9275bfc.png" alt="1-4" title="">
                 </div>
-                <div class="image-caption">image.png</div>
+                <div class="image-caption">1-4</div>
             </figure>
 
 <p>下面是我卸载的应用</p>
@@ -251,7 +251,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2021-04-15T08:42:55.188Z" itemprop="dateUpdated">2021-04-15 16:42:55</time>
+    Last updated: <time datetime="2021-04-15T08:48:47.629Z" itemprop="dateUpdated">2021-04-15 16:48:47</time>
 </span><br>
 
 
@@ -295,7 +295,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://subv.icu/2021/04/12/ADB%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E6%AF%92%E7%98%A4%E5%BA%94%E7%94%A8/&title=《ADB卸载手机原装毒瘤应用》 — subv's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://subv.icu/2021/04/12/ADB%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E6%AF%92%E7%98%A4%E5%BA%94%E7%94%A8/&title=《ADB卸载手机原装毒瘤应用》 — subv's blog&source=我的手机系统是miui12.5，其他手机也类似" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -447,7 +447,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://subv.icu/2021/04/12/ADB%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E6%AF%92%E7%98%A4%E5%BA%94%E7%94%A8/&title=《ADB卸载手机原装毒瘤应用》 — subv's blog&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://subv.icu/2021/04/12/ADB%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E6%AF%92%E7%98%A4%E5%BA%94%E7%94%A8/&title=《ADB卸载手机原装毒瘤应用》 — subv's blog&source=我的手机系统是miui12.5，其他手机也类似" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
