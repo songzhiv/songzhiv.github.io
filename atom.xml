@@ -34,25 +34,6 @@
   </entry>
   
   <entry>
-    <title>内网安全攻防--隐藏通信隧道技术</title>
-    <link href="https://subv.icu/2021/03/22/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2--%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/"/>
-    <id>https://subv.icu/2021/03/22/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2--%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/</id>
-    <published>2021-03-22T08:38:54.000Z</published>
-    <updated>2021-04-12T05:03:19.986Z</updated>
-    
-    <content type="html"><![CDATA[<p>内网安全攻防第三章–隐藏通信隧道技术<a id="more"></a></p><h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><h3 id="网络层："><a href="#网络层：" class="headerlink" title="网络层："></a>网络层：</h3><p>IPv6隧道</p><p>ICMP隧道</p><p>GRE隧道</p><h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><p>TCP隧道</p><p>UDP隧道</p><p>常规端口转发</p><h3 id="应用层："><a href="#应用层：" class="headerlink" title="应用层："></a>应用层：</h3><p>SSH隧道</p><p>HTTP隧道</p><p>HTTPS隧道</p><p>DNS隧道</p><h1 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://payloads.cn/2020/0105/intranet-penetration-in-actual-combat.html" target="_blank" rel="noopener">实战中内网穿透的打法 | AnonySec’Blog</a></p><p><a href="https://xie1997.blog.csdn.net/article/details/100046761" target="_blank" rel="noopener">内网转发及隐蔽隧道_谢公子的博客-CSDN博客</a></p><p><a href="file:///D:/Collect/%E9%85%92%E4%BB%99%E6%A1%A5%E5%85%AD%E5%8F%B7%E9%83%A8%E9%98%9F/[%E9%85%92%E4%BB%99%E6%A1%A5%E5%85%AD%E5%8F%B7%E9%83%A8%E9%98%9F]%20-%202020-07-10%20%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E4%B9%8B%E4%BB%A3%E7%90%86%E8%BD%AC%E5%8F%91.html">内网渗透之代理转发</a></p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;内网安全攻防第三章–隐藏通信隧道技术</summary>
-    
-    
-    
-    
-    <category term="内网渗透" scheme="https://subv.icu/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Ubuntu配置</title>
     <link href="https://subv.icu/2021/03/21/config/"/>
     <id>https://subv.icu/2021/03/21/config/</id>
