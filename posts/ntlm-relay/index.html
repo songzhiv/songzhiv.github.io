@@ -1,34 +1,68 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-        <title>NTLM Relay1 - NMK</title><meta name="Description" content=""><meta property="og:title" content="NTLM Relay1" />
-<meta property="og:description" content="本篇主要围绕下图进行。来自 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png &#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。 触发NTLM认证。 SMB Pe" />
+        <title>NTLM Relay - 柠檬k</title><meta name="Description" content=""><meta property="og:title" content="NTLM Relay" />
+<meta property="og:description" content="本篇主要围绕下图进行。来自
+https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
+&#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
+原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
+触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
+ MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
+MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
+ 如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
+ Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
+强制身份验证通过 SMB 进行。
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
+滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
+ https://github.com/ShutdownRepo/ShadowCoerce
+python3 shadowcoerce." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/posts/ntlm-relay/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://songzhiv.github.io/posts/ntlm-relay/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-02-18T17:10:15+08:00" />
 <meta property="article:modified_time" content="2022-02-18T17:10:15+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="NTLM Relay1"/>
-<meta name="twitter:description" content="本篇主要围绕下图进行。来自 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png &#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。 触发NTLM认证。 SMB Pe"/>
-<meta name="application-name" content="NMK">
-<meta name="apple-mobile-web-app-title" content="NMK"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/ntlm-relay/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+<meta name="twitter:title" content="NTLM Relay"/>
+<meta name="twitter:description" content="本篇主要围绕下图进行。来自
+https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
+&#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
+原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
+触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
+ MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
+MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
+ 如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
+ Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
+强制身份验证通过 SMB 进行。
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
+滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
+ https://github.com/ShutdownRepo/ShadowCoerce
+python3 shadowcoerce."/>
+<meta name="application-name" content="柠檬k">
+<meta name="apple-mobile-web-app-title" content="柠檬k"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://songzhiv.github.io/posts/ntlm-relay/" /><link rel="prev" href="https://songzhiv.github.io/posts/fastjson/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "NTLM Relay1",
-        "inLanguage": "zh-CN",
+        "headline": "NTLM Relay",
+        "inLanguage": "",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/posts\/ntlm-relay\/"
-        },"genre": "posts","wordcount":  2711 ,
-        "url": "http:\/\/example.org\/posts\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-18T17:10:15+08:00","publisher": {
+            "@id": "https:\/\/songzhiv.github.io\/posts\/ntlm-relay\/"
+        },"genre": "posts","wordcount":  344 ,
+        "url": "https:\/\/songzhiv.github.io\/posts\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-18T17:10:15+08:00","publisher": {
             "@type": "Organization",
             "name": "作者"},"author": {
                 "@type": "Person",
@@ -41,7 +75,7 @@
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="NMK">NMK</a>
+            <a href="/" title="柠檬k">柠檬k</a>
         </div>
         <div class="menu">
             <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
@@ -54,7 +88,7 @@
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="NMK">NMK</a>
+                <a href="/" title="柠檬k">柠檬k</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
@@ -75,10 +109,10 @@
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
             <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay1</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2711 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>作者</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 344 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -193,7 +227,9 @@ xp_dirtree <span class="s1">&#39;\\hostname@1234\test&#39;</span> --http
 <h4 id="webdav">WEBDAV</h4>
 <p>在开启<code>webclient</code>（需要安装<code>webdav</code>，开启<code>webclient</code>）时，可结合<code>PetitPotam</code> 、<code>PinterBug</code>发出HTTP的认证</p>
 <p>[安装webdav与开启webclient参考链接](<a href="https://theitbros.com/installing-webdav-client-windows-server-2016/]%28https:/theitbros.com/installing-webdav-client-windows-server-2016/%29" target="_blank" rel="noopener noreffer">https://theitbros.com/installing-webdav-client-windows-server-2016/](https:/theitbros.com/installing-webdav-client-windows-server-2016/)</a></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">外发HTTP类型认证需要在可信域中，所以需要在域内添加一条DNS记录。或者端口转发域内机器
+
+Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 </code></pre></div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -473,7 +509,7 @@ xp_dirtree <span class="s1">&#39;\\hostname@1234\test&#39;</span> --http
         </section>
     </div>
 
-    <div class="post-nav"></div>
+    <div class="post-nav"><a href="/posts/fastjson/" class="prev" rel="prev" title="Fastjson利用总结"><i class="fas fa-angle-left fa-fw"></i>Fastjson利用总结</a></div>
 </div>
 </article></div>
             </main><footer class="footer">

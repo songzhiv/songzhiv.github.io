@@ -1,7 +1,7 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tags - 标签 - NMK</title>
-        <link>http://example.org/tags/</link>
-        <description>Tags - 标签 - NMK</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><atom:link href="http://example.org/tags/" rel="self" type="application/rss+xml" /></channel>
+        <title>Tags - 标签 - 柠檬k</title>
+        <link>https://songzhiv.github.io/tags/</link>
+        <description>Tags - 标签 - 柠檬k</description>
+        <generator>Hugo -- gohugo.io</generator><atom:link href="https://songzhiv.github.io/tags/" rel="self" type="application/rss+xml" /></channel>
 </rss>

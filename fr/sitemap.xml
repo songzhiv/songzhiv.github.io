@@ -5,11 +5,11 @@
             <loc>https://example.com/fr/categories/</loc><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
                         rel="alternate"
                         hreflang="en"
-                        href="https://example.com/en/categories/"
+                        href="https://example.com/categories/"
                         /><xhtml:link
                         rel="alternate"
                         hreflang="zh-cn"
-                        href="https://example.com/categories/"
+                        href="https://example.com/zh-cn/categories/"
                         /><xhtml:link
                     rel="alternate"
                     hreflang="fr"
@@ -18,11 +18,11 @@
             <loc>https://example.com/fr/</loc><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
                         rel="alternate"
                         hreflang="en"
-                        href="https://example.com/en/"
+                        href="https://example.com/"
                         /><xhtml:link
                         rel="alternate"
                         hreflang="zh-cn"
-                        href="https://example.com/"
+                        href="https://example.com/zh-cn/"
                         /><xhtml:link
                     rel="alternate"
                     hreflang="fr"
@@ -31,11 +31,11 @@
             <loc>https://example.com/fr/tags/</loc><changefreq>weekly</changefreq><priority>0.5</priority><xhtml:link
                         rel="alternate"
                         hreflang="en"
-                        href="https://example.com/en/tags/"
+                        href="https://example.com/tags/"
                         /><xhtml:link
                         rel="alternate"
                         hreflang="zh-cn"
-                        href="https://example.com/tags/"
+                        href="https://example.com/zh-cn/tags/"
                         /><xhtml:link
                     rel="alternate"
                     hreflang="fr"

@@ -3,7 +3,7 @@
 
 **收集自己看过的没看过的文章。日后学习。**
 
-# AD
+# AD域
 
 [windows protocol](https://daiker.gitbook.io/windows-protocol/)
 

