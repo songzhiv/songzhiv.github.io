@@ -21,7 +21,7 @@ https://github.com/topotam/PetitPotam
 > MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
 >
 
-如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
 
 ![image.png](https://s2.loli.net/2022/02/18/BZsARCKxMv2Yyk9.png)
 
@@ -114,7 +114,9 @@ outlook与foxmail 图片预览功能支持HTTP和UNC路径，可触发SMB和http
 
 获取HTTP需要在可信域，需要添加一条DNS记录。
 
-![image.png](https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png)
+![image-20220219125011221](https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png)
+
+![image-20220219125106389](https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png)
 
 #### XXE与SSRF
 

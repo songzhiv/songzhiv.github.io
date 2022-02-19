@@ -13,7 +13,7 @@ https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
- 如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+ 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
 PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
@@ -38,7 +38,7 @@ https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
 触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
  MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
 MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
- 如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。
+ 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
 PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
  Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
 强制身份验证通过 SMB 进行。
@@ -211,7 +211,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <p>MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。</p>
 <p>MS-efs触发机器账户强制返回身份验证。默认走SMB协议。</p>
 </blockquote>
-<p>如果机器开启lsarpc的匿名访问。即可再不知道账户密码的情况下NTLM身份认证。</p>
+<p>如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
@@ -346,11 +346,19 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png"
-        data-srcset="https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png, https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png 1.5x, https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png 2x"
+        data-src="https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png"
+        data-srcset="https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png, https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png 1.5x, https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/SWyc4f5bk7K1qwn.png"
-        title="image.png" /></p>
+        alt="https://s2.loli.net/2022/02/19/rmQYGvTsH54neNP.png"
+        title="image-20220219125011221" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png"
+        data-srcset="https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png, https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png 1.5x, https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png 2x"
+        data-sizes="auto"
+        alt="https://s2.loli.net/2022/02/19/1BDOyZ5rinPSUXm.png"
+        title="image-20220219125106389" /></p>
 <h4 id="xxe与ssrf">XXE与SSRF</h4>
 <p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x0a-xxe-and-and-ssrf" target="_blank" rel="noopener noreffer">https://daiker.gitbook.io/windows-protocol/ntlm-pian/5#0x0a-xxe-and-and-ssrf</a></p>
 <blockquote>
