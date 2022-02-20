@@ -16,19 +16,21 @@
 
 输入.\adb.exe shell 显示下面这样就成功链接了
 
-![https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png](https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png)
+![img](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/1617974989237-229f2029-ae71-441c-a3c2-bcd0d822d28b.png)
 
 ## 卸载垃圾应用
 
 命令 ==pm uninstall –user 0 com.miui.systemAdSolution== 最后跟的是应用的包名，包名可以在应用管理中查看，想卸载哪个应用就点开那个应用，把最后的包名替换就行了。success就表示成功了。
 
-![https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617976291146-d7571877-37ac-452a-aba7-6dcb137c521b.png](https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617976291146-d7571877-37ac-452a-aba7-6dcb137c521b.png)
+![img](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/1617976291146-d7571877-37ac-452a-aba7-6dcb137c521b.png)
 
-![https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975324410-5e1febfd-3204-403e-9fce-fab8f8930cab.png](https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975324410-5e1febfd-3204-403e-9fce-fab8f8930cab.png)![https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975365177-b6785a7d-cc51-4eec-a4d9-93edf9275bfc.png](https://cdn.jsdelivr.net/gh/songzhiv/pic@main/img/1617975365177-b6785a7d-cc51-4eec-a4d9-93edf9275bfc.png)
+<img src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/1617975324410-5e1febfd-3204-403e-9fce-fab8f8930cab.png" alt="img" style="zoom:50%;" />        
+
+<img src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/1617975365177-b6785a7d-cc51-4eec-a4d9-93edf9275bfc.png" alt="img" style="zoom: 50%;" />
 
 下面是我卸载的应用
 
-```json
+```bash
 pm uninstall --user 0 com.miui.systemAdSolution（小米系统广告解决方案）
 pm uninstall --user 0 com.miui.analytics（小米广告分析）
 pm uninstall --user 0 com.miui.personalassistant（智能助理：既不智能，也不助理，除了卡，没别哒）

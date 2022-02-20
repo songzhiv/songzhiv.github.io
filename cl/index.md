@@ -9,6 +9,8 @@
 
 [NTLM - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/ntlm)
 
+[Penetration Testing Lab – Offensive Techniques & Methodologies](https://pentestlab.blog/)
+
 [Windows访问控制 - Windows Access Control](https://rootclay.gitbook.io/windows-access-control/)
 
 [AD域中的ACL攻防探索 - 安全客，安全资讯平台](https://www.anquanke.com/post/id/212163)
