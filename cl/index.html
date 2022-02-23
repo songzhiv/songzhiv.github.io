@@ -6,22 +6,7 @@
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <title> - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="" />
-<meta property="og:description" content="收集自己看过的没看过的文章。日后学习。
-AD域 windows protocol
-NTLM - The Hacker Recipes
-Penetration Testing Lab – Offensive Techniques &amp; Methodologies
-Windows访问控制 - Windows Access Control
-AD域中的ACL攻防探索 - 安全客，安全资讯平台
-这是一篇“不一样”的真实渗透测试案例分析文章 - 奇安信A-TEAM技术博客
-微软不认的“0day”之域内本地提权-烂番茄（Rotten Tomato） - 奇安信A-TEAM技术博客
-Project Zero: Using Kerberos for Authentication Relay Attacks
-结合CVE-2019-1040漏洞的两种域提权深度利用分析 - FreeBuf网络安全行业门户
-Abusing AD ACL - 先知社区
-渗透测试中的Exchange - 安全客，安全资讯平台
-Relaying NTLM authentication over RPC again… – Compass Security Blog
-AD CS攻击面剖析 - FreeBuf网络安全行业门户
-ADCS 攻击面挖掘与利用 - 安全客，安全资讯平台
-免杀 What is ired." />
+<meta property="og:description" content="最开始看不懂的文章，过了一段时间的学习后再回来看总会有种恍然大悟的感觉。 记录自己学习中觉得有价值的文章，以便日后再回来看。 让子弹飞一会！ AD" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://songzhiv.github.io/cl/" /><meta property="og:image" content="https://songzhiv.github.io/static/favicon.ico"/><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-02-18T17:10:15+08:00" />
@@ -31,22 +16,7 @@ ADCS 攻击面挖掘与利用 - 安全客，安全资讯平台
 <meta name="twitter:image" content="https://songzhiv.github.io/static/favicon.ico"/>
 
 <meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="收集自己看过的没看过的文章。日后学习。
-AD域 windows protocol
-NTLM - The Hacker Recipes
-Penetration Testing Lab – Offensive Techniques &amp; Methodologies
-Windows访问控制 - Windows Access Control
-AD域中的ACL攻防探索 - 安全客，安全资讯平台
-这是一篇“不一样”的真实渗透测试案例分析文章 - 奇安信A-TEAM技术博客
-微软不认的“0day”之域内本地提权-烂番茄（Rotten Tomato） - 奇安信A-TEAM技术博客
-Project Zero: Using Kerberos for Authentication Relay Attacks
-结合CVE-2019-1040漏洞的两种域提权深度利用分析 - FreeBuf网络安全行业门户
-Abusing AD ACL - 先知社区
-渗透测试中的Exchange - 安全客，安全资讯平台
-Relaying NTLM authentication over RPC again… – Compass Security Blog
-AD CS攻击面剖析 - FreeBuf网络安全行业门户
-ADCS 攻击面挖掘与利用 - 安全客，安全资讯平台
-免杀 What is ired."/>
+<meta name="twitter:description" content="最开始看不懂的文章，过了一段时间的学习后再回来看总会有种恍然大悟的感觉。 记录自己学习中觉得有价值的文章，以便日后再回来看。 让子弹飞一会！ AD"/>
 <meta name="application-name" content="柠檬k">
 <meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -63,7 +33,7 @@ ADCS 攻击面挖掘与利用 - 安全客，安全资讯平台
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/cl\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "page","wordcount":  111 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "page","wordcount":  604 ,
         "url": "https:\/\/songzhiv.github.io\/cl\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-18T17:10:15+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -135,11 +105,16 @@ ADCS 攻击面挖掘与利用 - 安全客，安全资讯平台
     <div id="search-dropdown-mobile"></div>
 </div>
 <main class="main">
-                <div class="container"><div class="page single special"><h1 class="single-title animated pulse faster"></h1><div class="content" id="content"><p><strong>收集自己看过的没看过的文章。日后学习。</strong></p>
+                <div class="container"><div class="page single special"><h1 class="single-title animated pulse faster"></h1><div class="content" id="content"><p>最开始看不懂的文章，过了一段时间的学习后再回来看总会有种恍然大悟的感觉。</p>
+<p>记录自己学习中觉得有价值的文章，以便日后再回来看。</p>
+<p>让子弹飞一会！</p>
 <h1 id="ad域">AD域</h1>
 <p><a href="https://daiker.gitbook.io/windows-protocol/" target="_blank" rel="noopener noreffer">windows protocol</a></p>
 <p><a href="https://www.thehacker.recipes/ad/movement/ntlm" target="_blank" rel="noopener noreffer">NTLM - The Hacker Recipes</a></p>
 <p><a href="https://pentestlab.blog/" target="_blank" rel="noopener noreffer">Penetration Testing Lab – Offensive Techniques &amp; Methodologies</a></p>
+<p><a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM Relay - hackndo</a></p>
+<p><a href="https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html" target="_blank" rel="noopener noreffer">Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory | Shenanigans Labs</a></p>
+<p><a href="http://blog.nsfocus.net/combination-resource-constrained-delegation-ntlm-relaying-takes-privileges-host-system-domain/" target="_blank" rel="noopener noreffer">【M01N】资源约束委派和NTLM Relaying的组合拳接管域内任意主机系统权限 – 绿盟科技技术博客</a></p>
 <p><a href="https://rootclay.gitbook.io/windows-access-control/" target="_blank" rel="noopener noreffer">Windows访问控制 - Windows Access Control</a></p>
 <p><a href="https://www.anquanke.com/post/id/212163" target="_blank" rel="noopener noreffer">AD域中的ACL攻防探索 - 安全客，安全资讯平台</a></p>
 <p><a href="https://blog.ateam.qianxin.com/post/zhe-shi-yi-pian-bu-yi-yang-de-zhen-shi-shen-tou-ce-shi-an-li-fen-xi-wen-zhang/" target="_blank" rel="noopener noreffer">这是一篇“不一样”的真实渗透测试案例分析文章 - 奇安信A-TEAM技术博客</a></p>

