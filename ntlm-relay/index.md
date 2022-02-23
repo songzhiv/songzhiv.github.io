@@ -373,7 +373,7 @@ python3 pywhisker.py -d "adc.com" -u "administrator" -p "sss@123" --target "yang
 > 计算机对象可以编辑它们自己的 msDS-KeyCredentialLink 属性，但只能在没有 KeyCredential 存在的情况下添加。
 >
 
-### RBCD（低权限）
+### RBCD
 
 基于资源的约束性委派又名RBCD。
 
