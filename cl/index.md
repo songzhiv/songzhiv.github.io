@@ -3,7 +3,7 @@
 
 最开始看不懂的文章，过了一段时间的学习后再回来看总会有种恍然大悟的感觉。
 
-记录自己学习中觉得有价值的文章，以便日后再回来看。
+记录自己看过的没看过的的文章，以便日后回顾。
 
 让子弹飞一会！
 
@@ -20,6 +20,8 @@
 [Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory | Shenanigans Labs](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
 
 [【M01N】资源约束委派和NTLM Relaying的组合拳接管域内任意主机系统权限 – 绿盟科技技术博客](http://blog.nsfocus.net/combination-resource-constrained-delegation-ntlm-relaying-takes-privileges-host-system-domain/)
+
+[Exploring search connectors and library files in Windows](https://dtm.uk/exploring-search-connectors-and-library-files-on-windows/)
 
 [Windows访问控制 - Windows Access Control](https://rootclay.gitbook.io/windows-access-control/)
 

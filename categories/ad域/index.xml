@@ -10,7 +10,7 @@
     <pubDate>Sun, 20 Feb 2022 15:49:05 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://songzhiv.github.io/delegation/</guid>
-    <description><![CDATA[本文记录Kerberos和委派相关的知识，尽可能的讲明白两者的原理和攻击手法。 未完待续。。。]]></description>
+    <description><![CDATA[本文记录学习Kerberos认证和委派相关的知识和攻击手法，由于原理很复杂，所以不敢保证自己能讲明白。尽力😥。 注： 本文中 TGS = 服务票据ST Kerberos 简]]></description>
 </item><item>
     <title>NTLM Relay</title>
     <link>https://songzhiv.github.io/ntlm-relay/</link>

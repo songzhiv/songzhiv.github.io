@@ -83,7 +83,7 @@ xp_dirtree '\\hostname@1234\test' --http
 
 在开启`webclient`（需要安装`webdav`，开启`webclient`）时，可结合`PetitPotam` 、`PinterBug`发出HTTP的认证
 
-[安装webdav与开启webclient参考链接](https://theitbros.com/installing-webdav-client-windows-server-2016/](https:/theitbros.com/installing-webdav-client-windows-server-2016/)
+[Installing WebDAV client on Windows Server 2016 – TheITBros](https://theitbros.com/installing-webdav-client-windows-server-2016/)
 
 ```bash
 外发HTTP类型认证需要在可信域中，所以需要在域内添加一条DNS记录。或者端口转发域内机器
