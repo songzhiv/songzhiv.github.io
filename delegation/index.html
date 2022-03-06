@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/delegation\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  5869 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  5864 ,
         "url": "https:\/\/songzhiv.github.io\/delegation\/","datePublished": "2022-02-20T15:49:05+08:00","dateModified": "2022-03-06T15:49:05+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -110,7 +110,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Delegation</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-20">2022-02-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5869 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-20">2022-02-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5864 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -184,14 +184,7 @@
 </ol>
 <h3 id="认证流程">认证流程</h3>
 <p>参考自<a href="https://daiker.gitbook.io/windows-protocol/kerberos/1" target="_blank" rel="noopener noreffer">daiker</a>、<a href="https://payloads.online/archivers/2018-11-30/1/" target="_blank" rel="noopener noreffer">倾旋</a>、 <a href="https://jd.army/2021/11/04/kerberos%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A5%E5%8F%8A%E6%94%BB%E5%87%BB%E9%9D%A2/#/windows%E4%B8%AD%E7%9A%84kerberos" target="_blank" rel="noopener noreffer">JD.Army</a></p>
-<p><img
-        class="lazyload"
-        src="/svg/loading.min.svg"
-        data-src="https://s2.loli.net/2022/03/06/a7PcJHkvzy1I6sS.png"
-        data-srcset="https://s2.loli.net/2022/03/06/a7PcJHkvzy1I6sS.png, https://s2.loli.net/2022/03/06/a7PcJHkvzy1I6sS.png 1.5x, https://s2.loli.net/2022/03/06/a7PcJHkvzy1I6sS.png 2x"
-        data-sizes="auto"
-        alt="https://s2.loli.net/2022/03/06/a7PcJHkvzy1I6sS.png"
-        title="image.png" />{: style=&ldquo;width: 683px;&rdquo; parent-style=&ldquo;max-width: 693px;&quot;}</p>
+<img src="https://s2.loli.net/2022/03/06/fesWOVS3ldY2Hiq.png" alt="image-20220306215916595" style="zoom:200%;" />
 <ol>
 <li>AS_REQ: Client向KDC发起AS_REQ,请求凭据包含用户名，用户的<code>NTLM Hash</code>加密的时间戳，到期时间等信息。</li>
 <li>AS_REP: KDC根据用户名在<code>Accout Database</code>中查找用户对应的<code>NTLM Hash</code>进行解密，如果结果正确则第一步认证通过。随后KDC生成随机字符串<code>Session Key</code>，使用用户<code>NTLM Hash</code>加密<code>Session Key</code>作为AS_REP返回，同时返回用<code>krbtgt hash</code>加密的TGT票据，TGT里面包含PAC,PAC包含Client的sid，Client所在的组以及<code>Session Key</code>。</li>

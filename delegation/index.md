@@ -23,7 +23,7 @@ Kerberos是一种由MIT（麻省理工大学）提出的一种网络身份验证
 
 参考自[daiker](https://daiker.gitbook.io/windows-protocol/kerberos/1)、[倾旋](https://payloads.online/archivers/2018-11-30/1/)、 [JD.Army](https://jd.army/2021/11/04/kerberos%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A5%E5%8F%8A%E6%94%BB%E5%87%BB%E9%9D%A2/#/windows%E4%B8%AD%E7%9A%84kerberos)
 
-![image.png](https://s2.loli.net/2022/03/06/a7PcJHkvzy1I6sS.png){: style="width: 683px;" parent-style="max-width: 693px;"}
+<img src="https://s2.loli.net/2022/03/06/fesWOVS3ldY2Hiq.png" alt="image-20220306215916595" style="zoom:200%;" />
 
 1. AS_REQ: Client向KDC发起AS_REQ,请求凭据包含用户名，用户的`NTLM Hash`加密的时间戳，到期时间等信息。
 2. AS_REP: KDC根据用户名在`Accout Database`中查找用户对应的`NTLM Hash`进行解密，如果结果正确则第一步认证通过。随后KDC生成随机字符串`Session Key`，使用用户`NTLM Hash`加密`Session Key`作为AS_REP返回，同时返回用`krbtgt hash`加密的TGT票据，TGT里面包含PAC,PAC包含Client的sid，Client所在的组以及`Session Key`。
