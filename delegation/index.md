@@ -51,7 +51,9 @@ Kerberos是一种由MIT（麻省理工大学）提出的一种网络身份验证
 
 ### s4u2self
 
-他其实是一次TGS认证的阶段。服务A代替用户请求一张针对服务A本身的服务票据ST。生成的服务票据是可转发的。从而用于后面的s4u2proxy认证阶段。![image.png](https://s2.loli.net/2022/03/06/YIaxKG6XuQA1nNP.png)
+他其实是一次TGS认证的阶段。服务A代替用户请求一张针对服务A本身的服务票据ST。生成的服务票据一般是用于后面的s4u2proxy认证阶段。
+
+![image.png](https://s2.loli.net/2022/03/06/YIaxKG6XuQA1nNP.png)
 
 之所以有这个阶段，是为了兼容其他不通过Kerberos认证的登录方式，比如用户通过SSO统一登录、或者通过NTLM认证。这是一个协议转换的过程。
 
@@ -71,6 +73,8 @@ Kerberos是一种由MIT（麻省理工大学）提出的一种网络身份验证
 即使机器没有被配置约束委派，也就是用户的`UserAccountControl`位没有`TrustedToAuthForDelegation` 属性。
 
 s4u2self依然可以请求到服务票据，只不过这个服务票据不可转发。这种情况适用于基于资源的约束委派RBCD。
+
+被委派的用户配置了敏感用户不能被委派，s4u2self返回不可转发票据。不可用于s4u2proxy（CVE-2020-17049绕过），但可用于s4u2self提权。
 
 
 ### s4u2proxy
@@ -332,7 +336,7 @@ forwardable = 0：
 
 这里根据我本地的测试结果。KDC检查用户是否配置了不可委派时是在TGS-REQ请求中的PAC中检查的。
 
-这也就是说以下攻击顺序是可行的：
+这也就是说以下攻击顺序是可行的（感觉也没啥实际价值）：
 
 1. s4u2self申请administrator的TGS。
 
@@ -341,8 +345,6 @@ forwardable = 0：
 3. 使用上面申请的TGS进行s4u2proxy。
 
 4. 成功获取票据。
-
-**瞎折腾了半天，感觉也没啥实际价值。**
 
 
 ### s4u2self提权

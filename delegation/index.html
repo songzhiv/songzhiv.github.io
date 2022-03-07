@@ -33,7 +33,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/songzhiv.github.io\/delegation\/"
-        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  5864 ,
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  5936 ,
         "url": "https:\/\/songzhiv.github.io\/delegation\/","datePublished": "2022-02-20T15:49:05+08:00","dateModified": "2022-03-06T15:49:05+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
@@ -110,7 +110,7 @@
             <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">Delegation</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/ad%E5%9F%9F/"><i class="far fa-folder fa-fw"></i>AD域</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-20">2022-02-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5864 字&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-02-20">2022-02-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5936 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -237,7 +237,8 @@
 <h2 id="s4u扩展协议">S4U扩展协议</h2>
 <p>包括s4u2self和s4u2proxy。</p>
 <h3 id="s4u2self">s4u2self</h3>
-<p>他其实是一次TGS认证的阶段。服务A代替用户请求一张针对服务A本身的服务票据ST。生成的服务票据是可转发的。从而用于后面的s4u2proxy认证阶段。<img
+<p>他其实是一次TGS认证的阶段。服务A代替用户请求一张针对服务A本身的服务票据ST。生成的服务票据一般是用于后面的s4u2proxy认证阶段。</p>
+<p><img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="https://s2.loli.net/2022/03/06/YIaxKG6XuQA1nNP.png"
@@ -277,6 +278,7 @@
 </ol>
 <p>即使机器没有被配置约束委派，也就是用户的<code>UserAccountControl</code>位没有<code>TrustedToAuthForDelegation</code> 属性。</p>
 <p>s4u2self依然可以请求到服务票据，只不过这个服务票据不可转发。这种情况适用于基于资源的约束委派RBCD。</p>
+<p>被委派的用户配置了敏感用户不能被委派，s4u2self返回不可转发票据。不可用于s4u2proxy（CVE-2020-17049绕过），但可用于s4u2self提权。</p>
 <h3 id="s4u2proxy">s4u2proxy</h3>
 <p>服务A拿着s4u2self阶段请求的服务票据ST去请求另一个服务B的服务票据。</p>
 <p>S4U2Proxy 总是产生一个可转发的 TGS，即使请求中提供的额外 TGS 是不可转发的。</p>
@@ -644,7 +646,7 @@ python3 getST.py -impersonate <span class="s1">&#39;administrator&#39;</span> -s
 <p>forwardable = 0：</p>
 <p>首先检查是否存在B-&gt;A的RBCD，如果二者存在RBCD，会进一步检查用户是否配置了不可委派或者是受保护组的,若不是s4u2proxy依然可用。</p>
 <p>这里根据我本地的测试结果。KDC检查用户是否配置了不可委派时是在TGS-REQ请求中的PAC中检查的。</p>
-<p>这也就是说以下攻击顺序是可行的：</p>
+<p>这也就是说以下攻击顺序是可行的（感觉也没啥实际价值）：</p>
 <ol>
 <li>
 <p>s4u2self申请administrator的TGS。</p>
@@ -659,7 +661,6 @@ python3 getST.py -impersonate <span class="s1">&#39;administrator&#39;</span> -s
 <p>成功获取票据。</p>
 </li>
 </ol>
-<p><strong>瞎折腾了半天，感觉也没啥实际价值。</strong></p>
 <h3 id="s4u2self提权">s4u2self提权</h3>
 <p>假设我们拿到一台机器权限是一些服务账户的，比如<code>NT AUTHORITY\NETWORK SERVICE</code>、<code>iis apppool\defaultapppool</code>   <code>nt service\mssqlserver</code>这类权限在访问网络资源时是通过机器账户去访问的。</p>
 <p><img
