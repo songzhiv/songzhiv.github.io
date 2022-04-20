@@ -4,7 +4,14 @@
         <link>https://songzhiv.github.io/posts/</link>
         <description>所有文章 | 柠檬k</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>songzhiv@126.com (nmk)</managingEditor>
-            <webMaster>songzhiv@126.com (nmk)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sun, 20 Feb 2022 15:49:05 &#43;0800</lastBuildDate><atom:link href="https://songzhiv.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+            <webMaster>songzhiv@126.com (nmk)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 20 Apr 2022 12:05:34 &#43;0800</lastBuildDate><atom:link href="https://songzhiv.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Domain Trust</title>
+    <link>https://songzhiv.github.io/domain-trust/</link>
+    <pubDate>Wed, 20 Apr 2022 12:05:34 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://songzhiv.github.io/domain-trust/</guid>
+    <description><![CDATA[Trust Technologies: Domain and Forest Trusts | Microsoft Docs How Domain and Forest Trusts Work | Microsoft Docs It’s All About Trust – Forging Kerberos Trust Tickets to Spoof Access across Active Directory Trusts – Active Directory Security (adsecurity.org) A Guide to Attacking Domain Trusts | by Will Schroeder | Medium From Domain Admin to Enterprise Admin - Red Teaming Experiments (ired.team) Active Directory forest trusts part]]></description>
+</item><item>
     <title>Delegation</title>
     <link>https://songzhiv.github.io/delegation/</link>
     <pubDate>Sun, 20 Feb 2022 15:49:05 &#43;0800</pubDate>
@@ -39,12 +46,5 @@
     <author>作者</author>
     <guid>https://songzhiv.github.io/config/</guid>
     <description><![CDATA[<p>配置</p>]]></description>
-</item><item>
-    <title></title>
-    <link>https://songzhiv.github.io/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>作者</author>
-    <guid>https://songzhiv.github.io/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F/</guid>
-    <description><![CDATA[Trust Technologies: Domain and Forest Trusts | Microsoft Docs How Domain and Forest Trusts Work | Microsoft Docs It’s All About Trust – Forging Kerberos Trust Tickets to Spoof Access across Active Directory Trusts – Active Directory Security (adsecurity.org) A Guide to Attacking Domain Trusts | by Will Schroeder | Medium From Domain Admin to Enterprise Admin - Red Teaming Experiments (ired.team) Active Directory forest trusts part]]></description>
 </item></channel>
 </rss>
