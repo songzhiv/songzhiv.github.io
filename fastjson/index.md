@@ -104,9 +104,9 @@ ldap服务收到了请求，可我们起的http服务却没有反应，也就访
 
 GitHub上的轮子：[https://github.com/veracode-research/rogue-jndi](https://github.com/veracode-research/rogue-jndi)
 
-以实战为例：深圳地质局的fastjson
 
-：**见视频** 😇
+
+：**** 😇
 
 ## fastjson不出网与命令回显
 
